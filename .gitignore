@@ -4,3 +4,4 @@ yarn.lock
 .vscode/
 yarn-error.log
 .next/
+.next/**
