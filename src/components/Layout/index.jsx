@@ -51,11 +51,15 @@ const LayoutComponent = (props) => {
 
   return (
     <Layout className={props.className}>
+
       <Header className="header">
+
         <div className="logo" />
+
         <Menu className="main-menu" theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
           {route.map((i) => <Menu.Item key={i.url} onClick={() => { router.push(i.url) }}>{i.title}</Menu.Item>)}
         </Menu>
+
         <Menu className="alert-menu" theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
           <Menu.Item onClick={() => { }}>
             <Badge count={cnt.commentNotReadCnt}>
@@ -73,14 +77,18 @@ const LayoutComponent = (props) => {
             </Badge>
           </Menu.Item>
         </Menu>
+
       </Header>
+
       <Content style={{ padding: '0 50px' }}>
         <Breadcrumb style={{ margin: '16px 0' }}>
           {routerAsPath.map((d, k) => <Breadcrumb.Item key={k}>{d}</Breadcrumb.Item>)}
         </Breadcrumb>
         {props.children}
       </Content>
+
       <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+      
     </Layout>
   )
 }
