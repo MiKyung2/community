@@ -1,4 +1,3 @@
-import { instance } from "../../common";
 import AxiosWrapper from "../../axiosWrapper";
 
 const boardListBroker = {
