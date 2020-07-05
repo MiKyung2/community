@@ -5,6 +5,7 @@ import broker from '../../api';
 import { Row, Table } from 'antd';
 import BoardList from '../../components/Board/List';
 import SearchInput from '../../components/SearchInput';
+import Router from 'next/router';
 
 const BoardPage = (props) => {
 
@@ -41,7 +42,7 @@ const BoardPage = (props) => {
           key: "commentCnt",
         }],
         dataSource: [{
-          key: "1",
+          key: "0",
           number: "1",
           title: "제목1",
           writer: "작성자1",
@@ -50,7 +51,7 @@ const BoardPage = (props) => {
           commentCnt: 123,
         },
         {
-          key: "2",
+          key: "1",
           number: "2",
           title: "제목2",
           writer: "작성자2",
@@ -82,10 +83,21 @@ const BoardPage = (props) => {
 
     const onClickTableRow = (record, rowIndex) => {
       return {
-        onClick: e => {
+        onClick: () => {
           // 해당 Row의 게시판 요청 api
           console.log("Table Row Clicked!-record", record);
-          console.log("Table Row Clicked!-index", rowIndex);
+          console.log("Table Row Clicked!-index", parseInt(rowIndex));
+
+          Router.push('/board/[id]', `/board/${rowIndex}`)
+
+          // state.dataSource.map(item => {
+          //   // Router.push(`/board/[id]', '/board/${item.key}`)
+          //   if(parseInt(rowIndex) === item.key) {
+
+          //     console.log("item.key",item.key)
+          //   }
+          //   })
+          
         }
       }
     }
