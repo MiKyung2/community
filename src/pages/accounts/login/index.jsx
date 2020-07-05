@@ -5,7 +5,6 @@ import styled from 'styled-components';
 
 import { Form, Input, Button, Checkbox, Row, Col } from 'antd';
 import BaseForm from '../../../components/BaseForm';
-
 import useLogin from '../../../hooks/login';
 
 const layout = {
