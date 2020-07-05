@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { MessageOutlined, LikeOutlined, DislikeOutlined, EyeOutlined } from '@ant-design/icons';
 import { List, Avatar } from 'antd';
-import IconText from '../_views/IconText/component';
+import IconText from './_views/IconText/component';
 
 const BoardList = (props) => {
   return useObserver(() => {

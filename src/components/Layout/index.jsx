@@ -27,17 +27,17 @@ const LayoutComponent = (props) => {
           {routes.map((i) => <Menu.Item key={i.url} onClick={() => { router.push(i.url) }}>{i.name}</Menu.Item>)}
         </Menu>
         <Menu className="alert-menu" theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-          <Menu.Item onClick={() => { }}>
+          <Menu.Item onClick={() => { router.push("/notes"); }}>
             <Badge count={cnt.commentNotReadCnt}>
               <a href="#" className="head-example" ><MessageOutlined /></a>
             </Badge>
           </Menu.Item>
-          <Menu.Item onClick={() => { }}>
+          <Menu.Item onClick={() => { router.push("/profile"); }}>
             <Badge count={cnt.boardNotReadCnt}>
               <a href="#" className="head-example" ><BellOutlined /></a>
             </Badge>
           </Menu.Item>
-          <Menu.Item onClick={() => { }}>
+          <Menu.Item onClick={() => { router.push("/profile"); }}>
             <Badge count={cnt.followNotReadCnt}>
               <a href="#" className="head-example" ><UserOutlined /></a>
             </Badge>
