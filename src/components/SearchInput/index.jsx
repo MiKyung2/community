@@ -20,14 +20,24 @@ const SearchInput = () => {
     </Menu>
   );
 
+  const onSearch = (keyword) => {
+      // 검색 키워드로 게시판 목록 api 요청
+      console.log("검색 키워드:", keyword);
+  }
+
   return (
     <div>
       <Dropdown overlay={menu}>
         <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-          필터 <DownOutlined />
+          필터 
+          <DownOutlined />
         </a>
       </Dropdown>
-      <Search placeholder="검색어를 입력하세요." onSearch={value => console.log(value)} enterButton />
+      <Search 
+        placeholder="검색어를 입력하세요." 
+        onSearch={onSearch} 
+        enterButton 
+      />
     </div>
   );
 };

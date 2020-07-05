@@ -6,6 +6,11 @@ import { List, Avatar } from 'antd';
 import IconText from '../_views/IconText/component';
 
 const BoardList = (props) => {
+
+  console.log("boardlist data", props.dataSource.board.content)
+
+  const boardListData = props.dataSource.board.content;
+
   return useObserver(() => {
     return (
       <List
@@ -18,7 +23,8 @@ const BoardList = (props) => {
           },
           pageSize: 10,
         }}
-        dataSource={props.dataSource}
+        dataSource={boardListData}
+        // dataSource={props.dataSource}
         renderItem={item => (
           <List.Item
             key={item.title}
@@ -26,7 +32,7 @@ const BoardList = (props) => {
               <IconText icon={EyeOutlined} text={item.viewCount} key="list-vertical-star-o" />,
               <IconText icon={LikeOutlined} text={item.rowLike} key="list-vertical-like-o" />,
               <IconText icon={DislikeOutlined} text={item.rowDisLike} key="list-vertical-like-o" />,
-              <IconText icon={MessageOutlined} text={item.commentEntityList.length} key="list-vertical-message" />,
+              // <IconText icon={MessageOutlined} text={item.commentEntityList.length} key="list-vertical-message" />,
             ]}
           >
             <List.Item.Meta
@@ -35,6 +41,7 @@ const BoardList = (props) => {
             // avatar={
             //   <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
             // }
+              // boardContentData={}
             />
             {item.content}
           </List.Item>
