@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 
 import { Layout, Menu, Badge, List, Avatar } from "antd";
+const { Header } = Layout;
 
 import { MessageOutlined, BellOutlined, UserOutlined } from "@ant-design/icons";
 
@@ -33,7 +34,7 @@ const LayoutHeader = (props) => {
   ];
 
   return (
-    <div className={props.className}>
+    <Header className={props.className}>
       <div className="logo" />
       <Menu
         className="main-menu"
@@ -110,14 +111,13 @@ const LayoutHeader = (props) => {
           </Badge>
         </Menu.Item>
       </Menu>
-    </div>
+    </Header>
   );
 };
 
 export default styled(LayoutHeader)`
   & {
     display: flex;
-    width: 100%;
 
     .logo {
       flex-shrink: 0;
@@ -128,6 +128,9 @@ export default styled(LayoutHeader)`
     }
     .alert-menu {
       flex-shrink: 0;
+      li {
+        border-radius: 50%;
+      }
     }
 
     .ant-menu-item {
@@ -146,14 +149,9 @@ export default styled(LayoutHeader)`
         border-radius: 8px;
         top: 60px;
         right: 0px;
-        width: 360px;
         padding: 10px;
         z-index: 100;
       }
-    }
-
-    .ant-list-item {
-      overflow: hidden;
     }
   }
 `;
