@@ -1,13 +1,17 @@
-import { useObserver } from 'mobx-react';
-import styled from 'styled-components';
+import { useObserver } from "mobx-react";
+import styled from "styled-components";
 
-import { MessageOutlined, LikeOutlined, DislikeOutlined, EyeOutlined } from '@ant-design/icons';
-import { List, Avatar } from 'antd';
-import IconText from '../_views/IconText/component';
+import {
+  MessageOutlined,
+  LikeOutlined,
+  DislikeOutlined,
+  EyeOutlined,
+} from "@ant-design/icons";
+import { List, Avatar } from "antd";
+import IconText from "./_views/IconText/component";
 
 const BoardList = (props) => {
-
-  console.log("boardlist data", props.dataSource.board.content)
+  console.log("boardlist data", props.dataSource.board.content);
 
   const boardListData = props.dataSource.board.content;
 
@@ -18,30 +22,41 @@ const BoardList = (props) => {
         itemLayout="vertical"
         size="large"
         pagination={{
-          onChange: page => {
+          onChange: (page) => {
             console.log(page);
           },
           pageSize: 10,
         }}
-        dataSource={boardListData}
-        // dataSource={props.dataSource}
-        renderItem={item => (
+        dataSource={props.dataSource}
+        renderItem={(item) => (
           <List.Item
             key={item.title}
             actions={[
-              <IconText icon={EyeOutlined} text={item.viewCount} key="list-vertical-star-o" />,
-              <IconText icon={LikeOutlined} text={item.rowLike} key="list-vertical-like-o" />,
-              <IconText icon={DislikeOutlined} text={item.rowDisLike} key="list-vertical-like-o" />,
-              // <IconText icon={MessageOutlined} text={item.commentEntityList.length} key="list-vertical-message" />,
+              <IconText
+                icon={EyeOutlined}
+                text={item.viewCount}
+                key="list-vertical-star-o"
+              />,
+              <IconText
+                icon={LikeOutlined}
+                text={item.rowLike}
+                key="list-vertical-like-o"
+              />,
+              <IconText
+                icon={DislikeOutlined}
+                text={item.rowDisLike}
+                key="list-vertical-like-o"
+              />,
             ]}
           >
             <List.Item.Meta
               title={<a href={`/board/${item.id}`}>{item.title}</a>}
               description={item.contents}
-            // avatar={
-            //   <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-            // }
-              // boardContentData={}
+              avatar={item.writer}
+              prefixCls={item.createDate}
+              // avatar={
+              //   <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+              // }
             />
             {item.content}
           </List.Item>

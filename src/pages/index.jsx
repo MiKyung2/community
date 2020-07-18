@@ -1,24 +1,17 @@
-import styled from 'styled-components';
-import { useObserver } from 'mobx-react';
-import { useRouter } from 'next/router';
-import { Button } from 'antd';
+import styled from "styled-components";
+import { useObserver } from "mobx-react";
+import { useRouter } from "next/router";
 
 const Home = (props) => {
   return useObserver(() => {
     const router = useRouter();
 
-    return (
-      <div className={props.className}>
-        home
-        <Button onClick={() => { router.push("/board"); }} >게시판</Button>
-        <Button onClick={() => { router.push("/accounts/login"); }}>로그인</Button>
-      </div >
-    )
+    return <div className={props.className}>home</div>;
   });
-}
+};
 
 export default styled(Home)`
-  & { 
+  & {
     padding: 0 0.5rem;
     display: flex;
     flex-direction: column;
@@ -145,4 +138,4 @@ export default styled(Home)`
       }
     }
   }
-`
+`;

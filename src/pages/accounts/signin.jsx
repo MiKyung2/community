@@ -1,10 +1,10 @@
-import Link from 'next/link'
+import Link from "next/link";
 
-import { useObserver } from "mobx-react";
-import styled from 'styled-components';
+import { useObserver, useLocalStore } from "mobx-react";
+import styled from "styled-components";
 
-import { Form, Input, Button, Checkbox, Row, Col } from 'antd';
-import useLogin from '../../../hooks/login';
+import { Form, Input, Button, Checkbox, Row, Col } from "antd";
+// import useLogin from "../../../hooks/login";
 
 const layout = {
   labelCol: {
@@ -24,7 +24,16 @@ const tailLayout = {
 
 const Login = (props) => {
   return useObserver(() => {
-    const login = useLogin(props);
+    const state = useLocalStore(() => {
+      return {
+        loading: false,
+        list: [],
+        value: {
+          email: "",
+          password: "",
+        },
+      };
+    });
 
     return (
       <div className={props.className}>
@@ -34,8 +43,12 @@ const Login = (props) => {
           initialValues={{
             remember: true,
           }}
-          onFinish={() => { console.log("finish") }}
-          onFinishFailed={() => { console.log("onFinishFailed") }}
+          onFinish={() => {
+            console.log("finish");
+          }}
+          onFinishFailed={() => {
+            console.log("onFinishFailed");
+          }}
         >
           <Form.Item
             label="아이디"
@@ -43,15 +56,15 @@ const Login = (props) => {
             rules={[
               {
                 required: true,
-                message: '이메일을 입력해주세요.',
+                message: "이메일을 입력해주세요.",
               },
             ]}
           >
             <Input
               id="email"
-              value={login.state.value.email}
+              value={state.value.email}
               onChange={(e) => {
-                login.state.value.email = e.target.value;
+                state.value.email = e.target.value;
               }}
             />
           </Form.Item>
@@ -62,15 +75,15 @@ const Login = (props) => {
             rules={[
               {
                 required: true,
-                message: '비밀번호를 입력해주세요.',
+                message: "비밀번호를 입력해주세요.",
               },
             ]}
           >
             <Input.Password
               id="password"
-              value={login.state.value.password}
+              value={state.value.password}
               onChange={(e) => {
-                login.state.value.password = e.target.value;
+                state.value.password = e.target.value;
               }}
             />
           </Form.Item>
@@ -80,28 +93,49 @@ const Login = (props) => {
           </Form.Item>
 
           <Form.Item {...tailLayout}>
-            <Button type="primary" htmlType="submit" onClick={() => {
-              console.log("email : ", login.state.value.email);
-              console.log("password : ", login.state.value.password);
-            }}>로그인</Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              onClick={() => {
+                console.log("email : ", state.value.email);
+                console.log("password : ", state.value.password);
+              }}
+            >
+              로그인
+            </Button>
           </Form.Item>
 
           <Row className="center">
-            <Col className="signup_txt">계정이 없으신가요? <Link href="signup"><a>회원가입</a></Link></Col>
+            <Col className="signup_txt">
+              계정이 없으신가요?{" "}
+              <Link href="signup">
+                <a>회원가입</a>
+              </Link>
+            </Col>
           </Row>
           <Row className="center">
-            <Col className="lostpw_txt"><Link href="password/reset"><a>비밀번호를 잊으셨나요?</a></Link></Col>
+            <Col className="lostpw_txt">
+              <Link href="password/reset">
+                <a>비밀번호를 잊으셨나요?</a>
+              </Link>
+            </Col>
           </Row>
           <Row className="center">
-            <Col><div className="login_logo">F</div></Col>
-            <Col><div className="login_logo">g</div></Col>
-            <Col><div className="login_logo">N</div></Col>
+            <Col>
+              <div className="login_logo">F</div>
+            </Col>
+            <Col>
+              <div className="login_logo">g</div>
+            </Col>
+            <Col>
+              <div className="login_logo">N</div>
+            </Col>
           </Row>
         </Form>
       </div>
     );
   });
-}
+};
 
 export default styled(Login)`
   & {
@@ -110,7 +144,6 @@ export default styled(Login)`
       align-items: center;
       justify-content: center;
     }
-
     .login_logo {
       display: flex;
       justify-content: center;
@@ -119,7 +152,6 @@ export default styled(Login)`
       height: 50px;
       border-radius: 50%;
       background: black;
-
       font-size: 20px;
       font-weight: bold;
       color: #fff;
