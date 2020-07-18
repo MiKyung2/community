@@ -68,7 +68,7 @@ const LayoutHeader = (props) => {
               <MessageOutlined />
             </a>
           </Badge>
-          <div className="board">
+          {/* <div className="board">
             <List
               itemLayout="horizontal"
               dataSource={data}
@@ -84,7 +84,7 @@ const LayoutHeader = (props) => {
                 </List.Item>
               )}
             />
-          </div>
+          </div> */}
         </Menu.Item>
         <Menu.Item
           onClick={() => {
@@ -96,7 +96,7 @@ const LayoutHeader = (props) => {
               <BellOutlined />
             </a>
           </Badge>
-          <div className="board"></div>
+          {/* <div className="board"></div> */}
         </Menu.Item>
         <Menu.Item
           onClick={() => {
