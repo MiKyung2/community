@@ -10,7 +10,10 @@ import ProfileCard from "../components/profile/Card";
 const ProfilePage = (props) => {
   return useObserver(() => {
     const state = useLocalStore(() => {
-      return { loading: false };
+      return {
+        loading: false,
+        tabActive: "1",
+      };
     });
 
     return (
@@ -46,8 +49,8 @@ const ProfilePage = (props) => {
               dataSource={[
                 {
                   title: "게시물에 댓글을 남겼습니다.",
-                  description: "[모집중] 토이프로젝트 모집합니다.",
-                  time: "2분 전",
+                  description: "[모집중] 토이프로젝트 모집합니다.1",
+                  time: "1분 전",
                   writer: "김코딩",
                 },
               ]}
@@ -59,8 +62,8 @@ const ProfilePage = (props) => {
               dataSource={[
                 {
                   title: "게시물에 댓글을 남겼습니다.",
-                  description: "[모집중] 토이프로젝트 모집합니다.",
-                  time: "2분 전",
+                  description: "[모집중] 토이프로젝트 모집합니다.2",
+                  time: "3분 전",
                   writer: "김코딩",
                 },
               ]}
