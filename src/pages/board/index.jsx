@@ -30,7 +30,6 @@ const BoardPage = (props) => {
 
 export const getStaticProps = async () => {
   const boardListRes = await broker.boardList.read({ title: "" });
-  console.log("boardListRes : ", JSON.stringify(boardListRes, null, 3));
   return {
     props: {
       board: boardListRes.body,

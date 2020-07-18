@@ -42,7 +42,6 @@ const LoginPage = (props) => {
           <BaseForm.Email value={login.state.value.email} onChange={(value) => { login.state.value.email = value; }} />
           <BaseForm.password value={login.state.value.password} onChange={(value) => { login.state.value.password = value; }} />
 
-
           <Form.Item {...tailLayout} name="remember" valuePropName="checked">
             <Checkbox>로그인 유지</Checkbox>
           </Form.Item>
