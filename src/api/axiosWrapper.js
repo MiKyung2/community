@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const serverURL = "http://13.125.209.154:8081";
+const serverURL = "http://141.164.41.213:8081";
 const VERSION = "/v1";
 const baseURL = serverURL + VERSION + "/api";
 
@@ -35,7 +35,7 @@ const handleError = (error) => {
       console.log("error, 예상치 못한 에러가 발생했습니다.");
       break;
   }
-  return Promise.reject(error)
+  return Promise.reject(error);
 };
 
 instance.interceptors.response.use(handleSuccess, handleError);
@@ -60,7 +60,7 @@ const AxiosWrapper = {
   async delete(url, config) {
     const res = await instance.delete(url, config);
     return res.data;
-  }
-}
+  },
+};
 
 export default AxiosWrapper;
