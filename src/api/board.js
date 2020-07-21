@@ -2,9 +2,12 @@ import AxiosWrapper from "./axiosWrapper";
 
 const BoardAPI = {
   list: async (payload) => {
+
+    const {gb, keyword, offset, pageNumber, pageSize, sort} = payload;
+
     try {
       const res = await AxiosWrapper.get(
-        "board/page?gb=title&keyword=title&offset=10&pageNumber=1&pageSize=10&sort=title"
+        `board/page?gb=${gb}&keyword=${keyword}&offset=${offset}&pageNumber=${pageNumber}&pageSize=${pageSize}&sort=${sort}`
       );
       // const res = await AxiosWrapper.get(
       //   `/board/page?pageNumber=10` + `&title=${payload.title}`
