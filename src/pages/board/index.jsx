@@ -12,6 +12,9 @@ import { dummy } from './dummy';
 
 const BoardPage = (props) => {
 
+  // console.log(props);
+  // console.log("content", props.board.content)
+
   return useObserver(() => {
 
     const router = useRouter();
@@ -21,8 +24,8 @@ const BoardPage = (props) => {
       return {
         columns: [{
           title: "번호",
-          dataIndex: "number",
-          key: "number",
+          dataIndex: "id",
+          key: "id",
         },
         {
           title: "제목",
@@ -34,19 +37,19 @@ const BoardPage = (props) => {
           key: "writer",
         }, {
           title: "좋아요",
-          dataIndex: "likeCnt",
-          key: "likeCnt",
+          dataIndex: "rowLike",
+          key: "rowLike",
         }, {
           title: "조회수",
-          dataIndex: "viewCnt",
-          key: "viewCnt",
+          dataIndex: "viewCount",
+          key: "viewCount",
         }, {
           title: "댓글수",
           dataIndex: "commentCnt",
           key: "commentCnt",
         }],
         // 게시판의 initial data 가져오기
-        dataSource: [...dummy],
+        dataSource: props.board.content,
         page: {
           total: 11,
           current: 1,
@@ -54,7 +57,12 @@ const BoardPage = (props) => {
       };
     });
 
+    const initialData = props.board.content;
+
+    console.log("initialData", initialData);
+
     const filterLists = ['좋아요순', '댓글순', '조회수순'];
+
 
     // 검색 필터 변경
     const onClickFilter = (index) => {
@@ -135,13 +143,22 @@ const BoardPage = (props) => {
           pagination={{ pageSize: 10 }}
           scroll={true}
         />
+
+        
       </div>
     );
   });
 };
 
 export const getStaticProps = async () => {
-  const boardListRes = await BoardAPI.list({ title: "" });
+  const boardListRes = await BoardAPI.list({ 
+    gb: "title",
+    keyword: "title",
+    offset: 10,
+    pageNumber: 1,
+    pageSize: 10,
+    sort: "title"
+   });
   return {
     props: {
       board: boardListRes.body,
