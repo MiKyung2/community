@@ -1,101 +1,120 @@
-import styled from "styled-components";
-import { Menu, Select, Input, Button, Avatar } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import React from 'react';
+import styled from 'styled-components';
+import { useObserver, useLocalStore } from 'mobx-react';
+import { Select, Input, Button, Avatar } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import CKEditor from 'ckeditor4-react';
+import {useRouter} from 'next/router';
+import Axios from 'axios';
 
 const { Option } = Select;
-
 const CreateBoard = () => {
-  const menu = (
-    <Menu>
-      <Menu.Item>
-        <a href="http://www.naver.com/">제목</a>
-      </Menu.Item>
-      <Menu.Item>
-        <a href="http://www.naver.com/">글쓴이</a>
-      </Menu.Item>
-    </Menu>
-  );
+    return useObserver(() => {
 
-  const onSubmitForm = (e) => {
-    e.preventDefault();
-    console.log("폼 제출");
-    // 1) 등록 api 요청
-    // 2) 글 목록 or 해당 글로 이동
-  };
+        const router = useRouter();
+        const state = useLocalStore(() => {
+            return {
+                select: '',
+                title: '',
+                content: ''
+            }
+        });
 
-  const handleChange = () => {
-    console.log("게시판 선택");
-  };
+        const onSubmitForm = (e) => {
+            e.preventDefault();
+           
+            // 1) 등록 api 요청
+            // 2) 글 목록 or 해당 글로 이동
+            // Q. 어떻게 각각의 요소들의 value를 가져오면 좋을까? -ok..?
 
-  const cancle = (e) => {
-    console.log("새 글 작성 - 취소");
-    // 글목록 or 해당 글로 이동
-  };
+            const formData = {
+                // id: 1,
+                select: state.select,
+                title: state.title,
+                content: state.content,
+            }
 
-  return (
-    <div
-      style={{
-        border: "1px solid black",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div
-        className="container"
-        style={{ border: "1px solid blue", width: "80%" }}
-      >
-        <header
-          style={{
-            border: "1px solid red",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "40px",
-          }}
-        >
-          <h2>새 글 작성</h2>
-          <Avatar size="large" icon={<UserOutlined />} />
-        </header>
+			console.log('폼 제출', formData);
+			
+			// Axios.post('http:1.1.1./1', formData, function(isSuccess, result) {
+			// 	console.log(result)
+			// })
 
-        <section>
-          <form onSubmit={onSubmitForm}>
-            <Select
-              defaultValue="default"
-              style={{ width: "100%", marginBottom: "20px" }}
-              onChange={handleChange}
-            >
-              <Option value="default">게시판을 선택해주세요.</Option>
-              <Option value="option1">Option1</Option>
-              <Option value="option2">Option2</Option>
-              <Option value="option3">Option3</Option>
-            </Select>
-            <Input
-              style={{ width: "100%", marginBottom: "20px" }}
-              placeholder="제목을 입력해주세요."
-            />
-            {/* 내용 입력칸 + 에디터 기능 추가 */}
-            <div
-              className="buttons"
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Button type="default" onClick={cancle}>
-                취소
-              </Button>
-              <Button type="primary" htmlType="submit">
-                등록
-              </Button>
+            // 글목록 or 해당 글로 이동
+            router.push('/board', `/board`);
+        }
+    
+        const onChangeSelect = (e) => {
+            console.log("게시판 선택", e);
+            state.select = e;
+        }
+
+        const onChangeInput = (e) => {
+            console.log("title!!!", e.target.value);
+            state.title = e.target.value;
+        }
+
+        const onChangeEditor = (e) => {
+            // input data 변경 -> mobx에서는 setState 어떻게 하나..?
+            console.log("onEditorChange!", e.editor.getData());
+            state.content = e.editor.getData();
+        }
+    
+        const onCancel = (e) => {
+            console.log("새 글 작성 - 취소");
+            // 글목록 or 해당 글로 이동
+            router.push('/board', `/board`);
+        }				      
+    
+    
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+            <div className="container" style={{ width: '80%'}}>
+                <header style={{
+					// border: '1px solid red', 
+					display: 'flex', 
+					justifyContent: 'space-between', 
+					alignItems: 'center',
+					marginBottom: '40px'
+					}}
+                >
+					<h2>새 글 작성</h2>
+					<Avatar size="large" icon={<UserOutlined />} />
+                </header>
+    
+                <section>
+                    <form onSubmit={onSubmitForm}>
+                        {/* 게시판 선택 */}
+                        <Select defaultValue="default" style={{ width: '100%', marginBottom: '15px' }} onChange={onChangeSelect}>
+                            <Option value="default">게시판을 선택해주세요.</Option>
+                            <Option value="option1">Option1</Option>
+                            <Option value="option2">Option2</Option>
+                            <Option value="option3">Option3</Option>
+                        </Select>
+                        
+                        {/* 게시판 제목 */}
+                        <Input value={state.title} onChange={onChangeInput} style={{ width: '100%', marginBottom: '15px' }} placeholder="제목을 입력해주세요." />
+                        
+                        {/* 게시판 내용 */}
+                        <CKEditor
+                        data={state.content}
+                        onChange={onChangeEditor}
+                        style={{marginBottom: '30px'}}
+                        />
+    
+                        {/* 게시판 버튼 */}
+                        <div className="buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                            <Button type="default" onClick={onCancel}>취소</Button>
+                            <Button type="primary" htmlType="submit">등록</Button>
+                        </div>
+                    </form>
+                </section>    
             </div>
-          </form>
-        </section>
-      </div>
-    </div>
-  );
+        </div>
+      );
+    })
 };
 
-export default styled(CreateBoard)``;
+export default styled(CreateBoard)`
+
+`;

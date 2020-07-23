@@ -7,7 +7,7 @@ import { EditOutlined } from '@ant-design/icons';
 import BoardList from "../../components/Board/List";
 import SearchInput from "../../components/SearchInput";
 import {useRouter} from "next/router";
-import { dummy } from './dummy';
+// import { dummy } from './dummy';
 
 
 const BoardPage = (props) => {

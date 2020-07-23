@@ -4,9 +4,9 @@ import { GetStaticPaths } from 'next';
 import { Button, Row } from 'antd';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useRouter } from 'next/router';
-import CommentList from '../../../components/Board/Comment/CommentList';
-import AddComment from '../../../components/Board/Comment/AddComment';
-import {dummy} from '../dummy';
+import CommentList from '../../components/Board/Comment/CommentList';
+import AddComment from '../../components/Board/Comment/AddComment';
+import {dummy} from '../../components/Board/dummy/dummy';
 
 
 const Board = (props) => {
