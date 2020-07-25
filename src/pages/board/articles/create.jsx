@@ -29,19 +29,22 @@ const CreateBoard = () => {
 
             const formData = {
                 // id: 1,
-                select: state.select,
+                writer: "하늘",
+                // select: state.select,
                 title: state.title,
-                content: state.content,
+                contents: state.content,
             }
 
 			console.log('폼 제출', formData);
 			
-			// Axios.post('http:1.1.1./1', formData, function(isSuccess, result) {
-			// 	console.log(result)
-			// })
+			Axios.post('http://141.164.41.213:8081/v1/api/board/', formData, function(isSuccess, result) {
+				console.log(result);
+			})
+
+
 
             // 글목록 or 해당 글로 이동
-            router.push('/board', `/board`);
+            // router.push('/board', `/board`);
         }
     
         const onChangeSelect = (e) => {
@@ -49,13 +52,13 @@ const CreateBoard = () => {
             state.select = e;
         }
 
-        const onChangeInput = (e) => {
+        const onChangeTitle = (e) => {
             console.log("title!!!", e.target.value);
             state.title = e.target.value;
         }
 
         const onChangeEditor = (e) => {
-            // input data 변경 -> mobx에서는 setState 어떻게 하나..?
+            // input data 변경 
             console.log("onEditorChange!", e.editor.getData());
             state.content = e.editor.getData();
         }
@@ -93,7 +96,7 @@ const CreateBoard = () => {
                         </Select>
                         
                         {/* 게시판 제목 */}
-                        <Input value={state.title} onChange={onChangeInput} style={{ width: '100%', marginBottom: '15px' }} placeholder="제목을 입력해주세요." />
+                        <Input value={state.title} onChange={onChangeTitle} style={{ width: '100%', marginBottom: '15px' }} placeholder="제목을 입력해주세요." />
                         
                         {/* 게시판 내용 */}
                         <CKEditor
@@ -102,7 +105,7 @@ const CreateBoard = () => {
                         style={{marginBottom: '30px'}}
                         />
     
-                        {/* 게시판 버튼 */}
+                        {/* 버튼 - 등록 & 취소 */}
                         <div className="buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                             <Button type="default" onClick={onCancel}>취소</Button>
                             <Button type="primary" htmlType="submit">등록</Button>

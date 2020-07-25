@@ -13,6 +13,7 @@ const handleSuccess = (response) => {
 };
 
 const handleError = (error) => {
+  console.log("error response", error);
   switch (error.response.status) {
     case 401:
       // 로그인이 필요합니다.
@@ -39,6 +40,7 @@ const handleError = (error) => {
 };
 
 instance.interceptors.response.use(handleSuccess, handleError);
+// instance.interceptors.response.use(handleSuccess);
 
 const AxiosWrapper = {
   async get(url, config) {

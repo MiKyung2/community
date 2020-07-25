@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { useObserver, useLocalStore } from 'mobx-react';
+import BoardAPI from "../../api/board";
+import axios from 'axios';
 
 import { Input, Menu, Dropdown } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
@@ -19,21 +21,41 @@ const SearchInput = () => {
       }
     });
 
-    const onSearch = (keyword) => {
+    const onSearch = async (searchKeyword) => {
       // 검색 키워드로 게시판 목록 api 요청
 
       const searchTerm = {
-        filter: state.menu,
-        keyword: keyword
+        gb: state.menu,
+        sort: state.menu,
+        keyword: searchKeyword
       }
 
-      console.log(searchTerm);
+      console.log("검색!", searchTerm);
+
+
+
+
+
+      
+      const {gb, sort, keyword} = searchTerm;
+      const res = await axios.get(`http://141.164.41.213:8081/v1/api/board/page?gb=${gb}&keyword=${keyword}&sort=${sort}`)
+
+      console.log("검색 결과 api 데이터", res.data);
+
+
+
+
+
+
+
+
+      // const boardListRes = await BoardAPI.searchInput(searchTerm);
+      // console.log(boardListRes);
     }
 
     const onClickMenu = (e) => {
       // console.log("필터 menu clicked!", e.target.dataset.name);
       
-    
       const target = e.target.dataset.name;
     
       if(target === "title") {
@@ -84,7 +106,7 @@ const SearchInput = () => {
     return (
       <div>
         <Dropdown overlay={menu}>
-          <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+          <a className="ant-dropdown-link">
             {filterName()}
             <DownOutlined />
           </a>

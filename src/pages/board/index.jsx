@@ -2,12 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import { useObserver, useLocalStore } from "mobx-react";
 import BoardAPI from "../../api/board";
-import { Row, Table, Button } from "antd";
+import { Row, Table, Column, Button } from "antd";
 import { EditOutlined } from '@ant-design/icons';
-import BoardList from "../../components/Board/List";
 import SearchInput from "../../components/SearchInput";
 import {useRouter} from "next/router";
-// import { dummy } from './dummy';
 
 
 const BoardPage = (props) => {
@@ -98,7 +96,7 @@ const BoardPage = (props) => {
           // console.log("Table Row Clicked!-index", parseInt(rowIndex));
 
           // 해당 게시물로 이동
-          router.push('/board/[id]', `/board/${rowIndex + 1}`);
+          router.push('/board/[id]', `/board/${rowIndex}`);
           
         }
       }
@@ -143,6 +141,11 @@ const BoardPage = (props) => {
           pagination={{ pageSize: 10 }}
           scroll={true}
         />
+          {/* {state.dataSource && state.dataSource.map(data => {
+            <Column />
+
+          })}
+        </Table> */}
 
         
       </div>
@@ -154,9 +157,9 @@ export const getStaticProps = async () => {
   const boardListRes = await BoardAPI.list({ 
     gb: "title",
     keyword: "title",
-    offset: 10,
-    pageNumber: 1,
-    pageSize: 10,
+    // offset: 10,
+    // pageNumber: 1,
+    // pageSize: 10,
     sort: "title"
    });
   return {
