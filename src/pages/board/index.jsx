@@ -7,7 +7,7 @@ import { EditOutlined } from "@ant-design/icons";
 import BoardList from "../../components/Board/BoardList";
 import SearchInput from "../../components/SearchInput";
 import { useRouter } from "next/router";
-import { dummy } from "./dummy";
+import { dummy } from "../../data/dummy";
 
 const BoardPage = (props) => {
   return useObserver(() => {
@@ -48,7 +48,7 @@ const BoardPage = (props) => {
           },
         ],
         // 게시판의 initial data 가져오기
-        dataSource: [...dummy],
+        dataSource: props.board.content,
         page: {
           total: 11,
           current: 1,

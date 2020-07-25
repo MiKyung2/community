@@ -1,0 +1,260 @@
+
+> new_project@1.0.0 dev /home/app-admin/community
+> next
+
+ready - started server on http://localhost:3000
+event - compiled successfully
+event - build page: /404
+wait  - compiling...
+event - compiled successfully
+[MobX] You haven't configured observer batching which might result in unexpected behavior in some cases. See more at https://github.com/mobxjs/mobx-react-lite/#observer-batching
+event - build page: /
+wait  - compiling...
+event - compiled successfully
+event - build page: /
+wait  - compiling...
+event - compiled successfully
+event - build page: /404
+wait  - compiling...
+event - compiled successfully
+event - build page: /404
+wait  - compiling...
+event - compiled successfully
+event - build page: /accounts/login
+wait  - compiling...
+event - build page: /board
+event - compiled successfully
+board props { board: [], className: 'sc-fzqNJr hxNjvU' }
+Warning: Each child in a list should have a unique "key" prop.
+
+Check the top-level render call using <ul>. See https://fb.me/react-warning-keys for more information.
+    in li (at board/index.jsx:116)
+    in BoardPage
+    in Styled(BoardPage) (at _app.jsx:17)
+    in main
+    in Basic
+    in Context.Consumer
+    in Content (at Layout/index.jsx:83)
+    in section
+    in Context.Provider
+    in Context.Consumer
+    in BasicLayout
+    in Context.Consumer
+    in Layout (at Layout/index.jsx:53)
+    in LayoutComponent
+    in Styled(LayoutComponent) (at _app.jsx:16)
+    in Context.Provider (at _app.jsx:15)
+    in Fragment
+    in App
+    in Styled(App) (at _document.jsx:13)
+    in Context.Provider
+    in Context.Provider
+    in StyleSheetManager
+    in Unknown
+    in Context.Provider
+    in Context.Provider
+    in Context.Provider
+    in AppContainer
+event - build page: /
+wait  - compiling...
+event - compiled successfully
+event - build page: /
+wait  - compiling...
+event - compiled successfully
+event - build page: /
+wait  - compiling...
+event - compiled successfully
+event - build page: /
+wait  - compiling...
+event - compiled successfully
+board props { board: [], className: 'sc-fzolEj eraoIH' }
+event - build page: /board/[id]
+wait  - compiling...
+event - compiled successfully
+board props { board: [], className: 'sc-fzpkJw kCbDsR' }
+event - build page: /
+wait  - compiling...
+event - compiled successfully
+event - build page: /404
+wait  - compiling...
+event - compiled successfully
+board props { board: [], className: 'sc-fzoJMP iaGbYf' }
+board props { board: [], className: 'sc-fzoaKM mdAzz' }
+board props { board: [], className: 'sc-fzoaKM mdAzz' }
+board props { board: [], className: 'sc-fzoaKM mdAzz' }
+board props { board: [], className: 'sc-fzoaKM mdAzz' }
+event - build page: /
+wait  - compiling...
+event - compiled successfully
+event - build page: /
+wait  - compiling...
+event - compiled successfully
+event - build page: /
+wait  - compiling...
+event - compiled successfully
+event - build page: /
+wait  - compiling...
+event - compiled successfully
+board props { board: [], className: 'sc-fzplgP cQxKnk' }
+event - build page: /board/[id]
+wait  - compiling...
+event - compiled successfully
+board props { board: [], className: 'sc-fzqOul hVLfno' }
+event - build page: /404
+wait  - compiling...
+event - compiled successfully
+event - build page: /404
+wait  - compiling...
+event - compiled successfully
+event - build page: /404
+wait  - compiling...
+event - compiled successfully
+board props { board: [], className: 'sc-fznNvL gsopEx' }
+event - build page: /accounts/login
+wait  - compiling...
+internal/child_process.js:406
+    throw errnoException(err, 'spawn');
+    ^
+
+Error: spawn ENOMEM
+    at ChildProcess.spawn (internal/child_process.js:406:11)
+    at spawn (child_process.js:553:9)
+    at Object.fork (child_process.js:121:10)
+    at ChildProcessWorker.initialize (/home/app-admin/community/node_modules/jest-worker/build/workers/ChildProcessWorker.js:137:44)
+    at ChildProcessWorker.onExit (/home/app-admin/community/node_modules/jest-worker/build/workers/ChildProcessWorker.js:263:12)
+    at ChildProcess.emit (events.js:314:20)
+    at Process.ChildProcess._handle.onexit (internal/child_process.js:276:12) {
+  errno: -12,
+  code: 'ENOMEM',
+  syscall: 'spawn'
+}
+npm ERR! code ELIFECYCLE
+npm ERR! errno 1
+npm ERR! new_project@1.0.0 dev: `next`
+npm ERR! Exit status 1
+npm ERR! 
+npm ERR! Failed at the new_project@1.0.0 dev script.
+npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /home/app-admin/.npm/_logs/2020-07-17T23_10_13_867Z-debug.log
+
+Usage: npm <command>
+
+where <command> is one of:
+    access, adduser, audit, bin, bugs, c, cache, ci, cit,
+    clean-install, clean-install-test, completion, config,
+    create, ddp, dedupe, deprecate, dist-tag, docs, doctor,
+    edit, explore, fund, get, help, help-search, hook, i, init,
+    install, install-ci-test, install-test, it, link, list, ln,
+    login, logout, ls, org, outdated, owner, pack, ping, prefix,
+    profile, prune, publish, rb, rebuild, repo, restart, root,
+    run, run-script, s, se, search, set, shrinkwrap, star,
+    stars, start, stop, t, team, test, token, tst, un,
+    uninstall, unpublish, unstar, up, update, v, version, view,
+    whoami
+
+npm <command> -h  quick help on <command>
+npm -l            display full usage info
+npm help <term>   search for help on <term>
+npm help npm      involved overview
+
+Specify configs in the ini-formatted file:
+    /home/app-admin/.npmrc
+or on the command line via: npm <command> --key value
+Config info can be viewed via: npm help config
+
+npm@6.14.5 /usr/local/lib/node_modules/npm
+
+Did you mean one of these?
+    get
+    set
+    test
+
+> new_project@1.0.0 dev /home/app-admin/community
+> next
+
+ready - started server on http://localhost:3000
+event - compiled successfully
+event - build page: /
+wait  - compiling...
+event - compiled successfully
+[MobX] You haven't configured observer batching which might result in unexpected behavior in some cases. See more at https://github.com/mobxjs/mobx-react-lite/#observer-batching
+event - build page: /404
+wait  - compiling...
+event - compiled successfully
+event - build page: /board
+wait  - compiling...
+event - build page: /accounts/login
+event - compiled successfully
+board props { board: [], className: 'sc-fznyAO foHXAe' }
+Warning: Each child in a list should have a unique "key" prop.
+
+Check the top-level render call using <ul>. See https://fb.me/react-warning-keys for more information.
+    in li (at board/index.jsx:116)
+    in BoardPage
+    in Styled(BoardPage) (at _app.jsx:17)
+    in main
+    in Basic
+    in Context.Consumer
+    in Content (at Layout/index.jsx:83)
+    in section
+    in Context.Provider
+    in Context.Consumer
+    in BasicLayout
+    in Context.Consumer
+    in Layout (at Layout/index.jsx:53)
+    in LayoutComponent
+    in Styled(LayoutComponent) (at _app.jsx:16)
+    in Context.Provider (at _app.jsx:15)
+    in Fragment
+    in App
+    in Styled(App) (at _document.jsx:13)
+    in Context.Provider
+    in Context.Provider
+    in StyleSheetManager
+    in Unknown
+    in Context.Provider
+    in Context.Provider
+    in Context.Provider
+    in AppContainer
+event - build page: /404
+wait  - compiling...
+event - compiled successfully
+event - build page: /board
+wait  - compiling...
+event - compiled successfully
+event - build page: /board
+wait  - compiling...
+event - compiled successfully
+board props { board: [], className: 'sc-fzqNqU jfPNbA' }
+board props { board: [], className: 'sc-fzqNqU jfPNbA' }
+event - build page: /
+wait  - compiling...
+event - compiled successfully
+event - build page: /404
+wait  - compiling...
+event - compiled successfully
+event - build page: /board
+wait  - compiling...
+event - compiled successfully
+board props { board: [], className: 'sc-fzqPZZ gMKVzG' }
+event - build page: /board/[id]
+wait  - compiling...
+event - compiled successfully
+board props { board: [], className: 'sc-fzomME cHyEEx' }
+board props { board: [], className: 'sc-fzomME cHyEEx' }
+board props { board: [], className: 'sc-fzomME cHyEEx' }
+board props { board: [], className: 'sc-fzomME cHyEEx' }
+board props { board: [], className: 'sc-fzomME cHyEEx' }
+board props { board: [], className: 'sc-fzomME cHyEEx' }
+board props { board: [], className: 'sc-fzomME cHyEEx' }
+board props { board: [], className: 'sc-fzomME cHyEEx' }
+event - build page: /
+wait  - compiling...
+event - compiled successfully
+event - build page: /
+wait  - compiling...
+event - compiled successfully
+board props { board: [], className: 'sc-fzomuh dCQzfM' }
+board props { board: [], className: 'sc-fzomuh dCQzfM' }
