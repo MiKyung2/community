@@ -4,7 +4,7 @@ import { useObserver, useLocalStore } from "mobx-react";
 import BoardAPI from "../../api/board";
 import { Row, Table, Button } from "antd";
 import { EditOutlined } from "@ant-design/icons";
-import BoardList from "../../components/Board/List";
+import BoardList from "../../components/Board/BoardList";
 import SearchInput from "../../components/SearchInput";
 import { useRouter } from "next/router";
 import { dummy } from "./dummy";
