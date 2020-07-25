@@ -8,7 +8,7 @@ import {
   EyeOutlined,
 } from "@ant-design/icons";
 import { List, Avatar } from "antd";
-import IconText from "./_views/IconText/component";
+import IconText from "../common/IconText";
 
 const BoardList = (props) => {
   console.log("boardlist data", props.dataSource.board.content);

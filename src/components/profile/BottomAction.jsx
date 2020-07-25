@@ -4,7 +4,7 @@ import { Row, Col } from "antd";
 
 const ButtomAction = (props) => {
   return (
-    <Col>
+    <Col onClick={props.onClick}>
       <Row align="middle" justify="center">
         <Col>{props.title}</Col>
       </Row>
