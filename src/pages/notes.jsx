@@ -1,7 +1,7 @@
 import { useLocalStore, useObserver } from "mobx-react-lite";
 import { Table, Button, Tabs, Popconfirm, message } from "antd";
 import NoteAPI from "../api/note";
-import SendNote from "../components/note/sendNote";
+import SendNote from "../components/note/SendNote";
 
 const { TabPane } = Tabs;
 
