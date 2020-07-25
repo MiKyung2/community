@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useObserver, useLocalStore } from "mobx-react";
 import BoardAPI from "../../api/board";
 import { Row, Table } from "antd";
-import BoardList from "../../components/Board/List";
+import BoardList from "../../components/Board/BoardList";
 import SearchInput from "../../components/SearchInput";
 import Router from "next/router";
 

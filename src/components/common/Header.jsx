@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 
-import { Layout, Menu, Badge, List, Avatar } from "antd";
+import { Layout, Menu, Badge, List, Avatar, Popover, Button } from "antd";
 const { Header } = Layout;
 
 import { MessageOutlined, BellOutlined, UserOutlined } from "@ant-design/icons";
@@ -53,64 +53,35 @@ const LayoutHeader = (props) => {
           </Menu.Item>
         ))}
       </Menu>
-      <Menu
-        className="alert-menu"
-        theme="dark"
-        mode="horizontal"
-        defaultSelectedKeys={["1"]}
-      >
-        <Menu.Item
-          onClick={() => {
-            router.push("/notes");
-          }}
+      <div className="alert-menu">
+        <Popover
+          placement="bottomRight"
+          content={<div>content</div>}
+          trigger="click"
         >
-          <Badge count={cnt.commentNotReadCnt}>
-            <a href="#" className="head-example">
-              <MessageOutlined />
-            </a>
-          </Badge>
-          {/* <div className="board">
-            <List
-              itemLayout="horizontal"
-              dataSource={data}
-              renderItem={(item) => (
-                <List.Item>
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                    }
-                    title={<a href="https://ant.design">{item.title}</a>}
-                    description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                  />
-                </List.Item>
-              )}
-            />
-          </div> */}
-        </Menu.Item>
-        <Menu.Item
-          onClick={() => {
-            router.push("/profile");
-          }}
-        >
+          <Button onClick={() => { router.push("/notes")}}>
+            <Badge count={cnt.commentNotReadCnt}>
+              <a href="#" className="head-example">
+                <MessageOutlined />
+              </a>
+            </Badge>
+          </Button>
+        </Popover>
+        <Button>
           <Badge count={cnt.boardNotReadCnt}>
             <a href="#" className="head-example">
               <BellOutlined />
             </a>
           </Badge>
-          {/* <div className="board"></div> */}
-        </Menu.Item>
-        <Menu.Item
-          onClick={() => {
-            router.push("/profile");
-          }}
-        >
+        </Button>
+        <Button onClick={() => { router.push("/profile")}}>
           <Badge count={cnt.followNotReadCnt}>
             <a href="#" className="head-example">
               <UserOutlined />
             </a>
           </Badge>
-        </Menu.Item>
-      </Menu>
+        </Button>
+      </div>
     </Header>
   );
 };

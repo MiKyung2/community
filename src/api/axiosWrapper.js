@@ -13,7 +13,7 @@ const handleSuccess = (response) => {
 };
 
 const handleError = (error) => {
-  switch (error.response.status) {
+  switch (error?.response?.status) {
     case 401:
       // 로그인이 필요합니다.
       console.log("error 401, 로그인이 필요합니다.");

@@ -1,8 +1,7 @@
-import { useRouter } from "next/router";
 import styled from "styled-components";
 
-import { Layout, Menu, Badge } from "antd";
-const { Content, Header } = Layout;
+import { Layout } from "antd";
+const { Content } = Layout;
 
 import dynamic from "next/dynamic";
 
@@ -19,9 +18,9 @@ const Footer = dynamic({
 const LayoutComponent = (props) => {
   return (
     <Layout className={props.className}>
-      <Header className="layout-header">
+      <div className="layout-header">
         <LayoutHeader />
-      </Header>
+      </div>
 
       <div className="layout-content">
         <Content className="content">{props.children}</Content>
