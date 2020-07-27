@@ -1,17 +1,18 @@
-import * as React from "react";
-import NextApp, { AppContext as NextAppContext } from "next/app";
-import { useLocalStore } from "mobx-react-lite";
-import App from "next/app";
-import cookie from "cookie";
+import * as React from 'react';
+import NextApp, { AppContext as NextAppContext } from 'next/app';
+import { useLocalStore } from 'mobx-react-lite';
+import App from 'next/app';
+import cookie from 'cookie';
 
 const initializer = (props) => {
   const state = {
     status: { loading: false },
     user: {
-      id: props.init?.user.id,
-      name: props.init?.user.name,
-      token: props.init?.user.token,
-      level: props.init?.user.level,
+      id: '',
+      email: '',
+      name: '',
+      token: '',
+      level: '',
     },
   };
 
@@ -19,15 +20,21 @@ const initializer = (props) => {
 };
 
 const dispatch = ($) => {
-  const login = () => {
-    $.state.user.token = "";
+  const signup = () => {
+    console.log('signup message')
+  };
+
+  const login = (data) => {
+    $.state.user.email = data.userId;
+    $.state.user.token = data.token;
   };
 
   const logout = () => {
-    $.state.user.token = "";
+    $.state.user.token = '';
   };
 
   return {
+    signup,
     login,
     logout,
   };
@@ -48,19 +55,22 @@ App.getInitialProps = async (appContext) => {
   const ctx = appContext.ctx;
 
   const ssr = !!appContext.ctx.req;
-  const ck = cookie.parse((ctx.req ? ctx.req.headers.cookie : document.cookie) ?? "");
+  const ck = cookie.parse(
+    (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
+  );
 
-  const token = ck.auth ?? "";
+  const token = ck.auth ?? '';
 
   return {
     ...nextAppProps,
-    ssr, cookie,
+    ssr,
+    cookie,
     init: {
       user: {
         token,
-      }
+      },
     },
-  }
-}
+  };
+};
 
 export default useApp;

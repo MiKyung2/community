@@ -57,14 +57,47 @@ const columns = [
 ];
 
 
+<<<<<<< HEAD
 const BoardPage = (props) => {
   console.log("boardpage props", props);
 
+=======
+>>>>>>> d2dbf70... 게시판 메인 화면 정렬 draft 완료
   return useObserver(() => {
     const router = useRouter();
 
     const state = useLocalStore(() => {
       return {
+<<<<<<< HEAD
+=======
+        columns: [{
+          title: "번호",
+          dataIndex: "id",
+          key: "id",
+        },
+        {
+          title: "제목",
+          dataIndex: "title",
+          key: "title",
+        }, {
+          title: "작성자",
+          dataIndex: "writer",
+          key: "writer",
+        }, {
+          title: "좋아요",
+          dataIndex: "rowLike",
+          key: "rowLike",
+        }, {
+          title: "조회수",
+          dataIndex: "viewCount",
+          key: "viewCount",
+        }, {
+          title: "댓글수",
+          dataIndex: "commentCnt",
+          key: "commentCnt",
+        }],
+        // 게시판의 initial data 가져오기
+>>>>>>> d2dbf70... 게시판 메인 화면 정렬 draft 완료
         dataSource: props.listByLike,
         page: {
           pageSize: 10,
@@ -73,6 +106,7 @@ const BoardPage = (props) => {
       };
     });
 
+<<<<<<< HEAD
     const onClickFilter = (selectedFilter) => {
       // console.log("onclickFIlter", e.target.id);
       const target = selectedFilter.target.id;
@@ -96,6 +130,22 @@ const BoardPage = (props) => {
         default :
           console.log("default-최신순?");
           // console.error("filter error");
+=======
+    const filterLists = ['좋아요순', '댓글순', '조회수순'];
+
+    // 검색 필터 변경
+    const onClickFilter = (index) => {
+
+      if (index === 0) {
+        //  "좋아요순"으로 해당 게시판 게시물 불러오는 api
+        state.dataSource = props.listByLike;
+      } else if (index === 1) {
+        //  "댓글순"으로 해당 게시판 게시물 불러오는 api
+        state.dataSource = props.listByComment;
+      } else {
+        // "조회수순"으로 해당 게시판 게시물 불러오는 api
+        state.dataSource = props.listByViewCnt;
+>>>>>>> d2dbf70... 게시판 메인 화면 정렬 draft 완료
       }
     }
 
@@ -115,6 +165,7 @@ const BoardPage = (props) => {
       }
     }
 
+<<<<<<< HEAD
     const onChangePage = (page, pageSize) => {
       // console.log("page:", page, "pageSize", pageSize);
       state.page.currentPage = page;
@@ -129,6 +180,14 @@ const BoardPage = (props) => {
     const onClickNewPostBtn = () => {
       router.push("/board/articles/create");
     };
+=======
+    // Search Input 
+    const onSubmitSearchInput = (searchResult) => {
+      console.log("submit search inputtt", searchResult);
+      state.dataSource = searchResult;
+    }
+
+>>>>>>> d2dbf70... 게시판 메인 화면 정렬 draft 완료
 
 
 

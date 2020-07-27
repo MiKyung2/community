@@ -11,8 +11,8 @@ import { observerBatching } from "mobx-react-lite";
 observerBatching();
 
 function App(props) {
+  const app = useApp(props);
   return useObserver(() => {
-    const app = useApp(props);
     return (
       <>
         <GlobalStyle />

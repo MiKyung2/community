@@ -7,6 +7,7 @@ const BoardAPI = {
   list: async (payload) => {
 
     const {gb, sort} = payload;
+<<<<<<< HEAD
 
     try {
       const res = await AxiosWrapper.get(
@@ -81,11 +82,49 @@ const BoardAPI = {
 
     try {
       const res = await AxiosWrapper.post('board/delete', payload);
+=======
+
+    try {
+      const res = await AxiosWrapper.get(
+        // `board/page?gb=${gb}&keyword=${keyword}&offset=${offset}&pageNumber=${pageNumber}&pageSize=${pageSize}&sort=${sort}`
+        `board/page?gb=${gb}&sort=${sort}`
+      );
 
       return res;
     } catch (error) {
       // throw error;
       console.error(error);
+    }
+  },
+  search: async (payload) => {
+
+    const {gb, sort, keyword} = payload;
+
+    try {
+      const res = await AxiosWrapper.get(
+        // `board/page?gb=${gb}&keyword=${keyword}&offset=${offset}&pageNumber=${pageNumber}&pageSize=${pageSize}&sort=${sort}`
+        `board/page?gb=${gb}&sort=${sort}&keyword=${keyword}`
+      );
+>>>>>>> d2dbf70... 게시판 메인 화면 정렬 draft 완료
+
+      return res;
+    } catch (error) {
+      // throw error;
+      console.error(error);
+<<<<<<< HEAD
+=======
+    }
+  },
+  write: async (payload) => {
+
+    try {
+      const res = await AxiosWrapper.post('board/write', payload);
+
+      return res;
+    } catch (error) {
+      // throw error;
+      console.error(error);
+>>>>>>> e2df469... edit accounts
     }
   },
 };

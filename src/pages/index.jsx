@@ -1,9 +1,12 @@
-import styled from "styled-components";
-import { useObserver } from "mobx-react";
-import { useRouter } from "next/router";
+import styled from 'styled-components';
+import { useObserver } from 'mobx-react';
+import { useRouter } from 'next/router';
+import useApp from '../hooks/app'
 
 const Home = (props) => {
+ 
   return useObserver(() => {
+
     const router = useRouter();
 
     return <div className={props.className}>home</div>;
