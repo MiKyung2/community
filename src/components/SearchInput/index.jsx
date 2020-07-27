@@ -10,6 +10,7 @@ const { Search } = Input;
 
 
 const SearchInput = () => {
+<<<<<<< HEAD
 
   return useObserver(() => {
 
@@ -120,6 +121,43 @@ const SearchInput = () => {
       </div>
     );
   });
+=======
+  const menu = (
+    <Menu>
+      <Menu.Item>
+        <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+          제목
+        </a>
+      </Menu.Item>
+      <Menu.Item>
+        <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+          글쓴이
+        </a>
+      </Menu.Item>
+    </Menu>
+  );
+
+  const onSearch = (keyword) => {
+      // 검색 키워드로 게시판 목록 api 요청
+      console.log("검색 키워드:", keyword);
+  }
+
+  return (
+    <div>
+      <Dropdown overlay={menu}>
+        <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+          필터 
+          <DownOutlined />
+        </a>
+      </Dropdown>
+      <Search 
+        placeholder="검색어를 입력하세요." 
+        onSearch={onSearch} 
+        enterButton 
+      />
+    </div>
+  );
+>>>>>>> 05018038492155c1304e56896f94d54fb6bd8aaf
 };
 
 export default styled(SearchInput)`
