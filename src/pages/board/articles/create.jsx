@@ -37,7 +37,7 @@ const CreateBoard = () => {
 
 			console.log('폼 제출', formData);
 			
-			Axios.post('http://141.164.41.213:8081/v1/api/board/', formData, function(isSuccess, result) {
+			Axios.post('http://141.164.41.213:8081/v1/api/board/write', formData, function(isSuccess, result) {
 				console.log(result);
 			})
 
