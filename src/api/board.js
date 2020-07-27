@@ -18,6 +18,22 @@ const BoardAPI = {
       throw error;
     }
   },
+  // searchInput: async(payload) => {
+  //   const {gb, keyword, sort} = payload;
+
+  //   try {
+  //     const res = await AxiosWrapper.get(
+  //       `board/page?gb=${gb}&keyword=${keyword}&sort=${sort}`
+  //     );
+  //     // const res = await AxiosWrapper.get(
+  //     //   `/board/page?pageNumber=10` + `&title=${payload.title}`
+  //     // );
+
+  //     return res;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 };
 
 export default BoardAPI;

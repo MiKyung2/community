@@ -39,6 +39,7 @@ const handleError = (error) => {
 };
 
 instance.interceptors.response.use(handleSuccess, handleError);
+// instance.interceptors.response.use(handleSuccess);
 
 const AxiosWrapper = {
   async get(url, config) {
