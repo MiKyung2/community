@@ -20,10 +20,6 @@ const CreateBoard = () => {
             }
         });
 
-        const postForm = async (formData) => {
-            const boardPostRes = await BoardAPI.write(formData);
-        }
-
         const onSubmitForm = (e) => {
             e.preventDefault();
 
@@ -35,7 +31,7 @@ const CreateBoard = () => {
                 contents: state.content,
             }
 
-            postForm(formData);
+            BoardAPI.write(formData);
 
             // 글목록 or 해당 글로 이동
             router.push('/board', `/board`);
