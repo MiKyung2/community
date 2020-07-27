@@ -29,7 +29,7 @@ const CreateBoard = () => {
 
             const formData = {
                 // id: 1,
-                writer: "하늘",
+                writer: "ally",
                 // select: state.select,
                 title: state.title,
                 contents: state.content,
