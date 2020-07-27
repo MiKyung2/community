@@ -13,7 +13,8 @@ const BoardAPI = {
 
       return res;
     } catch (error) {
-      throw error;
+      // throw error;
+      console.error(error);
     }
   },
   search: async (payload) => {
@@ -28,7 +29,19 @@ const BoardAPI = {
 
       return res;
     } catch (error) {
-      throw error;
+      // throw error;
+      console.error(error);
+    }
+  },
+  write: async (payload) => {
+
+    try {
+      const res = await AxiosWrapper.post('board/write', payload);
+
+      return res;
+    } catch (error) {
+      // throw error;
+      console.error(error);
     }
   },
 };

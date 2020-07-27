@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { useObserver, useLocalStore } from 'mobx-react';
 import BoardAPI from "../../api/board";
-import axios from 'axios';
 
 import { Input, Menu, Dropdown } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
