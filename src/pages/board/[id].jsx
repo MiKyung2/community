@@ -9,27 +9,25 @@ import CommentList from '../../components/Board/Comment/CommentList';
 import AddComment from '../../components/Board/Comment/AddComment';
 import {dummy} from '../../components/Board/dummy/dummy';
 
+let queryId;
 
 const Board = (props) => {
 
   const router = useRouter();
-  const queryId = router.query.id;
-  // const currentDataId = queryId -1;
+  queryId = router.query.id;
 
+
+  console.log("details initial data", props)
 
   return useObserver(() => {
 
     const state = useLocalStore(() => {
       return {
-        data: props.props.board.content
+        // data: props.board.content
       };
     });
 
     // 해당 게시판 currentData
-    const currentData = props.props.board.content[queryId];
-
-
-    console.log("state data", props.props.board.content[queryId])
 
     
     const onClickBackToList = () => {
@@ -45,7 +43,7 @@ const Board = (props) => {
                 // maxWidth: '75%',
       }}>
         <Row justify="space-between" style={{marginBottom: '30px'}}>
-          <h2 style={{marginBottom: '40px'}}>{currentData.title}</h2>
+          {/* <h2 style={{marginBottom: '40px'}}>{currentData.title}</h2> */}
           <Button type="default" onClick={onClickBackToList}>글 목록</Button>
         </Row>
 
@@ -57,8 +55,8 @@ const Board = (props) => {
                 marginBottom: '20px',
                 padding: '0 6px'
         }}>
-          <span><strong>작성일:</strong> {currentData.createdDate}</span>
-          <span><strong>작성자:</strong> {currentData.writer}</span>
+          {/* <span><strong>작성일:</strong> {currentData.createdDate}</span> */}
+          {/* <span><strong>작성자:</strong> {currentData.writer}</span> */}
         </div>
         
         {/* 게시판 내용 */}
@@ -83,7 +81,8 @@ const Board = (props) => {
                 // border: '1px solid blue',
                 marginTop: '20px',
               }}>
-                {currentData.contents}
+                {/* {currentData.contents} */}
+
             {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. 
             Cum ad odio suscipit et. Animi, veniam est, blanditiis ducimus 
             laboriosam iusto nulla fuga quidem soluta voluptatum repellat ad. 
@@ -130,20 +129,17 @@ const Board = (props) => {
 
 Board.getInitialProps = async () => {
 
+  const id = queryId;
+
   // 여기에서 "queryId"에 맞는 정보 api fetch 해오기
   // async - await
 
-  const boardListRes = await BoardAPI.list({ 
-    gb: "title",
-    keyword: "title",
-    offset: 10,
-    pageNumber: 1,
-    pageSize: 10,
-    sort: "title"
+  const boardDetailRes = await BoardAPI.detail({ 
+    id: queryId
    });
   return {
     props: {
-      board: boardListRes.body,
+      board: boardDetailRes,
     },
   };
 

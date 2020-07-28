@@ -44,6 +44,22 @@ const BoardAPI = {
       console.error(error);
     }
   },
+  detail: async (payload) => {
+
+    const {id} = payload;
+
+    console.log("detail api - id", id)
+
+    try {
+      const res = await AxiosWrapper.get(
+        `board/page?${id}`
+      );
+      return res;
+    } catch (error) {
+      // throw error;
+      console.error(error);
+    }
+  },
 };
 
 export default BoardAPI;

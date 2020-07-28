@@ -12,6 +12,7 @@ const BoardPage = (props) => {
 
   return useObserver(() => {
     const router = useRouter();
+    console.log("props", props);
 
     const state = useLocalStore(() => {
       return {
@@ -50,26 +51,30 @@ const BoardPage = (props) => {
       };
     });
 
+
+    // const tempInitialData = props.listByLike;
+    // const initialIndex = tempInitialData.map((item, index) => {return index});
+    // console.log("initial data temp", tempInitialData, "index", initialIndex)
+
     const filterLists = ['좋아요순', '댓글순', '조회수순'];
 
     // 검색 필터 변경
     const onClickFilter = (index) => {
 
       if (index === 0) {
-        //  "좋아요순"으로 해당 게시판 게시물 불러오는 api
+        //  "좋아요순"
         state.dataSource = props.listByLike;
       } else if (index === 1) {
-        //  "댓글순"으로 해당 게시판 게시물 불러오는 api
+        //  "댓글순"
         state.dataSource = props.listByComment;
       } else {
-        // "조회수순"으로 해당 게시판 게시물 불러오는 api
+        // "조회수순"
         state.dataSource = props.listByViewCnt;
       }
     };
 
-    // 새글쓰기 버튼 클릭
+    // 새글쓰기
     const onClickNewPostBtn = () => {
-      console.log("새글쓰기");
       router.push("/board/articles/create");
     };
 
@@ -80,6 +85,8 @@ const BoardPage = (props) => {
           // console.log("Table Row Clicked!-record", record);
           // console.log("Table Row Clicked!-index", parseInt(rowIndex));
 
+          // console.log("해당 게시물 이동", state.dataSource.data);
+
           // 해당 게시물로 이동
           router.push('/board/[id]', `/board/${rowIndex}`);
           
@@ -87,7 +94,7 @@ const BoardPage = (props) => {
       }
     }
 
-    // Search Input 
+    // 필터&검색
     const onSubmitSearchInput = (searchResult) => {
       console.log("submit search inputtt", searchResult);
       state.dataSource = searchResult;
@@ -137,11 +144,11 @@ const BoardPage = (props) => {
           pagination={{ pageSize: 10 }}
           scroll={true}
         />
-          {/* {state.dataSource && state.dataSource.map(data => {
-            <Column />
+          {/* {state.dataSource && state.dataSource.map(data => { */}
+            {/* <Column key="00" dataIndex="dataindex" /> */}
 
-          })}
-        </Table> */}
+          {/* })} */}
+        {/* </Table> */}
 
         
       </div>
