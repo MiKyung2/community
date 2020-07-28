@@ -1,4 +1,4 @@
-import React, {createElement} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import { GetStaticPaths } from 'next';
 import { Button, Row } from 'antd';
@@ -7,29 +7,24 @@ import { useRouter } from 'next/router';
 import BoardAPI from "../../api/board";
 import CommentList from '../../components/Board/Comment/CommentList';
 import AddComment from '../../components/Board/Comment/AddComment';
-import {dummy} from '../../components/Board/dummy/dummy';
 
 
 const Board = (props) => {
 
-  const router = useRouter();
-  const queryId = router.query.id;
-  // const currentDataId = queryId -1;
+  console.log("props ctx", props)
 
+  // const router = useRouter();
+  // Board.getInitialProps(router.query.id);
 
   return useObserver(() => {
 
     const state = useLocalStore(() => {
       return {
-        data: props.props.board.content
+        // data: props.board.content
       };
     });
 
     // 해당 게시판 currentData
-    const currentData = props.props.board.content[queryId];
-
-
-    console.log("state data", props.props.board.content[queryId])
 
     
     const onClickBackToList = () => {
@@ -45,7 +40,7 @@ const Board = (props) => {
                 // maxWidth: '75%',
       }}>
         <Row justify="space-between" style={{marginBottom: '30px'}}>
-          <h2 style={{marginBottom: '40px'}}>{currentData.title}</h2>
+          {/* <h2 style={{marginBottom: '40px'}}>{currentData.title}</h2> */}
           <Button type="default" onClick={onClickBackToList}>글 목록</Button>
         </Row>
 
@@ -57,8 +52,8 @@ const Board = (props) => {
                 marginBottom: '20px',
                 padding: '0 6px'
         }}>
-          <span><strong>작성일:</strong> {currentData.createdDate}</span>
-          <span><strong>작성자:</strong> {currentData.writer}</span>
+          {/* <span><strong>작성일:</strong> {currentData.createdDate}</span> */}
+          {/* <span><strong>작성자:</strong> {currentData.writer}</span> */}
         </div>
         
         {/* 게시판 내용 */}
@@ -83,23 +78,7 @@ const Board = (props) => {
                 // border: '1px solid blue',
                 marginTop: '20px',
               }}>
-                {currentData.contents}
-            {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Cum ad odio suscipit et. Animi, veniam est, blanditiis ducimus 
-            laboriosam iusto nulla fuga quidem soluta voluptatum repellat ad. 
-            Ducimus, ipsam numquam!<br/><br/>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Itaque sint reprehenderit molestiae in assumenda dolores odio deserunt 
-            fugit! Dolore magnam fugit molestiae nihil ea, 
-            deleniti alias impedit quisquam consequuntur quidem?<br/><br/>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Itaque sint reprehenderit molestiae in assumenda dolores odio deserunt 
-            fugit! Dolore magnam fugit molestiae nihil ea, 
-            deleniti alias impedit quisquam consequuntur quidem?<br/><br/>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Itaque sint reprehenderit molestiae in assumenda dolores odio deserunt 
-            fugit! Dolore magnam fugit molestiae nihil ea, 
-            deleniti alias impedit quisquam consequuntur quidem? */}
+                {/* {currentData.contents} */}
             </p>
           </div>
         </div>
@@ -127,27 +106,32 @@ const Board = (props) => {
 };
 
 
+// export async function getStaticPaths() {
+//   return {
+//     paths: 
+//       `/board/8`,
+//     fallback: true,
+//   }
+// }
 
-Board.getInitialProps = async () => {
 
-  // 여기에서 "queryId"에 맞는 정보 api fetch 해오기
-  // async - await
+// export const getStaticProps = async (ctx) => {
 
-  const boardListRes = await BoardAPI.list({ 
-    gb: "title",
-    keyword: "title",
-    offset: 10,
-    pageNumber: 1,
-    pageSize: 10,
-    sort: "title"
-   });
-  return {
-    props: {
-      board: boardListRes.body,
-    },
-  };
+//   console.log("ctx - 찾아라queryId", ctx);
 
-}
+//   // const boardDetailRes = await BoardAPI.detail({ 
+//   //   id: ctx.query
+//   //  });
+
+//   //  console.log("boardDetailRes", boardDetailRes)
+//   return {
+//     // props: {
+//     //   board: boardDetailRes,
+//     // },
+//     ctx: ctx
+//   };
+
+// }
 
 
 export default Board;

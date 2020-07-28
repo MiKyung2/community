@@ -1,48 +1,113 @@
-import styled from "styled-components";
-import { Select, Input, Button } from "antd";
+import React from 'react';
+import styled from 'styled-components';
+import { useObserver, useLocalStore } from 'mobx-react';
+import { Select, Input, Button, Avatar } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import CKEditor from 'ckeditor4-react';
+import {useRouter} from 'next/router';
+import BoardAPI from "../../../api/board";
 
 const { Option } = Select;
+const CreateBoard = () => {
+    return useObserver(() => {
 
-const ModifyBoard = () => {
-  const handleChange = () => {
-    console.log("handle change of select:");
-  };
+        const router = useRouter();
+        const state = useLocalStore(() => {
+            return {
+                select: '',
+                title: '오케오케',
+                content: ''
+            }
+        });
 
-  const cancle = (e) => {
-    console.log("게시글 수정 - 취소");
-  };
+        const onSubmitForm = (e) => {
+            e.preventDefault();
 
-  const modify = (e) => {
-    console.log("게시글 수정 - 수정");
-  };
+            const formData = {
+                id: 56,
+                writer: "ally",
+                title: state.title,
+                contents: state.content,
+            }
 
-  return (
-    <div>
-      <h2>게시글 수정</h2>
-      <div>
-        <Select
-          defaultValue="default"
-          style={{ width: "80%" }}
-          onChange={handleChange}
-        >
-          <Option value="default">게시판을 선택해주세요.</Option>
-          <Option value="option1">Option1</Option>
-          <Option value="option2">Option2</Option>
-          <Option value="option3">Option3</Option>
-        </Select>
-        <Input style={{ width: "80%" }} placeholder="게시글 예시1" />
-        {/* 내용 입력칸 + 에디터 기능 추가 */}
-      </div>
-      <div className="board__buttons">
-        <Button type="default" onClick={cancle}>
-          취소
-        </Button>
-        <Button type="primary" onClick={modify}>
-          수정
-        </Button>
-      </div>
-    </div>
-  );
+            BoardAPI.edit(formData);
+
+            // 글목록 or 해당 글로 이동
+            router.push('/board', `/board`);
+        }
+
+    
+        const onChangeSelect = (e) => {
+            // console.log("게시판 선택", e);
+            state.select = e;
+        }
+
+        const onChangeTitle = (e) => {
+            // console.log("title!!!", e.target.value);
+            state.title = e.target.value;
+        }
+
+        const onChangeEditor = (e) => {
+            // input data 변경 
+            // console.log("onEditorChange!", e.editor.getData());
+            state.content = e.editor.getData();
+        }
+    
+        const onCancel = (e) => {
+            console.log("새 글 작성 - 취소");
+            // 글목록 or 해당 글로 이동
+            router.push('/board', `/board`);
+        }				      
+    
+    
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+            <div className="container" style={{ width: '80%'}}>
+                <header style={{
+					// border: '1px solid red', 
+					display: 'flex', 
+					justifyContent: 'space-between', 
+					alignItems: 'center',
+					marginBottom: '40px'
+					}}
+                >
+					<h2>게시물 수정</h2>
+					<Avatar size="large" icon={<UserOutlined />} />
+                </header>
+    
+                <section>
+                    <form onSubmit={onSubmitForm}>
+                        {/* 게시판 선택 */}
+                        <Select defaultValue="default" style={{ width: '100%', marginBottom: '15px' }} onChange={onChangeSelect}>
+                            <Option value="default">게시판을 선택해주세요.</Option>
+                            <Option value="option1">Option1</Option>
+                            <Option value="option2">Option2</Option>
+                            <Option value="option3">Option3</Option>
+                        </Select>
+                        
+                        {/* 게시판 제목 */}
+                        <Input value={state.title} onChange={onChangeTitle} style={{ width: '100%', marginBottom: '15px' }} placeholder="제목을 입력해주세요." />
+                        
+                        {/* 게시판 내용 */}
+                        <CKEditor
+                        data={state.content}
+                        onChange={onChangeEditor}
+                        style={{marginBottom: '30px'}}
+                        />
+    
+                        {/* 버튼 - 등록 & 취소 */}
+                        <div className="buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                            <Button type="default" onClick={onCancel}>취소</Button>
+                            <Button type="primary" htmlType="submit">수정</Button>
+                        </div>
+                    </form>
+                </section>    
+            </div>
+        </div>
+      );
+    })
 };
 
-export default styled(ModifyBoard)``;
+export default styled(CreateBoard)`
+
+`;
