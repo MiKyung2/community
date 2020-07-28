@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useObserver, useLocalStore } from "mobx-react";
 import BoardAPI from "../../api/board";
-import { Row, Table, Column, Button } from "antd";
+import { Row, Table, Button } from "antd";
 import { EditOutlined } from '@ant-design/icons';
 import SearchInput from "../../components/SearchInput";
 import {useRouter} from "next/router";
@@ -12,36 +12,9 @@ const BoardPage = (props) => {
 
   return useObserver(() => {
     const router = useRouter();
-    console.log("props", props);
 
     const state = useLocalStore(() => {
       return {
-        columns: [{
-          title: "번호",
-          dataIndex: "id",
-          key: "id",
-        },
-        {
-          title: "제목",
-          dataIndex: "title",
-          key: "title",
-        }, {
-          title: "작성자",
-          dataIndex: "writer",
-          key: "writer",
-        }, {
-          title: "좋아요",
-          dataIndex: "rowLike",
-          key: "rowLike",
-        }, {
-          title: "조회수",
-          dataIndex: "viewCount",
-          key: "viewCount",
-        }, {
-          title: "댓글수",
-          dataIndex: "commentCnt",
-          key: "commentCnt",
-        }],
         // 게시판의 initial data 가져오기
         dataSource: props.listByLike,
         page: {
@@ -51,10 +24,35 @@ const BoardPage = (props) => {
       };
     });
 
+    const columns = [
+    // {
+    //   title: "번호",
+    //   dataIndex: "id",
+    //   key: "id",
+    // },
+    {
+      title: "제목",
+      dataIndex: "title",
+      key: "title",
+    }, {
+      title: "작성자",
+      dataIndex: "writer",
+      key: "writer",
+    }, {
+      title: "좋아요",
+      dataIndex: "rowLike",
+      key: "rowLike",
+    }, {
+      title: "조회수",
+      dataIndex: "viewCount",
+      key: "viewCount",
+    }, {
+      title: "댓글수",
+      dataIndex: "commentCnt",
+      key: "commentCnt",
+    }];
 
-    // const tempInitialData = props.listByLike;
-    // const initialIndex = tempInitialData.map((item, index) => {return index});
-    // console.log("initial data temp", tempInitialData, "index", initialIndex)
+    console.log("dataSource length", state.dataSource.length)
 
     const filterLists = ['좋아요순', '댓글순', '조회수순'];
 
@@ -82,13 +80,11 @@ const BoardPage = (props) => {
     const onClickTableRow = (record, rowIndex) => {
       return {
         onClick: () => {
-          // console.log("Table Row Clicked!-record", record);
-          // console.log("Table Row Clicked!-index", parseInt(rowIndex));
-
-          // console.log("해당 게시물 이동", state.dataSource.data);
+          console.log("해당 게시물 id", state.dataSource[rowIndex].id)
 
           // 해당 게시물로 이동
-          router.push('/board/[id]', `/board/${rowIndex}`);
+          router.push('/board/[id]', `/board/${state.dataSource[rowIndex].id}`);
+
           
         }
       }
@@ -99,8 +95,6 @@ const BoardPage = (props) => {
       console.log("submit search inputtt", searchResult);
       state.dataSource = searchResult;
     }
-
-
 
 
     return (
@@ -138,7 +132,7 @@ const BoardPage = (props) => {
 
         {/* 테이블 & 리스트 */}
         <Table
-          columns={state.columns}
+          columns={columns}
           dataSource={state.dataSource}
           onRow={onClickTableRow}
           pagination={{ pageSize: 10 }}

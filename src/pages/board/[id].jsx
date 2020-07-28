@@ -1,4 +1,4 @@
-import React, {createElement} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import { GetStaticPaths } from 'next';
 import { Button, Row } from 'antd';
@@ -7,17 +7,14 @@ import { useRouter } from 'next/router';
 import BoardAPI from "../../api/board";
 import CommentList from '../../components/Board/Comment/CommentList';
 import AddComment from '../../components/Board/Comment/AddComment';
-import {dummy} from '../../components/Board/dummy/dummy';
 
-let queryId;
 
 const Board = (props) => {
 
-  const router = useRouter();
-  queryId = router.query.id;
+  console.log("props ctx", props)
 
-
-  console.log("details initial data", props)
+  // const router = useRouter();
+  // Board.getInitialProps(router.query.id);
 
   return useObserver(() => {
 
@@ -82,23 +79,6 @@ const Board = (props) => {
                 marginTop: '20px',
               }}>
                 {/* {currentData.contents} */}
-
-            {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Cum ad odio suscipit et. Animi, veniam est, blanditiis ducimus 
-            laboriosam iusto nulla fuga quidem soluta voluptatum repellat ad. 
-            Ducimus, ipsam numquam!<br/><br/>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Itaque sint reprehenderit molestiae in assumenda dolores odio deserunt 
-            fugit! Dolore magnam fugit molestiae nihil ea, 
-            deleniti alias impedit quisquam consequuntur quidem?<br/><br/>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Itaque sint reprehenderit molestiae in assumenda dolores odio deserunt 
-            fugit! Dolore magnam fugit molestiae nihil ea, 
-            deleniti alias impedit quisquam consequuntur quidem?<br/><br/>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Itaque sint reprehenderit molestiae in assumenda dolores odio deserunt 
-            fugit! Dolore magnam fugit molestiae nihil ea, 
-            deleniti alias impedit quisquam consequuntur quidem? */}
             </p>
           </div>
         </div>
@@ -126,24 +106,32 @@ const Board = (props) => {
 };
 
 
+// export async function getStaticPaths() {
+//   return {
+//     paths: 
+//       `/board/8`,
+//     fallback: true,
+//   }
+// }
 
-Board.getInitialProps = async () => {
 
-  const id = queryId;
+// export const getStaticProps = async (ctx) => {
 
-  // 여기에서 "queryId"에 맞는 정보 api fetch 해오기
-  // async - await
+//   console.log("ctx - 찾아라queryId", ctx);
 
-  const boardDetailRes = await BoardAPI.detail({ 
-    id: queryId
-   });
-  return {
-    props: {
-      board: boardDetailRes,
-    },
-  };
+//   // const boardDetailRes = await BoardAPI.detail({ 
+//   //   id: ctx.query
+//   //  });
 
-}
+//   //  console.log("boardDetailRes", boardDetailRes)
+//   return {
+//     // props: {
+//     //   board: boardDetailRes,
+//     // },
+//     ctx: ctx
+//   };
+
+// }
 
 
 export default Board;
