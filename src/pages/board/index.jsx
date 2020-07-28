@@ -10,9 +10,6 @@ import {useRouter} from "next/router";
 
 const BoardPage = (props) => {
 
-  // console.log(props);
-  // console.log("content", props.board.content)
-
   return useObserver(() => {
     const router = useRouter();
 
@@ -45,7 +42,7 @@ const BoardPage = (props) => {
           key: "commentCnt",
         }],
         // 게시판의 initial data 가져오기
-        dataSource: props.board.content,
+        dataSource: props.listByLike,
         page: {
           total: 11,
           current: 1,
@@ -53,26 +50,20 @@ const BoardPage = (props) => {
       };
     });
 
-    const initialData = props.board.content;
-
-    console.log("initialData", initialData);
-
     const filterLists = ['좋아요순', '댓글순', '조회수순'];
-
 
     // 검색 필터 변경
     const onClickFilter = (index) => {
-      // index에 따라 다른 방법으로 정렬
-      // datasource에 가져온 데이터 넣기?
+
       if (index === 0) {
         //  "좋아요순"으로 해당 게시판 게시물 불러오는 api
-        console.log("좋아요순 clicked!", index);
+        state.dataSource = props.listByLike;
       } else if (index === 1) {
         //  "댓글순"으로 해당 게시판 게시물 불러오는 api
-        console.log("댓글순 clicked!", index);
+        state.dataSource = props.listByComment;
       } else {
         // "조회수순"으로 해당 게시판 게시물 불러오는 api
-        console.log("조회수순 clicked!", index);
+        state.dataSource = props.listByViewCnt;
       }
     };
 
@@ -95,6 +86,15 @@ const BoardPage = (props) => {
         }
       }
     }
+
+    // Search Input 
+    const onSubmitSearchInput = (searchResult) => {
+      console.log("submit search inputtt", searchResult);
+      state.dataSource = searchResult;
+    }
+
+
+
 
     return (
       <div className={props.className}>
@@ -126,7 +126,7 @@ const BoardPage = (props) => {
           </ul>
 
           {/* 검색바 */}
-          <SearchInput />
+          <SearchInput onSubmitSearchInput={onSubmitSearchInput} />
         </Row>
 
         {/* 테이블 & 리스트 */}
@@ -150,17 +150,30 @@ const BoardPage = (props) => {
 };
 
 export const getStaticProps = async () => {
-  const boardListRes = await BoardAPI.list({ 
+  // 좋아요순
+  const boardListByLike = await BoardAPI.list({ 
     gb: "title",
-    keyword: "title",
-    // offset: 10,
-    // pageNumber: 1,
-    // pageSize: 10,
-    sort: "title"
+    sort: "like"
    });
+
+  // 댓글순
+  const boardListByComment = await BoardAPI.list({ 
+    gb: "title",
+    sort: "commentCnt"
+   });
+
+  // 조회수순
+  const boardListByViewCnt = await BoardAPI.list({ 
+    gb: "title",
+    sort: "viewCount"
+   });
+
+
   return {
     props: {
-      board: boardListRes.body,
+      listByLike: boardListByLike.body.content,
+      listByComment: boardListByComment.body.content,
+      listByViewCnt: boardListByViewCnt.body.content
     },
   };
 };

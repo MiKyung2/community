@@ -5,7 +5,7 @@ import { Select, Input, Button, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import CKEditor from 'ckeditor4-react';
 import {useRouter} from 'next/router';
-import Axios from 'axios';
+import BoardAPI from "../../../api/board";
 
 const { Option } = Select;
 const CreateBoard = () => {
@@ -22,44 +22,35 @@ const CreateBoard = () => {
 
         const onSubmitForm = (e) => {
             e.preventDefault();
-           
-            // 1) 등록 api 요청
-            // 2) 글 목록 or 해당 글로 이동
-            // Q. 어떻게 각각의 요소들의 value를 가져오면 좋을까? -ok..?
 
             const formData = {
                 // id: 1,
-                writer: "하늘",
+                writer: "ally",
                 // select: state.select,
                 title: state.title,
                 contents: state.content,
             }
 
-			console.log('폼 제출', formData);
-			
-			Axios.post('http://141.164.41.213:8081/v1/api/board/write', formData, function(isSuccess, result) {
-				console.log(result);
-			})
-
-
+            BoardAPI.write(formData);
 
             // 글목록 or 해당 글로 이동
-            // router.push('/board', `/board`);
+            router.push('/board', `/board`);
         }
+
     
         const onChangeSelect = (e) => {
-            console.log("게시판 선택", e);
+            // console.log("게시판 선택", e);
             state.select = e;
         }
 
         const onChangeTitle = (e) => {
-            console.log("title!!!", e.target.value);
+            // console.log("title!!!", e.target.value);
             state.title = e.target.value;
         }
 
         const onChangeEditor = (e) => {
             // input data 변경 
-            console.log("onEditorChange!", e.editor.getData());
+            // console.log("onEditorChange!", e.editor.getData());
             state.content = e.editor.getData();
         }
     
