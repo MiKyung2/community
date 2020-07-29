@@ -15,7 +15,6 @@ const BoardPage = (props) => {
 
     const state = useLocalStore(() => {
       return {
-        // 게시판의 initial data 가져오기
         dataSource: props.listByLike,
         page: {
           total: 11,

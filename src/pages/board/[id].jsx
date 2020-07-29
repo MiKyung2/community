@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { GetStaticPaths } from 'next';
 import { Button, Row } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useRouter } from 'next/router';
 import BoardAPI from "../../api/board";
@@ -11,20 +11,18 @@ import AddComment from '../../components/Board/Comment/AddComment';
 
 const Board = (props) => {
 
-  console.log("props ctx", props)
+  const router = useRouter();
+  const queryId = router.query.id;
 
-  // const router = useRouter();
-  // Board.getInitialProps(router.query.id);
+  // console.log("게시물 props", props.props.board.body)
 
   return useObserver(() => {
 
     const state = useLocalStore(() => {
       return {
-        // data: props.board.content
+        data: props.props.board.body
       };
     });
-
-    // 해당 게시판 currentData
 
     
     const onClickBackToList = () => {
@@ -32,57 +30,87 @@ const Board = (props) => {
       router.push('/board');
     }
 
+    const onClickEdit = () => {
+      console.log("글 수정 페이지로 이동!");
+      router.push('/board/articles/modify');
+    }
+
+    const onClickDelete = async() => {
+      console.log("글 삭제!");
+      console.log("해당 게시글 id", queryId);
+
+      const boardDeleteRes = await BoardAPI.delete({ 
+        id: queryId
+      });
+
+      console.log("글 삭제 후 res", boardDeleteRes);
+
+      router.push('/board');
+    }
+
     
-  
+
     return (
       <div style={{
                 // border: '1px solid black',
                 // maxWidth: '75%',
       }}>
-        <Row justify="space-between" style={{marginBottom: '30px'}}>
-          {/* <h2 style={{marginBottom: '40px'}}>{currentData.title}</h2> */}
+        <Row justify="space-between" style={{ marginBottom: '60px'}}>
+          <h2 style={{marginBottom: '40px'}}>{state.data.title}</h2>
+          <Row>
           <Button type="default" onClick={onClickBackToList}>글 목록</Button>
+          </Row>
         </Row>
 
 
         <div style={{
                 display: 'flex', 
                 justifyContent: 'space-between', 
-                fontSize: '15px',
+                fontSize: '13px',
                 marginBottom: '20px',
                 padding: '0 6px'
         }}>
-          {/* <span><strong>작성일:</strong> {currentData.createdDate}</span> */}
-          {/* <span><strong>작성자:</strong> {currentData.writer}</span> */}
+          <span><strong>작성일:</strong> {state.data.createdDate}</span>
+          <span><strong>작성자:</strong> {state.data.writer}</span>
         </div>
         
-        {/* 게시판 내용 */}
+        {/* 게시판 main */}
         <div style={{
                 // border: '1px solid green',
                 backgroundColor: '#fff',
                 boxShadow: '0 0 5px rgba(0,0,0,0.3)', 
-                // height: '250px',
-                // maxWidth: '75%',
                 borderRadius: '5px',
+                height: '250px',
+                // maxWidth: '75%',
                 display: 'flex',
+                flexDirection: 'column',
                 justifyContent: 'center',
                 padding: '20px 10px',
-                marginBottom: '40px',
+                marginBottom: '100px',
                 // overflow: 'auto'
         }}>
+
+        {/* 수정 & 삭제 */}
+        <Row justify="end" style={{flex: '1'}}>
+          <Button type="text" onClick={onClickEdit}>수정</Button>
+          <Button type="text" onClick={onClickDelete}>삭제</Button>
+        </Row>
+
+          {/* 내용 */}
           <div style={{
                   // border: '1px solid red',
-                  width: '85%' 
+                  width: '100%',
+                  flex: '9' 
           }}>
             <p style={{
                 // border: '1px solid blue',
-                marginTop: '20px',
+                margin: '0',
+                padding: '0 30px'
               }}>
-                {/* {currentData.contents} */}
+                {state.data.contents}
             </p>
           </div>
         </div>
-
 
 
         {/* 댓글 */}
@@ -106,32 +134,21 @@ const Board = (props) => {
 };
 
 
-// export async function getStaticPaths() {
-//   return {
-//     paths: 
-//       `/board/8`,
-//     fallback: true,
-//   }
-// }
 
+Board.getInitialProps = async({ query }) => {
 
-// export const getStaticProps = async (ctx) => {
+  const boardDetailRes = await BoardAPI.detail({ 
+    id: query.id
+   });
 
-//   console.log("ctx - 찾아라queryId", ctx);
+   console.log("boardDetailRes", boardDetailRes)
+  return {
+    props: {
+      board: boardDetailRes,
+    }
+  };
 
-//   // const boardDetailRes = await BoardAPI.detail({ 
-//   //   id: ctx.query
-//   //  });
-
-//   //  console.log("boardDetailRes", boardDetailRes)
-//   return {
-//     // props: {
-//     //   board: boardDetailRes,
-//     // },
-//     ctx: ctx
-//   };
-
-// }
+}
 
 
 export default Board;
