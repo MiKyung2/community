@@ -7,13 +7,13 @@ const { TabPane } = Tabs;
 
 const sendColumns = [
   { title: "제목", dataIndex: "title" },
-  { title: "받는 사람", dataIndex: "toWriter" },
+  { title: "받는 사람", dataIndex: "revId" },
   { title: "보낸 시간", dataIndex: "createdDate" },
 ];
 
 const receiveColumns = [
   { title: "제목", dataIndex: "title" },
-  { title: "보낸 사람", dataIndex: "fromWriter" },
+  { title: "보낸 사람", dataIndex: "sendId" },
   { title: "받은 시간", dataIndex: "createdDate" },
 ];
 
@@ -21,6 +21,8 @@ const Notes = (props) => {
   return useObserver(() => {
     const state = useLocalStore(() => {
       return {
+        loading: false,
+        error: false,
         tabActive: "receive",
         receiveList: props.receiveList || [],
         sendList: [],
@@ -59,49 +61,24 @@ const Notes = (props) => {
       state.delete.selectedRowKeys = [];
 
       if (state.tabActive === "receive") {
-        const data = [];
-        for (let i = 0; i < 46; i++) {
-          data.push({
-            key: i,
-            title: `받는 쪽지 제목입니다 ${i}`,
-            contents: `내용입니다 ${i}`,
-            fromWriter: `보낸사람 ${i}`,
-            toWriter: `받는사람 ${i}`,
-            createdDate: "4일 전",
-            viewPoint: 0,
-          });
-        }
-        state.receiveList = data;
-
-        // (async () => {
-        //   try {
-        //     const res = await NoteAPI.receiveList({ userId: 1 });
-        //   } catch (error) {
-        //     throw error;
-        //   }
-        // })();
+        (async () => {
+          try {
+            const res = await NoteAPI.receiveList({ userId: 1 });
+            state.receiveList = res.body;
+            console.log("Rs : ", JSON.stringify(res, null, 3));
+          } catch (error) {
+            state.error = true;
+          }
+        })();
       } else if (state.tabActive === "send") {
-        const data = [];
-        for (let i = 0; i < 46; i++) {
-          data.push({
-            key: i,
-            title: `받은 쪽지 제목입니다 ${i}`,
-            contents: `내용입니다 ${i}`,
-            fromWriter: `보낸사람 ${i}`,
-            toWriter: `받는사람 ${i}`,
-            createdDate: "4일 전",
-            viewPoint: 0,
-          });
-        }
-        state.sendList = data;
-
-        // (async () => {
-        //   try {
-        //     const res = await NoteAPI.sendList({ userId: 1 });
-        //   } catch (error) {
-        //     throw error;
-        //   }
-        // })();
+        (async () => {
+          try {
+            const res = await NoteAPI.sendList({ userId: 1 });
+            state.sendList = res.body;
+          } catch (error) {
+            state.error = true;
+          }
+        })();
       }
     }, [state.tabActive]);
 
@@ -172,23 +149,15 @@ const Notes = (props) => {
 };
 
 Notes.getInitialProps = async () => {
-  // const receiveList = NoteAPI.receiveList({ userId: 1 });
+  try {
+    const receiveList = NoteAPI.receiveList({ userId: 1 });
 
-  const receiveList = [];
-  for (let i = 0; i < 46; i++) {
-    receiveList.push({
-      key: i,
-      title: `받는 쪽지 제목입니다 ${i}`,
-      contents: `내용입니다 ${i}`,
-      fromWriter: `보낸사람 ${i}`,
-      toWriter: `받는사람 ${i}`,
-      createdDate: "4일 전",
-      viewPoint: 0,
-    });
+    return {
+      receiveList: [],
+    };
+  } catch (error) {
+    console.error("error : ", error);
   }
-  return {
-    receiveList,
-  };
 };
 
 export default Notes;

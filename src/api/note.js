@@ -7,7 +7,7 @@ const NoteAPI = {
 
       return res;
     } catch (error) {
-      throw error;
+      console.error(error);
     }
   },
   receiveList: async (payload) => {
@@ -18,7 +18,7 @@ const NoteAPI = {
 
       return res;
     } catch (error) {
-      throw error;
+      console.error(error);
     }
   },
   get: async (payload) => {
@@ -26,15 +26,15 @@ const NoteAPI = {
       const res = await AxiosWrapper.get(`note/${payload.id}`);
       return res;
     } catch (error) {
-      throw error;
+      console.error(error);
     }
   },
   post: async (payload) => {
     try {
-      const res = await AxiosWrapper.post("note/", payload.data);
+      const res = await AxiosWrapper.post("note/write", payload.data);
       return res;
     } catch (error) {
-      throw error;
+      console.error(error);
     }
   },
   put: async (payload) => {
@@ -42,7 +42,7 @@ const NoteAPI = {
       const res = await AxiosWrapper.put("note/", payload.data);
       return res;
     } catch (error) {
-      throw error;
+      console.error(error);
     }
   },
 };
