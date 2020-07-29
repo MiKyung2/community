@@ -1,6 +1,6 @@
 import FollowTab from "../../components/profile/FollowTab";
 
-const Following = () => {
+const Follower = () => {
   return (
     <FollowTab
       data={[
@@ -26,7 +26,7 @@ const Following = () => {
           type: "following",
         },
       ]}
-      tabActive={"1"}
+      tabActive={"2"}
       onChange={(value) => {
         console.log("change : ", value);
       }}
@@ -34,4 +34,4 @@ const Following = () => {
   );
 };
 
-export default Following;
+export default Follower;
