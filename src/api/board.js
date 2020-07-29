@@ -64,6 +64,8 @@ const BoardAPI = {
   },
   edit: async (payload) => {
 
+    console.log("edit payload", payload);
+
     try {
       const res = await AxiosWrapper.post('board/edit', payload);
 

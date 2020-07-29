@@ -51,8 +51,6 @@ const BoardPage = (props) => {
       key: "commentCnt",
     }];
 
-    console.log("dataSource length", state.dataSource.length)
-
     const filterLists = ['좋아요순', '댓글순', '조회수순'];
 
     // 검색 필터 변경
@@ -136,14 +134,7 @@ const BoardPage = (props) => {
           onRow={onClickTableRow}
           pagination={{ pageSize: 10 }}
           scroll={true}
-        />
-          {/* {state.dataSource && state.dataSource.map(data => { */}
-            {/* <Column key="00" dataIndex="dataindex" /> */}
-
-          {/* })} */}
-        {/* </Table> */}
-
-        
+        />        
       </div>
     );
   });

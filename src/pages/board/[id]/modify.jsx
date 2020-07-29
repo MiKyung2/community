@@ -8,33 +8,52 @@ import {useRouter} from 'next/router';
 import BoardAPI from "../../../api/board";
 
 const { Option } = Select;
-const CreateBoard = () => {
+
+
+const EditBoard = ({props}) => {
+
+    console.log("게시물 수정 props", props.board.body);
+
+
     return useObserver(() => {
 
         const router = useRouter();
         const state = useLocalStore(() => {
             return {
-                select: '',
-                title: '오케오케',
-                content: ''
+                data: props.board.body,
+                id: props.board.body.id,
+                writer: props.board.body.writer,
+                // select: props.board.body.select,
+                title: props.board.body.title,
+                contents: props.board.body.contents
             }
         });
 
-        const onSubmitForm = (e) => {
+        const onSubmitEditForm = async (e) => {
             e.preventDefault();
 
             const formData = {
-                id: 56,
-                writer: "ally",
+                id: state.id,
+                writer: state.writer,
                 title: state.title,
-                contents: state.content,
+                contents: state.contents,
             }
 
-            BoardAPI.edit(formData);
+            console.log("게시물 수정!!!!", formData);
+
+            const boardEditRes = await BoardAPI.edit(formData);
+
+            console.log("글 수정 후 res", boardEditRes);
 
             // 글목록 or 해당 글로 이동
-            router.push('/board', `/board`);
+            router.push('/board/[id]', `/board/${state.id}`);
         }
+
+        const onCancel = (e) => {
+            console.log("새 글 작성 - 취소");
+            // 글목록 or 해당 글로 이동
+            router.push('/board', `/board`);
+        }	
 
     
         const onChangeSelect = (e) => {
@@ -50,14 +69,8 @@ const CreateBoard = () => {
         const onChangeEditor = (e) => {
             // input data 변경 
             // console.log("onEditorChange!", e.editor.getData());
-            state.content = e.editor.getData();
-        }
-    
-        const onCancel = (e) => {
-            console.log("새 글 작성 - 취소");
-            // 글목록 or 해당 글로 이동
-            router.push('/board', `/board`);
-        }				      
+            state.contents = e.editor.getData();
+        }			      
     
     
       return (
@@ -76,7 +89,7 @@ const CreateBoard = () => {
                 </header>
     
                 <section>
-                    <form onSubmit={onSubmitForm}>
+                    <form onSubmit={onSubmitEditForm}>
                         {/* 게시판 선택 */}
                         <Select defaultValue="default" style={{ width: '100%', marginBottom: '15px' }} onChange={onChangeSelect}>
                             <Option value="default">게시판을 선택해주세요.</Option>
@@ -90,7 +103,7 @@ const CreateBoard = () => {
                         
                         {/* 게시판 내용 */}
                         <CKEditor
-                        data={state.content}
+                        data={state.contents}
                         onChange={onChangeEditor}
                         style={{marginBottom: '30px'}}
                         />
@@ -108,6 +121,21 @@ const CreateBoard = () => {
     })
 };
 
-export default styled(CreateBoard)`
+EditBoard.getInitialProps = async({ query }) => {
+
+    const boardDetailRes = await BoardAPI.detail({ 
+        id: query.id
+        });
+
+        console.log("boardDetailRes", boardDetailRes)
+    return {
+        props: {
+        board: boardDetailRes,
+        }
+    };
+  
+}
+
+export default styled(EditBoard)`
 
 `;
