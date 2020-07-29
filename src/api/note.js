@@ -37,9 +37,11 @@ const NoteAPI = {
       console.error(error);
     }
   },
-  put: async (payload) => {
+  remove: async (payload) => {
     try {
-      const res = await AxiosWrapper.put("note/", payload.data);
+      const res = await AxiosWrapper.post(
+        `note/remove/${payload.gb}/${payload.id}`
+      );
       return res;
     } catch (error) {
       console.error(error);

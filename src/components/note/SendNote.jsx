@@ -17,7 +17,6 @@ const SendNote = (props) => {
       form.submit();
     };
 
-    // 141.164.41.213:8081/v1/api/note/write
     const onFinish = (values) => {
       (async () => {
         try {

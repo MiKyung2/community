@@ -23,7 +23,7 @@ const Notes = (props) => {
       return {
         loading: false,
         error: false,
-        tabActive: "receive",
+        tabActive: "R",
         receiveList: props.receiveList || [],
         sendList: [],
         delete: {
@@ -39,11 +39,21 @@ const Notes = (props) => {
 
     const onDelete = () => {
       state.delete.loading = true;
-      // ajax request after empty completing
-      setTimeout(() => {
-        state.delete.selectedRowKeys = [];
-        state.delete.loading = false;
-      }, 1000);
+
+      (async () => {
+        try {
+          const res = await NoteAPI.remove({
+            gb: state.tabActive,
+            id: state.delete.selectedRowKeys,
+          });
+
+          state.delete.selectedRowKeys = [];
+        } catch (error) {
+          // state.error = true;
+        } finally {
+          state.delete.loading = false;
+        }
+      })();
     };
 
     const onSelectChange = (selectedRowKeys) => {
@@ -60,25 +70,25 @@ const Notes = (props) => {
     React.useEffect(() => {
       state.delete.selectedRowKeys = [];
 
-      if (state.tabActive === "receive") {
-        (async () => {
-          try {
-            const res = await NoteAPI.receiveList({ userId: 1 });
-            state.receiveList = res.body;
-            console.log("Rs : ", JSON.stringify(res, null, 3));
-          } catch (error) {
-            state.error = true;
-          }
-        })();
-      } else if (state.tabActive === "send") {
-        (async () => {
-          try {
-            const res = await NoteAPI.sendList({ userId: 1 });
-            state.sendList = res.body;
-          } catch (error) {
-            state.error = true;
-          }
-        })();
+      switch (state.tabActive) {
+        case "R":
+          (async () => {
+            try {
+              const res = await NoteAPI.receiveList({ userId: 1 });
+              state.receiveList = res.body;
+            } catch (error) {
+              state.error = true;
+            }
+          })();
+        case "S":
+          (async () => {
+            try {
+              const res = await NoteAPI.sendList({ userId: 1 });
+              state.sendList = res.body;
+            } catch (error) {
+              state.error = true;
+            }
+          })();
       }
     }, [state.tabActive]);
 
@@ -121,14 +131,14 @@ const Notes = (props) => {
             state.tabActive = active;
           }}
         >
-          <TabPane tab="받은 쪽지함" key="receive">
+          <TabPane tab="받은 쪽지함" key="R">
             <Table
               rowSelection={rowSelection}
               columns={receiveColumns}
               dataSource={state.receiveList}
             />
           </TabPane>
-          <TabPane tab="보낸 쪽지함" key="send">
+          <TabPane tab="보낸 쪽지함" key="S">
             <Table
               rowSelection={rowSelection}
               columns={sendColumns}
