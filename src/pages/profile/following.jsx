@@ -34,4 +34,15 @@ const Following = () => {
   );
 };
 
+// Following.getInitialProps = async () => {
+//   try {
+//     const list = UserAPI.Following({ userId: 1 });
+//     return {
+//       list: list.body.follower_list,
+//     };
+//   } catch (error) {
+//     console.error("error : ", error);
+//   }
+// };
+
 export default Following;

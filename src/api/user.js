@@ -18,9 +18,29 @@ const UserAPI = {
       throw error;
     }
   },
-  putPassword: async (data) => {
+  putPassword: async (payload) => {
     try {
-      const res = await AxiosWrapper.put("user/password", data);
+      const res = await AxiosWrapper.put("user/password", payload.data);
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  },
+  followingList: async (payload) => {
+    try {
+      const res = await AxiosWrapper.get(
+        `user/following/following_id=${payload.userId}`
+      );
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  },
+  followerList: async (payload) => {
+    try {
+      const res = await AxiosWrapper.get(
+        `user/follower/followed_id=${payload.userId}`
+      );
       return res;
     } catch (error) {
       throw error;

@@ -1,4 +1,5 @@
 import FollowTab from "../../components/profile/FollowTab";
+import UserAPI from "../../api/user";
 
 const Follower = () => {
   return (
@@ -32,6 +33,17 @@ const Follower = () => {
       }}
     />
   );
+};
+
+Follower.getInitialProps = async () => {
+  // try {
+  //   const list = UserAPI.followerList({ userId: 1 });
+  //   return {
+  //     list: list.body.follower_list,
+  //   };
+  // } catch (error) {
+  //   console.error("error : ", error);
+  // }
 };
 
 export default Follower;
