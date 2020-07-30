@@ -7,7 +7,7 @@ const UserAPI = {
 
       return res;
     } catch (error) {
-      throw error;
+      console.error(error);
     }
   },
   put: async (payload) => {
@@ -15,7 +15,7 @@ const UserAPI = {
       const res = await AxiosWrapper.put("user");
       return res;
     } catch (error) {
-      throw error;
+      console.error(error);
     }
   },
   putPassword: async (payload) => {
@@ -23,7 +23,7 @@ const UserAPI = {
       const res = await AxiosWrapper.put("user/password", payload.data);
       return res;
     } catch (error) {
-      throw error;
+      console.error(error);
     }
   },
   followingList: async (payload) => {
@@ -33,7 +33,7 @@ const UserAPI = {
       );
       return res;
     } catch (error) {
-      throw error;
+      console.error(error);
     }
   },
   followerList: async (payload) => {
@@ -43,7 +43,7 @@ const UserAPI = {
       );
       return res;
     } catch (error) {
-      throw error;
+      console.error(error);
     }
   },
 };

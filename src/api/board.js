@@ -2,8 +2,7 @@ import AxiosWrapper from "./axiosWrapper";
 
 const BoardAPI = {
   list: async (payload) => {
-
-    const {gb, keyword, offset, pageNumber, pageSize, sort} = payload;
+    const { gb, keyword, offset, pageNumber, pageSize, sort } = payload;
 
     try {
       const res = await AxiosWrapper.get(
@@ -15,7 +14,7 @@ const BoardAPI = {
 
       return res;
     } catch (error) {
-      throw error;
+      console.error(error);
     }
   },
   // searchInput: async(payload) => {
@@ -31,7 +30,7 @@ const BoardAPI = {
 
   //     return res;
   //   } catch (error) {
-  //     throw error;
+  //     console.error(error);
   //   }
   // }
 };
