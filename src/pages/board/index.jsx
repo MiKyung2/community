@@ -51,22 +51,55 @@ const BoardPage = (props) => {
       key: "commentCnt",
     }];
 
-    const filterLists = ['좋아요순', '댓글순', '조회수순'];
 
-    // 검색 필터 변경
-    const onClickFilter = (index) => {
+    // 최신순 | 좋아요순 | 댓글순 | 조회수순
+    const filterLists = [
+      {
+        id: 'filter_newest',
+        name: '최신순'
+      },
+      {
+        id: 'filter_like',
+        name: '좋아요순'
+      },
+      {
+        id: 'filter_comment',
+        name: '댓글순'
+      },
+      {
+        id: 'filter_view',
+        name: '조회수순'
+      },
+    ]
 
-      if (index === 0) {
-        //  "좋아요순"
-        state.dataSource = props.listByLike;
-      } else if (index === 1) {
-        //  "댓글순"
-        state.dataSource = props.listByComment;
-      } else {
-        // "조회수순"
-        state.dataSource = props.listByViewCnt;
+    const onClickFilter = (e) => {
+      console.log("onclickFIlter", e.target.id);
+
+      const target = e.target.id;
+
+      switch (target) {
+        case 'filter_newest' :
+          console.log("최신순!!");
+          break;
+        case 'filter_like' :
+          console.log("좋아요순!!");
+          state.dataSource = props.listByLike;
+          break;
+        case 'filter_comment' :
+          console.log("댓글순!!");
+          state.dataSource = props.listByComment;
+          break;
+        case 'filter_view' :
+          console.log("조회수순!!");
+          state.dataSource = props.listByViewCnt;
+          break;
+        default :
+          console.log("default");
+          // console.error("filter error");
       }
-    };
+      
+
+    }
 
     // 새글쓰기
     const onClickNewPostBtn = () => {
@@ -117,10 +150,9 @@ const BoardPage = (props) => {
         >
           {/* 좋아요순 | 댓글순 | 조회수순 */}
           <ul className="filter">
-            {filterLists &&
-              filterLists.map((list, index) => (
-                <li onClick={() => onClickFilter(index)}>{list}</li>
-              ))}
+            {filterLists && filterLists.map(list => (
+              <li id={list.id} onClick={onClickFilter}>{list.name}</li>
+            ))}
           </ul>
 
           {/* 검색바 */}
