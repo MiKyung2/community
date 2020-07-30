@@ -49,7 +49,12 @@ const BoardPage = (props) => {
       title: "댓글수",
       dataIndex: "commentCnt",
       key: "commentCnt",
-    }];
+    },
+    {
+      title: "날짜",
+      dataIndex: "createdDate",
+      key: "createdDate",
+    },];
 
 
     // 최신순 | 좋아요순 | 댓글순 | 조회수순
