@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Button, Row } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined, EyeOutlined, CommentOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useRouter } from 'next/router';
 import BoardAPI from "../../../api/board";
@@ -47,7 +47,10 @@ const Board = (props) => {
 
       router.push('/board');
     }
-
+    
+    const onClickLikeDislike = () => {
+      console.log("clicked like or dislike!")
+    }
     
 
     return (
@@ -74,7 +77,7 @@ const Board = (props) => {
           <span><strong>작성자:</strong> {state.data.writer}</span>
         </div>
         
-        {/* 게시판 main */}
+        {/* 게시글 main */}
         <div style={{
                 // border: '1px solid green',
                 backgroundColor: '#fff',
@@ -90,17 +93,38 @@ const Board = (props) => {
                 // overflow: 'auto'
         }}>
 
-        {/* 수정 & 삭제 */}
-        <Row justify="end" style={{flex: '1'}}>
-          <Button type="text" onClick={onClickEdit}>수정</Button>
-          <Button type="text" onClick={onClickDelete}>삭제</Button>
-        </Row>
+        
+          {/* 게시글 상단 */}
+          <Row justify="space-between" style={{
+                                          // border: '1px solid red',
+                                          borderBottom: '1px solid lightgray',
+                                          alignItems:'center',
+                                          paddingLeft: '15px'
+                                        }
+          }>
+            
+            {/* 해당 게시글 조회수 & 댓글수 & 좋아요수 */}
+            <Row>
+              <span style={{marginRight: '10px', color: 'gray'}}><EyeOutlined /> {state.data.viewCount}</span>
+              <span style={{marginRight: '10px', color: 'gray'}}><LikeOutlined onClick={onClickLikeDislike} /> {state.data.rowLike}</span>
+              <span style={{marginRight: '10px', color: 'gray'}}><DislikeOutlined onClick={onClickLikeDislike} /> {state.data.rowDisLike}</span>
+              {/* <span style={{marginRight: '5px', color: 'gray'}}><CommentOutlined /> {state.data.commentCnt}</span> */}
+            </Row>
 
-          {/* 내용 */}
+            {/* 수정 & 삭제 */}
+            <Row>
+              <Button type="text" onClick={onClickEdit}>수정</Button>
+              <Button type="text" onClick={onClickDelete}>삭제</Button>
+            </Row>
+          </Row>
+
+
+          {/* 게시글 내용 */}
           <div style={{
                   // border: '1px solid red',
                   width: '100%',
-                  flex: '9' 
+                  flex: '9' ,
+                  marginTop: '50px'
           }}>
             <p style={{
                 // border: '1px solid blue',
