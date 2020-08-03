@@ -7,10 +7,58 @@ import { EditOutlined } from '@ant-design/icons';
 import SearchInput from "../../components/SearchInput";
 import {useRouter} from "next/router";
 
+const columns = [
+  {
+    title: "제목",
+    dataIndex: "title",
+    key: "title",
+  }, {
+    title: "작성자",
+    dataIndex: "writer",
+    key: "writer",
+  }, {
+    title: "좋아요",
+    dataIndex: "rowLike",
+    key: "rowLike",
+  }, {
+    title: "조회수",
+    dataIndex: "viewCount",
+    key: "viewCount",
+  }, {
+    title: "댓글수",
+    dataIndex: "commentCnt",
+    key: "commentCnt",
+  },
+  {
+    title: "날짜",
+    dataIndex: "createdDate",
+    key: "createdDate",
+  },
+];
+
+ // 최신순 | 좋아요순 | 댓글순 | 조회수순
+ const filterLists = [
+  {
+    id: 'filter_newest',
+    name: '최신순'
+  },
+  {
+    id: 'filter_like',
+    name: '좋아요순'
+  },
+  {
+    id: 'filter_comment',
+    name: '댓글순'
+  },
+  {
+    id: 'filter_view',
+    name: '조회수순'
+  },
+];
+
 
 const BoardPage = (props) => {
-
-  console.log("boardpage props", props);
+  // console.log("boardpage props", props);
 
   return useObserver(() => {
     const router = useRouter();
@@ -25,59 +73,9 @@ const BoardPage = (props) => {
       };
     });
 
-    const columns = [
-    {
-      title: "제목",
-      dataIndex: "title",
-      key: "title",
-    }, {
-      title: "작성자",
-      dataIndex: "writer",
-      key: "writer",
-    }, {
-      title: "좋아요",
-      dataIndex: "rowLike",
-      key: "rowLike",
-    }, {
-      title: "조회수",
-      dataIndex: "viewCount",
-      key: "viewCount",
-    }, {
-      title: "댓글수",
-      dataIndex: "commentCnt",
-      key: "commentCnt",
-    },
-    {
-      title: "날짜",
-      dataIndex: "createdDate",
-      key: "createdDate",
-    },];
-
-
-    // 최신순 | 좋아요순 | 댓글순 | 조회수순
-    const filterLists = [
-      {
-        id: 'filter_newest',
-        name: '최신순'
-      },
-      {
-        id: 'filter_like',
-        name: '좋아요순'
-      },
-      {
-        id: 'filter_comment',
-        name: '댓글순'
-      },
-      {
-        id: 'filter_view',
-        name: '조회수순'
-      },
-    ]
-
-    const onClickFilter = (e) => {
+    const onClickFilter = (selectedFilter) => {
       // console.log("onclickFIlter", e.target.id);
-
-      const target = e.target.id;
+      const target = selectedFilter.target.id;
 
       switch (target) {
         case 'filter_newest' :
@@ -101,17 +99,11 @@ const BoardPage = (props) => {
       }
     }
 
-    // 새글쓰기
-    const onClickNewPostBtn = () => {
-      router.push("/board/articles/create");
-    };
-
     // 해당 게시물 이동
     const onClickTableRow = (record, rowIndex) => {
       return {
         onClick: () => {
-          console.log("해당 게시물 id", state.dataSource[rowIndex].id)
-
+          // console.log("해당 게시물 id", state.dataSource[rowIndex].id)
           // 해당 게시물로 이동
           router.push('/board/[id]', `/board/${state.dataSource[rowIndex].id}`);
         }
@@ -120,9 +112,13 @@ const BoardPage = (props) => {
 
     // 필터&검색
     const onSubmitSearchInput = (searchResult) => {
-      console.log("submit search inputtt", searchResult);
       state.dataSource = searchResult;
     }
+
+    // 새글쓰기로 이동
+    const onClickNewPostBtn = () => {
+      router.push("/board/articles/create");
+    };
 
 
     return (
@@ -132,21 +128,13 @@ const BoardPage = (props) => {
           <h1>게시판 이름</h1>
 
           {/* "새글쓰기" 버튼 */}
-          <Button
-            className="new_post_btn"
-            type="primary"
-            onClick={onClickNewPostBtn}
-          >
+          <Button className="new_post_btn" type="primary" onClick={onClickNewPostBtn}>
             <EditOutlined />
             새글쓰기
           </Button>
         </Row>
 
-        <Row
-          align="bottom"
-          justify="space-between"
-          className="filter_container"
-        >
+        <Row align="bottom" justify="space-between" className="filter_container">
           {/* 좋아요순 | 댓글순 | 조회수순 */}
           <ul className="filter">
             {filterLists && filterLists.map(list => (

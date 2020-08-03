@@ -10,42 +10,40 @@ import AddComment from '../../../components/Board/Comment/AddComment';
 
 
 const Board = (props) => {
-
-  console.log("Board props", props)
+  // console.log("Board props", props)
 
   const router = useRouter();
   const queryId = router.query.id;
 
+  const boardProps = props.props;
   // console.log("게시물 props", props.props.board.body)
 
   return useObserver(() => {
 
     const state = useLocalStore(() => {
       return {
-        data: props.props.board.body
+        data: boardProps.board.body
       };
     });
 
     
     const onClickBackToList = () => {
-      console.log("글목록으로 돌아가기");
+      // console.log("글목록으로 돌아가기");
       router.push('/board');
     }
 
     const onClickEdit = () => {
-      console.log("글 수정 페이지로 이동!");
+      // console.log("글 수정 페이지로 이동!");
       router.push(`/board/${queryId}/modify`);
     }
 
     const onClickDelete = async() => {
-      console.log("글 삭제!");
-      console.log("해당 게시글 id", queryId);
-
+      // console.log("글 삭제! - 헤당 게시글 id", queryId);
+      
       const boardDeleteRes = await BoardAPI.delete({ 
         id: queryId
       });
-
-      console.log("글 삭제 후 res", boardDeleteRes);
+      // console.log("글 삭제 후 res", boardDeleteRes);
 
       router.push('/board');
     }
@@ -57,12 +55,9 @@ const Board = (props) => {
 
     return (
       <div className={props.className}>
-        <div>
           <Row justify="space-between" className="header_top">
             <h2>{state.data.title}</h2>
-            <Row>
             <Button type="default" onClick={onClickBackToList}>글 목록</Button>
-            </Row>
           </Row>
 
           <div className="header_bottom">
@@ -71,12 +66,9 @@ const Board = (props) => {
           </div>
           
           
-          {/* 게시글 main */}
           <div className="main_container">
 
-            {/* 게시글 상단 */}
             <Row justify="space-between" className="main_container_top">
-              
               {/* 해당 게시글 조회수 & 댓글수 & 좋아요수 */}
               <Row>
                 <span className="main_container_top_left "><EyeOutlined /> {state.data.viewCount}</span>
@@ -112,12 +104,6 @@ const Board = (props) => {
             {/* 댓글 - 새댓글 등록 */}
             <AddComment />
           </div>
-
-
-
-          {/* 글목록 버튼*/}
-
-        </div>
       </div>
     );
   });
@@ -130,8 +116,7 @@ Board.getInitialProps = async({ query }) => {
   const boardDetailRes = await BoardAPI.detail({ 
     id: query.id
    });
-
-   console.log("boardDetailRes", boardDetailRes)
+  //  console.log("boardDetailRes", boardDetailRes)
   return {
     props: {
       board: boardDetailRes,
