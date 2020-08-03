@@ -35,10 +35,8 @@ const EditBoard = (props) => {
             }
 
             // console.log("게시물 수정!!!!", formData);
-
             const boardEditRes = await BoardAPI.edit(formData);
-
-            console.log("글 수정 후 res", boardEditRes);
+            // console.log("글 수정 후 res", boardEditRes);
 
             // 글목록 or 해당 글로 이동
             router.push('/board/[id]', `/board/${state.id}`);
@@ -93,7 +91,7 @@ EditBoard.getInitialProps = async({ query }) => {
         id: query.id
         });
 
-        console.log("boardDetailRes", boardDetailRes)
+        // console.log("boardDetailRes", boardDetailRes)
     return {
         props: {
         board: boardDetailRes,

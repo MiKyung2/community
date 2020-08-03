@@ -20,12 +20,6 @@ const SearchInput = ({ onSubmitSearchInput }) => {
       }
     });
 
-    const onSubmit = async (searchTerm) => {
-      const boardListSearchRes = await BoardAPI.search(searchTerm)
-
-      onSubmitSearchInput(boardListSearchRes.body.content);
-    }
-
     const onSearch = (searchKeyword) => {
 
       const searchTerm = {
@@ -36,6 +30,12 @@ const SearchInput = ({ onSubmitSearchInput }) => {
 
       onSubmit(searchTerm);
 
+    }
+
+    const onSubmit = async (searchTerm) => {
+      const boardListSearchRes = await BoardAPI.search(searchTerm)
+
+      onSubmitSearchInput(boardListSearchRes.body.content);
     }
 
     const onClickMenu = (e) => {
