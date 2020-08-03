@@ -1,4 +1,4 @@
-const user = {
+const testUserData = {
   profile: {
     id: 2,
     userId: "xowns4817@gmail.com",
@@ -16,3 +16,5 @@ const user = {
   ],
   followingList: [{ id: 5, nickname: "kimCode", profileImg: "" }],
 };
+
+export default testUserData;

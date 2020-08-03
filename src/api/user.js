@@ -1,11 +1,16 @@
 import AxiosWrapper from "./axiosWrapper";
+import CONFIG from "../utils/CONFIG";
+import testUserData from "../data/user";
 
 const UserAPI = {
   get: async (payload) => {
     try {
-      const res = await AxiosWrapper.get(`user/${payload.id}`);
-
-      return res;
+      if (CONFIG.NODE_ENV == "test") {
+        return testUserData.profile;
+      } else {
+        const res = await AxiosWrapper.get(`user/${payload.id}`);
+        return res;
+      }
     } catch (error) {
       console.error(error);
     }
@@ -28,20 +33,28 @@ const UserAPI = {
   },
   followingList: async (payload) => {
     try {
-      const res = await AxiosWrapper.get(
-        `user/following/following_id=${payload.userId}`
-      );
-      return res;
+      if (CONFIG.NODE_ENV == "test") {
+        return testUserData.followingList;
+      } else {
+        const res = await AxiosWrapper.get(
+          `user/following/following_id=${payload.userId}`
+        );
+        return res;
+      }
     } catch (error) {
       console.error(error);
     }
   },
   followerList: async (payload) => {
     try {
-      const res = await AxiosWrapper.get(
-        `user/follower/followed_id=${payload.userId}`
-      );
-      return res;
+      if (CONFIG.NODE_ENV == "test") {
+        return testUserData.followedList;
+      } else {
+        const res = await AxiosWrapper.get(
+          `user/follower/followed_id=${payload.userId}`
+        );
+        return res;
+      }
     } catch (error) {
       console.error(error);
     }

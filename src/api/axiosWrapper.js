@@ -1,11 +1,8 @@
 import axios from "axios";
-
-const serverURL = "http://141.164.41.213:8081";
-const VERSION = "/v1";
-const baseURL = serverURL + VERSION + "/api";
+import CONFIG from "../utils/CONFIG";
 
 export const instance = axios.create({
-  baseURL,
+  baseURL: CONFIG.API_BASE_URL,
 });
 
 const handleSuccess = (response) => {
