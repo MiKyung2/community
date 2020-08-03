@@ -10,12 +10,13 @@ import {useRouter} from "next/router";
 
 const BoardPage = (props) => {
 
+  console.log("boardpage props", props);
+
   return useObserver(() => {
     const router = useRouter();
 
     const state = useLocalStore(() => {
       return {
-        // 게시판의 initial data 가져오기
         dataSource: props.listByLike,
         page: {
           total: 11,
@@ -25,11 +26,6 @@ const BoardPage = (props) => {
     });
 
     const columns = [
-    // {
-    //   title: "번호",
-    //   dataIndex: "id",
-    //   key: "id",
-    // },
     {
       title: "제목",
       dataIndex: "title",
@@ -50,26 +46,60 @@ const BoardPage = (props) => {
       title: "댓글수",
       dataIndex: "commentCnt",
       key: "commentCnt",
-    }];
+    },
+    {
+      title: "날짜",
+      dataIndex: "createdDate",
+      key: "createdDate",
+    },];
 
-    console.log("dataSource length", state.dataSource.length)
 
-    const filterLists = ['좋아요순', '댓글순', '조회수순'];
+    // 최신순 | 좋아요순 | 댓글순 | 조회수순
+    const filterLists = [
+      {
+        id: 'filter_newest',
+        name: '최신순'
+      },
+      {
+        id: 'filter_like',
+        name: '좋아요순'
+      },
+      {
+        id: 'filter_comment',
+        name: '댓글순'
+      },
+      {
+        id: 'filter_view',
+        name: '조회수순'
+      },
+    ]
 
-    // 검색 필터 변경
-    const onClickFilter = (index) => {
+    const onClickFilter = (e) => {
+      // console.log("onclickFIlter", e.target.id);
 
-      if (index === 0) {
-        //  "좋아요순"
-        state.dataSource = props.listByLike;
-      } else if (index === 1) {
-        //  "댓글순"
-        state.dataSource = props.listByComment;
-      } else {
-        // "조회수순"
-        state.dataSource = props.listByViewCnt;
+      const target = e.target.id;
+
+      switch (target) {
+        case 'filter_newest' :
+          console.log("최신순!!");
+          break;
+        case 'filter_like' :
+          // console.log("좋아요순!!");
+          state.dataSource = props.listByLike;
+          break;
+        case 'filter_comment' :
+          // console.log("댓글순!!");
+          state.dataSource = props.listByComment;
+          break;
+        case 'filter_view' :
+          // console.log("조회수순!!");
+          state.dataSource = props.listByViewCnt;
+          break;
+        default :
+          console.log("default-최신순?");
+          // console.error("filter error");
       }
-    };
+    }
 
     // 새글쓰기
     const onClickNewPostBtn = () => {
@@ -84,8 +114,6 @@ const BoardPage = (props) => {
 
           // 해당 게시물로 이동
           router.push('/board/[id]', `/board/${state.dataSource[rowIndex].id}`);
-
-          
         }
       }
     }
@@ -99,12 +127,13 @@ const BoardPage = (props) => {
 
     return (
       <div className={props.className}>
+        
         <Row justify="space-between">
           <h1>게시판 이름</h1>
 
           {/* "새글쓰기" 버튼 */}
           <Button
-            style={{ marginBottom: "40px" }}
+            className="new_post_btn"
             type="primary"
             onClick={onClickNewPostBtn}
           >
@@ -116,14 +145,13 @@ const BoardPage = (props) => {
         <Row
           align="bottom"
           justify="space-between"
-          style={{ marginBottom: "20px" }}
+          className="filter_container"
         >
           {/* 좋아요순 | 댓글순 | 조회수순 */}
           <ul className="filter">
-            {filterLists &&
-              filterLists.map((list, index) => (
-                <li onClick={() => onClickFilter(index)}>{list}</li>
-              ))}
+            {filterLists && filterLists.map(list => (
+              <li id={list.id} onClick={onClickFilter}>{list.name}</li>
+            ))}
           </ul>
 
           {/* 검색바 */}
@@ -137,14 +165,7 @@ const BoardPage = (props) => {
           onRow={onClickTableRow}
           pagination={{ pageSize: 10 }}
           scroll={true}
-        />
-          {/* {state.dataSource && state.dataSource.map(data => { */}
-            {/* <Column key="00" dataIndex="dataindex" /> */}
-
-          {/* })} */}
-        {/* </Table> */}
-
-        
+        />        
       </div>
     );
   });
@@ -181,9 +202,14 @@ export const getStaticProps = async () => {
 
 export default styled(BoardPage)`
   & {
+    .new_post_btn {
+      margin-bottom: 40px;
+    }
+    .filter_container {
+      margin-bottom: 20px;
+    }
     .filter {
       display: flex;
-      /* margin-bottom: 20px; */
       > li {
         margin-right: 10px;
         font-size: 14px;

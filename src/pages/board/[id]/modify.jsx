@@ -8,39 +8,50 @@ import {useRouter} from 'next/router';
 import BoardAPI from "../../../api/board";
 
 const { Option } = Select;
-const CreateBoard = (props) => {
+
+
+const EditBoard = (props) => {
+
+    // console.log("게시물 수정 props", props.props.board.body);
+
     return useObserver(() => {
 
         const router = useRouter();
         const state = useLocalStore(() => {
             return {
-                select: '',
-                title: '',
-                content: ''
+                data: props.props.board.body,
+                id: props.props.board.body.id,
+                writer: props.props.board.body.writer,
+                // select: props.board.body.select,
+                title: props.props.board.body.title,
+                contents: props.props.board.body.contents
             }
         });
 
-        const onSubmitForm = (e) => {
+        const onSubmitEditForm = async (e) => {
             e.preventDefault();
 
             const formData = {
-                // id: 1,
-                writer: "ally",
-                // select: state.select,
+                id: state.id,
+                writer: state.writer,
                 title: state.title,
-                contents: state.content,
+                contents: state.contents,
             }
 
-            BoardAPI.write(formData);
+            console.log("게시물 수정!!!!", formData);
+
+            const boardEditRes = await BoardAPI.edit(formData);
+
+            console.log("글 수정 후 res", boardEditRes);
 
             // 글목록 or 해당 글로 이동
-            router.push('/board', `/board`);
+            router.push('/board/[id]', `/board/${state.id}`);
         }
 
         const onCancel = (e) => {
             console.log("새 글 작성 - 취소");
             // 글목록 or 해당 글로 이동
-            router.push('/board', `/board`);
+            router.push('/board/[id]', `/board/${state.id}`);
         }	
 
     
@@ -57,22 +68,20 @@ const CreateBoard = (props) => {
         const onChangeEditor = (e) => {
             // input data 변경 
             // console.log("onEditorChange!", e.editor.getData());
-            state.content = e.editor.getData();
-        }
-    
-       			      
+            state.contents = e.editor.getData();
+        }			      
     
     
       return (
         <div className={props.className}>
             <div className="container">
                 <header className="header">
-					<h2>새 글 작성</h2>
+					<h2>게시물 수정</h2>
 					<Avatar size="large" icon={<UserOutlined />} />
                 </header>
     
                 <section>
-                    <form onSubmit={onSubmitForm}>
+                    <form onSubmit={onSubmitEditForm}>
                         {/* 게시판 선택 */}
                         <Select defaultValue="default" className="select" onChange={onChangeSelect}>
                             <Option value="default">게시판을 선택해주세요.</Option>
@@ -86,7 +95,7 @@ const CreateBoard = (props) => {
                         
                         {/* 게시판 내용 */}
                         <CKEditor
-                        data={state.content}
+                        data={state.contents}
                         onChange={onChangeEditor}
                         className="editor"
                         />
@@ -94,7 +103,7 @@ const CreateBoard = (props) => {
                         {/* 버튼 - 등록 & 취소 */}
                         <div className="buttons">
                             <Button type="default" onClick={onCancel}>취소</Button>
-                            <Button type="primary" htmlType="submit">등록</Button>
+                            <Button type="primary" htmlType="submit">수정</Button>
                         </div>
                     </form>
                 </section>    
@@ -104,14 +113,29 @@ const CreateBoard = (props) => {
     })
 };
 
-export default styled(CreateBoard)`
+EditBoard.getInitialProps = async({ query }) => {
+
+    const boardDetailRes = await BoardAPI.detail({ 
+        id: query.id
+        });
+
+        console.log("boardDetailRes", boardDetailRes)
+    return {
+        props: {
+        board: boardDetailRes,
+        }
+    };
+  
+}
+
+export default styled(EditBoard)`
     display: flex; 
     flex-direction: column; 
     justify-content: center; 
     align-items: center;
     & {
         .container {
-            width: '80%';
+            width: 80%;
         }
         .header {
             /* border: 1px solid red; */

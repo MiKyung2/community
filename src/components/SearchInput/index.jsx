@@ -41,16 +41,31 @@ const SearchInput = ({ onSubmitSearchInput }) => {
     const onClickMenu = (e) => {
       
       const target = e.target.dataset.name;
-    
-      if(target === "title") {
-        // 제목 필터로 검색
-        state.menu = target;
-        state.filter = target;
-      } else {
-        // 글쓴이 필터로 검색
-        state.menu = target;
-        state.filter = target;
-      } 
+
+      state.menu = target;
+      state.filter = target;
+
+    }
+
+    const filterName = () => {
+
+      let filter;
+
+      switch(state.filter) {
+        case 'title' :
+          filter = "제목"
+          break;
+        case 'writer' :
+          filter = "글쓴이"
+          break;
+        case 'contents' :
+          filter = "내용"
+          break;
+        default :
+          filter = '필터'
+      }
+
+      return filter;
     }
     
     const menu = (
@@ -65,25 +80,13 @@ const SearchInput = ({ onSubmitSearchInput }) => {
             글쓴이
           </a>
         </Menu.Item>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" data-name="contents" onClick={onClickMenu}>
+            내용
+          </a>
+        </Menu.Item>
       </Menu>
     );
-
-    const filterName = () => {
-
-      let filter;
-      
-      if(state.filter === null) {
-        filter = "필터"
-      } else if (state.filter === "title") {
-        filter = "제목"
-      } else if (state.filter === "writer") {
-        filter = "글쓴이"
-      } else {
-        console.log("검색 필터 이름 에러.")
-      }
-
-      return filter;
-    }
 
     return (
       <div>
