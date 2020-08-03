@@ -4,8 +4,8 @@ const NoteAPI = {
   sendList: async (payload) => {
     try {
       const res = await AxiosWrapper.get(`note/send?userId=${payload.userId}`);
-
-      return res;
+      res.body.map((v) => (v.key = v.id));
+      return res.body;
     } catch (error) {
       console.error(error);
     }
@@ -15,8 +15,8 @@ const NoteAPI = {
       const res = await AxiosWrapper.get(
         `note/receive?userId=${payload.userId}`
       );
-
-      return res;
+      res.body.map((v) => (v.key = v.id));
+      return res.body;
     } catch (error) {
       console.error(error);
     }

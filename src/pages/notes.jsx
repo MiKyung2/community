@@ -72,23 +72,27 @@ const Notes = (props) => {
 
       switch (state.tabActive) {
         case "R":
+          state.receiveList = [];
           (async () => {
             try {
               const res = await NoteAPI.receiveList({ userId: 1 });
-              state.receiveList = res.body;
+              state.receiveList = res;
             } catch (error) {
               state.error = true;
             }
           })();
+          break;
         case "S":
+          state.sendList = [];
           (async () => {
             try {
               const res = await NoteAPI.sendList({ userId: 1 });
-              state.sendList = res.body;
+              state.sendList = res;
             } catch (error) {
               state.error = true;
             }
           })();
+          break;
       }
     }, [state.tabActive]);
 
@@ -160,10 +164,9 @@ const Notes = (props) => {
 
 Notes.getInitialProps = async () => {
   try {
-    const receiveList = NoteAPI.receiveList({ userId: 1 });
-
+    const receiveList = await NoteAPI.receiveList({ userId: 1 });
     return {
-      receiveList: [],
+      receiveList,
     };
   } catch (error) {
     console.error("error : ", error);

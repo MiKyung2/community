@@ -8,10 +8,10 @@ const initializer = (props) => {
   const state = {
     status: { loading: false },
     user: {
-      id: props.init?.user.id,
-      name: props.init?.user.name,
-      token: props.init?.user.token,
-      level: props.init?.user.level,
+      id: "",
+      name: "",
+      token: "",
+      level: "",
     },
   };
 
@@ -48,19 +48,22 @@ App.getInitialProps = async (appContext) => {
   const ctx = appContext.ctx;
 
   const ssr = !!appContext.ctx.req;
-  const ck = cookie.parse((ctx.req ? ctx.req.headers.cookie : document.cookie) ?? "");
+  const ck = cookie.parse(
+    (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? ""
+  );
 
   const token = ck.auth ?? "";
 
   return {
     ...nextAppProps,
-    ssr, cookie,
+    ssr,
+    cookie,
     init: {
       user: {
         token,
-      }
+      },
     },
-  }
-}
+  };
+};
 
 export default useApp;
