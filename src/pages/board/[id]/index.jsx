@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, {ServerStyleSheet, injectGlobal} from 'styled-components';
 import { Button, Row } from 'antd';
 import { EditOutlined, EyeOutlined, CommentOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
 import { useObserver, useLocalStore } from 'mobx-react';
@@ -10,6 +10,8 @@ import AddComment from '../../../components/Board/Comment/AddComment';
 
 
 const Board = (props) => {
+
+  console.log("Board props", props)
 
   const router = useRouter();
   const queryId = router.query.id;
@@ -54,104 +56,68 @@ const Board = (props) => {
     
 
     return (
-      <div style={{
-                // border: '1px solid black',
-                // maxWidth: '75%',
-      }}>
-        <Row justify="space-between" style={{ marginBottom: '60px'}}>
-          <h2 style={{marginBottom: '40px'}}>{state.data.title}</h2>
-          <Row>
-          <Button type="default" onClick={onClickBackToList}>글 목록</Button>
-          </Row>
-        </Row>
-
-
-        <div style={{
-                display: 'flex', 
-                justifyContent: 'space-between', 
-                fontSize: '13px',
-                marginBottom: '20px',
-                padding: '0 6px'
-        }}>
-          <span><strong>작성일:</strong> {state.data.createdDate}</span>
-          <span><strong>작성자:</strong> {state.data.writer}</span>
-        </div>
-        
-        {/* 게시글 main */}
-        <div style={{
-                // border: '1px solid green',
-                backgroundColor: '#fff',
-                boxShadow: '0 0 5px rgba(0,0,0,0.3)', 
-                borderRadius: '5px',
-                height: '250px',
-                // maxWidth: '75%',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                padding: '20px 10px',
-                marginBottom: '100px',
-                // overflow: 'auto'
-        }}>
-
-        
-          {/* 게시글 상단 */}
-          <Row justify="space-between" style={{
-                                          // border: '1px solid red',
-                                          borderBottom: '1px solid lightgray',
-                                          alignItems:'center',
-                                          paddingLeft: '15px'
-                                        }
-          }>
-            
-            {/* 해당 게시글 조회수 & 댓글수 & 좋아요수 */}
-            <Row>
-              <span style={{marginRight: '10px', color: 'gray'}}><EyeOutlined /> {state.data.viewCount}</span>
-              <span style={{marginRight: '10px', color: 'gray'}}><LikeOutlined onClick={onClickLikeDislike} /> {state.data.rowLike}</span>
-              <span style={{marginRight: '10px', color: 'gray'}}><DislikeOutlined onClick={onClickLikeDislike} /> {state.data.rowDisLike}</span>
-              {/* <span style={{marginRight: '5px', color: 'gray'}}><CommentOutlined /> {state.data.commentCnt}</span> */}
-            </Row>
-
-            {/* 수정 & 삭제 */}
-            <Row>
-              <Button type="text" onClick={onClickEdit}>수정</Button>
-              <Button type="text" onClick={onClickDelete}>삭제</Button>
-            </Row>
-          </Row>
-
-
-          {/* 게시글 내용 */}
-          <div style={{
-                  // border: '1px solid red',
-                  width: '100%',
-                  flex: '9' ,
-                  marginTop: '50px'
-          }}>
-            <p style={{
-                // border: '1px solid blue',
-                margin: '0',
-                padding: '0 30px'
-              }}>
-                {state.data.contents}
-            </p>
-          </div>
-        </div>
-
-
-        {/* 댓글 */}
+      <div className={props.className}>
         <div>
-          <h3>댓글</h3>
+          <Row justify="space-between" className="header_top">
+            <h2>{state.data.title}</h2>
+            <Row>
+            <Button type="default" onClick={onClickBackToList}>글 목록</Button>
+            </Row>
+          </Row>
 
-          {/* 댓글 - 리스트 */}
-          <CommentList />
+          <div className="header_bottom">
+            <span><strong>작성일:</strong> {state.data.createdDate}</span>
+            <span><strong>작성자:</strong> {state.data.writer}</span>
+          </div>
+          
+          
+          {/* 게시글 main */}
+          <div className="main_container">
 
-          {/* 댓글 - 새댓글 등록 */}
-          <AddComment />
+            {/* 게시글 상단 */}
+            <Row justify="space-between" className="main_container_top">
+              
+              {/* 해당 게시글 조회수 & 댓글수 & 좋아요수 */}
+              <Row>
+                <span className="main_container_top_left "><EyeOutlined /> {state.data.viewCount}</span>
+                <span className="main_container_top_left "><LikeOutlined onClick={onClickLikeDislike} /> {state.data.rowLike}</span>
+                <span className="main_container_top_left "><DislikeOutlined onClick={onClickLikeDislike} /> {state.data.rowDisLike}</span>
+                {/* <span className="main_container_top_left "><CommentOutlined /> {state.data.commentCnt}</span> */}
+              </Row>
+
+              {/* 수정 & 삭제 */}
+              <Row>
+                <Button type="text" onClick={onClickEdit}>수정</Button>
+                <Button type="text" onClick={onClickDelete}>삭제</Button>
+              </Row>
+            </Row>
+
+
+            {/* 게시글 내용 */}
+            <div className="main_content ">
+              <p>
+                  {state.data.contents}
+              </p>
+            </div>
+          </div>
+
+
+          {/* 댓글 */}
+          <div>
+            <h3>댓글</h3>
+
+            {/* 댓글 - 리스트 */}
+            <CommentList />
+
+            {/* 댓글 - 새댓글 등록 */}
+            <AddComment />
+          </div>
+
+
+
+          {/* 글목록 버튼*/}
+
         </div>
-
-
-
-        {/* 글목록 버튼*/}
-
       </div>
     );
   });
@@ -174,5 +140,53 @@ Board.getInitialProps = async({ query }) => {
 
 }
 
-
-export default Board;
+export default styled(Board)`
+  & {
+    .header_top {
+      margin-bottom: 60px;
+      > h2 {
+        margin-bottom: 40px;
+      }
+    }
+    .header_bottom {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 20px;
+      padding: 0 6px;
+    }
+    .main_container {
+      /* border: 1px solid green; */
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.3);
+      border-radius: 5px;
+      height: 250px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px 10px;
+      margin-bottom: 100px;
+    }
+    .main_container_top {
+      /* border: 1px solid red; */
+      border-bottom: 1px solid lightgray;
+      align-items: center;
+      padding-left: 15px;
+    }
+    .main_container_top_left {
+      margin-right: 10px;
+      color: gray;
+    }
+    .main_content {
+      /* border: 1px solid red; */
+      width: 100%;
+      flex: 9;
+      margin-top: 50px;
+      > p {
+        /* border: 1px solid blue; */
+        margin: 0;
+        padding: 0 30px;
+      }
+    }
+  }
+`;

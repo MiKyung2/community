@@ -8,7 +8,7 @@ import {useRouter} from 'next/router';
 import BoardAPI from "../../../api/board";
 
 const { Option } = Select;
-const CreateBoard = () => {
+const CreateBoard = (props) => {
     return useObserver(() => {
 
         const router = useRouter();
@@ -62,16 +62,9 @@ const CreateBoard = () => {
     
     
       return (
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-            <div className="container" style={{ width: '80%'}}>
-                <header style={{
-					// border: '1px solid red', 
-					display: 'flex', 
-					justifyContent: 'space-between', 
-					alignItems: 'center',
-					marginBottom: '40px'
-					}}
-                >
+        <div className={props.className}>
+            <div className="container">
+                <header className="header">
 					<h2>새 글 작성</h2>
 					<Avatar size="large" icon={<UserOutlined />} />
                 </header>
@@ -79,7 +72,7 @@ const CreateBoard = () => {
                 <section>
                     <form onSubmit={onSubmitForm}>
                         {/* 게시판 선택 */}
-                        <Select defaultValue="default" style={{ width: '100%', marginBottom: '15px' }} onChange={onChangeSelect}>
+                        <Select defaultValue="default" className="select" onChange={onChangeSelect}>
                             <Option value="default">게시판을 선택해주세요.</Option>
                             <Option value="option1">Option1</Option>
                             <Option value="option2">Option2</Option>
@@ -87,17 +80,17 @@ const CreateBoard = () => {
                         </Select>
                         
                         {/* 게시판 제목 */}
-                        <Input value={state.title} onChange={onChangeTitle} style={{ width: '100%', marginBottom: '15px' }} placeholder="제목을 입력해주세요." />
+                        <Input value={state.title} onChange={onChangeTitle} className="input" placeholder="제목을 입력해주세요." />
                         
                         {/* 게시판 내용 */}
                         <CKEditor
                         data={state.content}
                         onChange={onChangeEditor}
-                        style={{marginBottom: '30px'}}
+                        className="editor"
                         />
     
                         {/* 버튼 - 등록 & 취소 */}
-                        <div className="buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <div className="buttons">
                             <Button type="default" onClick={onCancel}>취소</Button>
                             <Button type="primary" htmlType="submit">등록</Button>
                         </div>
@@ -110,5 +103,36 @@ const CreateBoard = () => {
 };
 
 export default styled(CreateBoard)`
-
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    & {
+        .container {
+            width: '80%';
+        }
+        .header {
+            /* border: 1px solid red; */
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .select {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .input {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .editor {
+            margin-bottom: 30px;
+        }
+        .buttons {
+            display: flex; 
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
 `;

@@ -10,22 +10,21 @@ import BoardAPI from "../../../api/board";
 const { Option } = Select;
 
 
-const EditBoard = ({props}) => {
+const EditBoard = (props) => {
 
-    console.log("게시물 수정 props", props.board.body);
-
+    // console.log("게시물 수정 props", props.props.board.body);
 
     return useObserver(() => {
 
         const router = useRouter();
         const state = useLocalStore(() => {
             return {
-                data: props.board.body,
-                id: props.board.body.id,
-                writer: props.board.body.writer,
+                data: props.props.board.body,
+                id: props.props.board.body.id,
+                writer: props.props.board.body.writer,
                 // select: props.board.body.select,
-                title: props.board.body.title,
-                contents: props.board.body.contents
+                title: props.props.board.body.title,
+                contents: props.props.board.body.contents
             }
         });
 
@@ -52,7 +51,7 @@ const EditBoard = ({props}) => {
         const onCancel = (e) => {
             console.log("새 글 작성 - 취소");
             // 글목록 or 해당 글로 이동
-            router.push('/board', `/board`);
+            router.push('/board/[id]', `/board/${state.id}`);
         }	
 
     
@@ -74,16 +73,9 @@ const EditBoard = ({props}) => {
     
     
       return (
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-            <div className="container" style={{ width: '80%'}}>
-                <header style={{
-					// border: '1px solid red', 
-					display: 'flex', 
-					justifyContent: 'space-between', 
-					alignItems: 'center',
-					marginBottom: '40px'
-					}}
-                >
+        <div className={props.className}>
+            <div className="container">
+                <header className="header">
 					<h2>게시물 수정</h2>
 					<Avatar size="large" icon={<UserOutlined />} />
                 </header>
@@ -91,7 +83,7 @@ const EditBoard = ({props}) => {
                 <section>
                     <form onSubmit={onSubmitEditForm}>
                         {/* 게시판 선택 */}
-                        <Select defaultValue="default" style={{ width: '100%', marginBottom: '15px' }} onChange={onChangeSelect}>
+                        <Select defaultValue="default" className="select" onChange={onChangeSelect}>
                             <Option value="default">게시판을 선택해주세요.</Option>
                             <Option value="option1">Option1</Option>
                             <Option value="option2">Option2</Option>
@@ -99,17 +91,17 @@ const EditBoard = ({props}) => {
                         </Select>
                         
                         {/* 게시판 제목 */}
-                        <Input value={state.title} onChange={onChangeTitle} style={{ width: '100%', marginBottom: '15px' }} placeholder="제목을 입력해주세요." />
+                        <Input value={state.title} onChange={onChangeTitle} className="input" placeholder="제목을 입력해주세요." />
                         
                         {/* 게시판 내용 */}
                         <CKEditor
                         data={state.contents}
                         onChange={onChangeEditor}
-                        style={{marginBottom: '30px'}}
+                        className="editor"
                         />
     
                         {/* 버튼 - 등록 & 취소 */}
-                        <div className="buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <div className="buttons">
                             <Button type="default" onClick={onCancel}>취소</Button>
                             <Button type="primary" htmlType="submit">수정</Button>
                         </div>
@@ -137,5 +129,36 @@ EditBoard.getInitialProps = async({ query }) => {
 }
 
 export default styled(EditBoard)`
-
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    & {
+        .container {
+            width: 80%;
+        }
+        .header {
+            /* border: 1px solid red; */
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .select {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .input {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .editor {
+            margin-bottom: 30px;
+        }
+        .buttons {
+            display: flex; 
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
 `;
