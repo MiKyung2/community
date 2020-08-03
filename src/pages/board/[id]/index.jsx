@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, {ServerStyleSheet, injectGlobal} from 'styled-components';
 import { Button, Row } from 'antd';
-import { EditOutlined, EyeOutlined, CommentOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
+import { EyeOutlined, CommentOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useRouter } from 'next/router';
 import BoardAPI from "../../../api/board";

@@ -96,7 +96,7 @@ const BoardPage = (props) => {
           state.dataSource = props.listByViewCnt;
           break;
         default :
-          console.log("default");
+          console.log("default-최신순?");
           // console.error("filter error");
       }
     }
@@ -127,6 +127,7 @@ const BoardPage = (props) => {
 
     return (
       <div className={props.className}>
+        
         <Row justify="space-between">
           <h1>게시판 이름</h1>
 

@@ -37,6 +37,12 @@ const CreateBoard = (props) => {
             router.push('/board', `/board`);
         }
 
+        const onCancel = (e) => {
+            console.log("새 글 작성 - 취소");
+            // 글목록 or 해당 글로 이동
+            router.push('/board', `/board`);
+        }	
+
     
         const onChangeSelect = (e) => {
             // console.log("게시판 선택", e);
@@ -54,11 +60,7 @@ const CreateBoard = (props) => {
             state.content = e.editor.getData();
         }
     
-        const onCancel = (e) => {
-            console.log("새 글 작성 - 취소");
-            // 글목록 or 해당 글로 이동
-            router.push('/board', `/board`);
-        }				      
+       			      
     
     
       return (
