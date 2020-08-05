@@ -164,7 +164,7 @@ export default styled(Board)`
       width: 100%;
       flex: 9;
       margin-top: 50px;
-      padding: 0 30px;
+      padding: 0 30px 30px 30px;
     }
   }
 `;
