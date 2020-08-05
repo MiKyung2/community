@@ -87,9 +87,7 @@ const Board = (props) => {
 
             {/* 게시글 내용 */}
             <div className="main_content ">
-              <p>
-                  {state.data.contents}
-              </p>
+              <div dangerouslySetInnerHTML={ { __html: state.data.contents } }></div>
             </div>
           </div>
 
@@ -145,7 +143,6 @@ export default styled(Board)`
       background-color: #fff;
       box-shadow: 0 0 5px rgba(0,0,0,0.3);
       border-radius: 5px;
-      height: 250px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -167,11 +164,7 @@ export default styled(Board)`
       width: 100%;
       flex: 9;
       margin-top: 50px;
-      > p {
-        /* border: 1px solid blue; */
-        margin: 0;
-        padding: 0 30px;
-      }
+      padding: 0 30px;
     }
   }
 `;

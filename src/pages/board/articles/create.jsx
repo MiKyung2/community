@@ -56,7 +56,8 @@ const CreateBoard = (props) => {
         const onChangeEditor = (e) => {
             // input data 변경 
             // console.log("onEditorChange!", e.editor.getData());
-            state.contents = e.editor.getData();
+            const dataFromEditor =  e.editor.getData();
+            state.contents = dataFromEditor;
         }
     
        			      
