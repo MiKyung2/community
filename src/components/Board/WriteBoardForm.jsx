@@ -53,8 +53,9 @@ const WriteBoardForm = (props) => {
                         
                         {/* 게시판 내용 */}
                         <CKEditor
-                        data={boardContents}
-                        onChange={onChangeEditor}
+                            type="classic"
+                            data={boardContents}
+                            onChange={onChangeEditor}
                         />
     
                         {/* 버튼 - 등록||수정 & 취소 */}

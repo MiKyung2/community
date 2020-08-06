@@ -58,7 +58,7 @@ const columns = [
 
 
 const BoardPage = (props) => {
-  // console.log("boardpage props", props);
+  console.log("boardpage props", props);
 
   return useObserver(() => {
     const router = useRouter();
@@ -67,8 +67,8 @@ const BoardPage = (props) => {
       return {
         dataSource: props.listByLike,
         page: {
-          total: 11,
-          current: 1,
+          pageSize: 10,
+          currentPage: 1,
         },
       };
     });
@@ -103,11 +103,21 @@ const BoardPage = (props) => {
     const onClickTableRow = (record, rowIndex) => {
       return {
         onClick: () => {
-          // console.log("해당 게시물 id", state.dataSource[rowIndex].id)
-          // 해당 게시물로 이동
-          router.push('/board/[id]', `/board/${state.dataSource[rowIndex].id}`);
+          const currentPage = state.page.currentPage;
+          const pageSize = state.page.pageSize;
+          const dataIndex = (currentPage - 1) * pageSize + rowIndex;
+          const currentDataId = state.dataSource[dataIndex].id;
+          
+          router.push('/board/[id]', `/board/${currentDataId}`);
+          // console.log("해당 게시물 id", state.dataSource[dataIndex].id);
+
         }
       }
+    }
+
+    const onChangePage = (page, pageSize) => {
+      // console.log("page:", page, "pageSize", pageSize);
+      state.page.currentPage = page;
     }
 
     // 필터&검색
@@ -119,6 +129,7 @@ const BoardPage = (props) => {
     const onClickNewPostBtn = () => {
       router.push("/board/articles/create");
     };
+
 
 
     return (
@@ -151,7 +162,7 @@ const BoardPage = (props) => {
           columns={columns}
           dataSource={state.dataSource}
           onRow={onClickTableRow}
-          pagination={{ pageSize: 10 }}
+          pagination={{ pageSize: state.page.pageSize, onChange: onChangePage }}
           scroll={true}
         />        
       </div>
