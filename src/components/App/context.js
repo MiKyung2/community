@@ -1,5 +1,12 @@
 import * as React from "react";
 
-import { IApp } from "../../hooks/app";
-
-export const AppContext = React.createContext(IApp);
+export const AppContext = React.createContext({
+  status: { loading: false },
+    user: {
+      id: '',
+      email: '',
+      name: '',
+      token: '',
+      level: '',
+    },
+});

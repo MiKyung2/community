@@ -13,7 +13,6 @@ import { AppContext } from '../../components/App/context';
 const SignIn = (props) => {
   const global = React.useContext(AppContext);
 
-  // const global = useApp();
   return useObserver(() => {
     const state = useLocalStore(() => {
       return {
