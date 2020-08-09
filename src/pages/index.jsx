@@ -7,7 +7,7 @@ const Home = (props) => {
   return useObserver(() => {
     const router = useRouter();
     const test = "test";
-    CONFIG.LOG(`test : ${test}`);
+
     return <div className={props.className}>home</div>;
   });
 };

@@ -23,7 +23,7 @@ const NoteAPI = {
   },
   get: async (payload) => {
     try {
-      const res = await AxiosWrapper.get(`note/${payload.id}`);
+      const res = await AxiosWrapper.get(`note/detail/${payload.gb}/${payload.id}`);
       return res;
     } catch (error) {
       console.error(error);
@@ -39,9 +39,7 @@ const NoteAPI = {
   },
   remove: async (payload) => {
     try {
-      const res = await AxiosWrapper.post(
-        `note/remove/${payload.gb}/${payload.id}`
-      );
+      const res = await AxiosWrapper.post("note/remove/bulk", payload.data);
       return res;
     } catch (error) {
       console.error(error);

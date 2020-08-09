@@ -43,8 +43,10 @@ const Notes = (props) => {
       (async () => {
         try {
           const res = await NoteAPI.remove({
-            gb: state.tabActive,
-            id: state.delete.selectedRowKeys,
+            data: {
+              gb: state.tabActive,
+              id: state.delete.selectedRowKeys,
+            }
           });
 
           state.delete.selectedRowKeys = [];

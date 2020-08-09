@@ -59,6 +59,22 @@ const UserAPI = {
       console.error(error);
     }
   },
+  follow: async (payload) => {
+    try {
+      const res = await AxiosWrapper.post(payload.data);
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  unfollow: async (payload) => {
+    try {
+      const res = await AxiosWrapper.delete(payload.data);
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 };
 
 export default UserAPI;
