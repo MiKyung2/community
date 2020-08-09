@@ -8,9 +8,12 @@ import { MessageOutlined, BellOutlined, UserOutlined } from "@ant-design/icons";
 import useApp from '../../hooks/app';
 import routes from "../../routes";
 import styled from "styled-components";
+import { AppContext } from '../App/context';
 
 const LayoutHeader = (props) => {
   return useObserver(() => {
+    const global = React.useContext(AppContext);
+
     const state = useLocalStore(() => {
       return {
         login: false
