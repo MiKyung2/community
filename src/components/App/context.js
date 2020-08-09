@@ -1,3 +1,5 @@
 import * as React from "react";
 
-export const AppContext = React.createContext(null);
+import { IApp } from "../../hooks/app";
+
+export const AppContext = React.createContext(IApp);

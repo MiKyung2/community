@@ -8,10 +8,12 @@ import styled from 'styled-components';
 import { Form, Input, Button, Checkbox, Row, Col } from 'antd';
 import AuthAPI from '../../api/auth';
 
-import useApp from '../../hooks/app';
+import { AppContext } from '../../components/App/context';
 
 const SignIn = (props) => {
-  const global = useApp();
+  const global = React.useContext(AppContext);
+
+  // const global = useApp();
   return useObserver(() => {
     const state = useLocalStore(() => {
       return {
@@ -23,9 +25,6 @@ const SignIn = (props) => {
         },
       };
     });
-
-    // const stringify = JSON.stringify(global, null, 3);
-    // const parse = JSON.parse(stringify);
 
     const onLogin = async () => {
       const resAuth = await AuthAPI.login(state);
