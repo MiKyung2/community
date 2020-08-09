@@ -10,6 +10,8 @@ import routes from "../../routes";
 import styled from "styled-components";
 import { AppContext } from '../App/context';
 
+import { useObserver } from "mobx-react";
+
 const LayoutHeader = (props) => {
   return useObserver(() => {
     const global = React.useContext(AppContext);
