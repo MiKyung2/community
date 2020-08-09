@@ -7,13 +7,13 @@ const { TabPane } = Tabs;
 
 const sendColumns = [
   { title: "제목", dataIndex: "title" },
-  { title: "받는 사람", dataIndex: "toWriter" },
+  { title: "받는 사람", dataIndex: "revId" },
   { title: "보낸 시간", dataIndex: "createdDate" },
 ];
 
 const receiveColumns = [
   { title: "제목", dataIndex: "title" },
-  { title: "보낸 사람", dataIndex: "fromWriter" },
+  { title: "보낸 사람", dataIndex: "sendId" },
   { title: "받은 시간", dataIndex: "createdDate" },
 ];
 
@@ -21,7 +21,9 @@ const Notes = (props) => {
   return useObserver(() => {
     const state = useLocalStore(() => {
       return {
-        tabActive: "receive",
+        loading: false,
+        error: false,
+        tabActive: "R",
         receiveList: props.receiveList || [],
         sendList: [],
         delete: {
@@ -37,11 +39,23 @@ const Notes = (props) => {
 
     const onDelete = () => {
       state.delete.loading = true;
-      // ajax request after empty completing
-      setTimeout(() => {
-        state.delete.selectedRowKeys = [];
-        state.delete.loading = false;
-      }, 1000);
+
+      (async () => {
+        try {
+          const res = await NoteAPI.remove({
+            data: {
+              gb: state.tabActive,
+              id: state.delete.selectedRowKeys,
+            }
+          });
+
+          state.delete.selectedRowKeys = [];
+        } catch (error) {
+          // state.error = true;
+        } finally {
+          state.delete.loading = false;
+        }
+      })();
     };
 
     const onSelectChange = (selectedRowKeys) => {
@@ -58,50 +72,29 @@ const Notes = (props) => {
     React.useEffect(() => {
       state.delete.selectedRowKeys = [];
 
-      if (state.tabActive === "receive") {
-        const data = [];
-        for (let i = 0; i < 46; i++) {
-          data.push({
-            key: i,
-            title: `받는 쪽지 제목입니다 ${i}`,
-            contents: `내용입니다 ${i}`,
-            fromWriter: `보낸사람 ${i}`,
-            toWriter: `받는사람 ${i}`,
-            createdDate: "4일 전",
-            viewPoint: 0,
-          });
-        }
-        state.receiveList = data;
-
-        // (async () => {
-        //   try {
-        //     const res = await NoteAPI.receiveList({ userId: 1 });
-        //   } catch (error) {
-        //     throw error;
-        //   }
-        // })();
-      } else if (state.tabActive === "send") {
-        const data = [];
-        for (let i = 0; i < 46; i++) {
-          data.push({
-            key: i,
-            title: `받은 쪽지 제목입니다 ${i}`,
-            contents: `내용입니다 ${i}`,
-            fromWriter: `보낸사람 ${i}`,
-            toWriter: `받는사람 ${i}`,
-            createdDate: "4일 전",
-            viewPoint: 0,
-          });
-        }
-        state.sendList = data;
-
-        // (async () => {
-        //   try {
-        //     const res = await NoteAPI.sendList({ userId: 1 });
-        //   } catch (error) {
-        //     throw error;
-        //   }
-        // })();
+      switch (state.tabActive) {
+        case "R":
+          state.receiveList = [];
+          (async () => {
+            try {
+              const res = await NoteAPI.receiveList({ userId: 1 });
+              state.receiveList = res;
+            } catch (error) {
+              state.error = true;
+            }
+          })();
+          break;
+        case "S":
+          state.sendList = [];
+          (async () => {
+            try {
+              const res = await NoteAPI.sendList({ userId: 1 });
+              state.sendList = res;
+            } catch (error) {
+              state.error = true;
+            }
+          })();
+          break;
       }
     }, [state.tabActive]);
 
@@ -144,14 +137,14 @@ const Notes = (props) => {
             state.tabActive = active;
           }}
         >
-          <TabPane tab="받은 쪽지함" key="receive">
+          <TabPane tab="받은 쪽지함" key="R">
             <Table
               rowSelection={rowSelection}
               columns={receiveColumns}
               dataSource={state.receiveList}
             />
           </TabPane>
-          <TabPane tab="보낸 쪽지함" key="send">
+          <TabPane tab="보낸 쪽지함" key="S">
             <Table
               rowSelection={rowSelection}
               columns={sendColumns}
@@ -172,23 +165,14 @@ const Notes = (props) => {
 };
 
 Notes.getInitialProps = async () => {
-  // const receiveList = NoteAPI.receiveList({ userId: 1 });
-
-  const receiveList = [];
-  for (let i = 0; i < 46; i++) {
-    receiveList.push({
-      key: i,
-      title: `받는 쪽지 제목입니다 ${i}`,
-      contents: `내용입니다 ${i}`,
-      fromWriter: `보낸사람 ${i}`,
-      toWriter: `받는사람 ${i}`,
-      createdDate: "4일 전",
-      viewPoint: 0,
-    });
+  try {
+    const receiveList = await NoteAPI.receiveList({ userId: 1 });
+    return {
+      receiveList,
+    };
+  } catch (error) {
+    console.error("error : ", error);
   }
-  return {
-    receiveList,
-  };
 };
 
 export default Notes;

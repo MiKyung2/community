@@ -1,6 +1,7 @@
 import FollowTab from "../../components/profile/FollowTab";
+import UserAPI from "../../api/user";
 
-const Following = () => {
+const Follower = () => {
   return (
     <FollowTab
       data={[
@@ -26,7 +27,7 @@ const Following = () => {
           type: "following",
         },
       ]}
-      tabActive={"1"}
+      tabActive={"2"}
       onChange={(value) => {
         console.log("change : ", value);
       }}
@@ -34,15 +35,15 @@ const Following = () => {
   );
 };
 
-// Following.getInitialProps = async () => {
-//   try {
-//     const list = UserAPI.Following({ userId: 1 });
-//     return {
-//       list: list.body.follower_list,
-//     };
-//   } catch (error) {
-//     console.error("error : ", error);
-//   }
-// };
+Follower.getInitialProps = async () => {
+  // try {
+  //   const list = UserAPI.followerList({ userId: 1 });
+  //   return {
+  //     list: list.body.follower_list,
+  //   };
+  // } catch (error) {
+  //   console.error("error : ", error);
+  // }
+};
 
-export default Following;
+export default Follower;
