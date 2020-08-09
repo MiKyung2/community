@@ -20,15 +20,6 @@ const SearchInput = ({ onSubmitSearchInput }) => {
       }
     });
 
-<<<<<<< HEAD
-=======
-    const onSubmit = async (searchTerm) => {
-      const boardListSearchRes = await BoardAPI.search(searchTerm)
-
-      onSubmitSearchInput(boardListSearchRes.body.content);
-    }
-
->>>>>>> d2dbf70... 게시판 메인 화면 정렬 draft 완료
     const onSearch = (searchKeyword) => {
 
       const searchTerm = {
@@ -38,7 +29,6 @@ const SearchInput = ({ onSubmitSearchInput }) => {
       }
 
       onSubmit(searchTerm);
-<<<<<<< HEAD
 
     }
 
@@ -76,24 +66,6 @@ const SearchInput = ({ onSubmitSearchInput }) => {
       }
 
       return filter;
-=======
-
-    }
-
-    const onClickMenu = (e) => {
-      
-      const target = e.target.dataset.name;
-    
-      if(target === "title") {
-        // 제목 필터로 검색
-        state.menu = target;
-        state.filter = target;
-      } else {
-        // 글쓴이 필터로 검색
-        state.menu = target;
-        state.filter = target;
-      } 
->>>>>>> d2dbf70... 게시판 메인 화면 정렬 draft 완료
     }
     
     const menu = (

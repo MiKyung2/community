@@ -17,7 +17,7 @@ const Signup = (props) => {
         value: {
           nickname: '',
           id: '',
-          userId: '',
+          email: '',
           password1: '',
           password2: '',
         },
@@ -83,9 +83,9 @@ const Signup = (props) => {
               <Input
                 className='input'
                 placeholder='이메일을 입력해주세요'
-                value={state.value.userId}
+                value={state.value.email}
                 onChange={(e) => {
-                  state.value.userId = e.target.value;
+                  state.value.email = e.target.value;
                 }}
               />
             </Form.Item>

@@ -10,6 +10,8 @@ const AuthAPI = {
         userId: payload.value.email,
       });
 
+      console.log(res)
+
       return res;
     } catch (error) {
       throw error;
