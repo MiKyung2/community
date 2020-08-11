@@ -1,5 +1,6 @@
 import { useObserver } from "mobx-react";
 import { Form, Button, Upload, Input } from "antd";
+import UserAPI from "../../../api/user";
 
 const formItemLayout = {
   labelCol: {
@@ -77,7 +78,11 @@ const ProfilePasswordEdit = () => {
           <Button
             type="primary"
             onClick={() => {
-              router.push("/profile/password/edit");
+              UserAPI.putPassword({
+                id: 0,
+                newPassword: "string"
+              });
+              // router.push("/profile/password/edit");
             }}
           >
             비밀번호 수정

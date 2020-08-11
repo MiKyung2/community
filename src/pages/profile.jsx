@@ -58,8 +58,10 @@ const ProfilePage = (props) => {
 ProfilePage.getInitialProps = async () => {
   const profileRes = await UserAPI.get({ id: 1 });
 
+  console.log("profile : ", JSON.stringify(profileRes, null, 3));
+
   return {
-    profile: profileRes.body,
+    profile: {},
     theLatestDate: [
       {
         key: 1,
