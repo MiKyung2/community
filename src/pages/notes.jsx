@@ -142,6 +142,17 @@ const Notes = (props) => {
               rowSelection={rowSelection}
               columns={receiveColumns}
               dataSource={state.receiveList}
+              expandable={{
+                expandedRowRender: record => <p style={{ marginLeft: "110px" }}>{record.contents}</p>,
+                expandRowByClick: true,
+              }}
+              onRow={(record, rowIndex) => {
+                return {
+                  onClick: event => { 
+                    console.log(`${rowIndex} : ${record.id}`)
+                  },
+                }
+              }}
             />
           </TabPane>
           <TabPane tab="보낸 쪽지함" key="S">
