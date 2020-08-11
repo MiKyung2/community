@@ -1,6 +1,7 @@
 import React from 'react';
 import { useObserver, useLocalStore } from 'mobx-react';
 import {useRouter} from 'next/router';
+import {CONFIG} from '../../../utils/CONFIG';
 import BoardAPI from "../../../api/board";
 
 import WriteBoardForm from '../../../components/Board/WriteBoardForm';
@@ -8,7 +9,7 @@ import WriteBoardForm from '../../../components/Board/WriteBoardForm';
 
 const EditBoard = (props) => {
 
-    // console.log("게시물 수정 props", props.props.board.body);
+    // CONFIG.LOG("게시물 수정 props", props.props.board.body);
 
     return useObserver(() => {
 
@@ -34,34 +35,34 @@ const EditBoard = (props) => {
                 contents: state.contents,
             }
 
-            // console.log("게시물 수정!!!!", formData);
+            // CONFIG.LOG("게시물 수정!!!!", formData);
             const boardEditRes = await BoardAPI.edit(formData);
-            // console.log("글 수정 후 res", boardEditRes);
+            // CONFIG.LOG("글 수정 후 res", boardEditRes);
 
             // 글목록 or 해당 글로 이동
             router.push('/board/[id]', `/board/${state.id}`);
         }
 
         const onCancel = (e) => {
-            // console.log("새 글 작성 - 취소");
+            // CONFIG.LOG("새 글 작성 - 취소");
             // 글목록 or 해당 글로 이동
             router.push('/board/[id]', `/board/${state.id}`);
         }	
 
     
         const onChangeSelect = (e) => {
-            // console.log("게시판 선택", e);
+            // CONFIG.LOG("게시판 선택", e);
             state.select = e;
         }
 
         const onChangeTitle = (e) => {
-            // console.log("title!!!", e.target.value);
+            // CONFIG.LOG("title!!!", e.target.value);
             state.title = e.target.value;
         }
 
         const onChangeEditor = (e) => {
             // input data 변경 
-            // console.log("onEditorChange!", e.editor.getData());
+            // CONFIG.LOG("onEditorChange!", e.editor.getData());
             state.contents = e.editor.getData();
         }			      
     
@@ -91,7 +92,7 @@ EditBoard.getInitialProps = async({ query }) => {
         id: query.id
         });
 
-        // console.log("boardDetailRes", boardDetailRes)
+        // CONFIG.LOG("boardDetailRes", boardDetailRes)
     return {
         props: {
         board: boardDetailRes,

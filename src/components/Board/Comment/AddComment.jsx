@@ -3,6 +3,7 @@ import styled from 'styled-components';
 // import { Form, Button, List, Input, Avatar, Comment } from 'antd';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useRouter } from 'next/router';
+import {CONFIG} from '../../../utils/CONFIG';
 import moment from 'moment';
 
 // const { TextArea } = Input;
@@ -33,12 +34,12 @@ const AddComment = () => {
         });
 
         const onChangeTextArea = (e) => {
-          // console.log("on change textarea", e.target.value);
+          // CONFIG.LOG("on change textarea", e.target.value);
           state.value = e.target.value;
         }
 
         const onClickAddBtn = () => {
-          console.log("댓글등록 버튼 clicked!", state.value);
+          CONFIG.LOG("댓글등록 버튼 clicked!", state.value);
           // 댓글 내용 전송!
         }
 

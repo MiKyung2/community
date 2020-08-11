@@ -4,19 +4,20 @@ import { Button, Row } from 'antd';
 import { EyeOutlined, CommentOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useRouter } from 'next/router';
+import {CONFIG} from '../../../utils/CONFIG';
 import BoardAPI from "../../../api/board";
 import CommentList from '../../../components/Board/Comment/CommentList';
 import AddComment from '../../../components/Board/Comment/AddComment';
 
 
 const Board = (props) => {
-  // console.log("Board props", props)
+  // CONFIG.LOG("Board props", props)
 
   const router = useRouter();
   const queryId = router.query.id;
 
   const boardProps = props.props;
-  // console.log("게시물 props", props.props.board.body)
+  // CONFIG.LOG("게시물 props", props.props.board.body)
 
   return useObserver(() => {
 
@@ -28,28 +29,28 @@ const Board = (props) => {
 
     
     const onClickBackToList = () => {
-      // console.log("글목록으로 돌아가기");
+      // CONFIG.LOG("글목록으로 돌아가기");
       router.push('/board');
     }
 
     const onClickEdit = () => {
-      // console.log("글 수정 페이지로 이동!");
+      // CONFIG.LOG("글 수정 페이지로 이동!");
       router.push(`/board/${queryId}/modify`);
     }
 
     const onClickDelete = async() => {
-      // console.log("글 삭제! - 헤당 게시글 id", queryId);
+      // CONFIG.LOG("글 삭제! - 헤당 게시글 id", queryId);
       
       const boardDeleteRes = await BoardAPI.delete({ 
         id: queryId
       });
-      // console.log("글 삭제 후 res", boardDeleteRes);
+      // CONFIG.LOG("글 삭제 후 res", boardDeleteRes);
 
       router.push('/board');
     }
     
     const onClickLikeDislike = () => {
-      console.log("clicked like or dislike!")
+      CONFIG.LOG("clicked like or dislike!")
     }
     
 
@@ -114,7 +115,7 @@ Board.getInitialProps = async({ query }) => {
   const boardDetailRes = await BoardAPI.detail({ 
     id: query.id
    });
-  //  console.log("boardDetailRes", boardDetailRes)
+  //  CONFIG.LOG("boardDetailRes", boardDetailRes)
   return {
     props: {
       board: boardDetailRes,

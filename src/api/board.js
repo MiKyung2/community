@@ -1,4 +1,5 @@
 import AxiosWrapper from "./axiosWrapper";
+import {CONFIG} from '../utils/CONFIG';
 
  // `board/page?gb=${gb}&keyword=${keyword}&offset=${offset}&pageNumber=${pageNumber}&pageSize=${pageSize}&sort=${sort}`
 
@@ -38,13 +39,13 @@ const BoardAPI = {
 
     const {id} = payload;
 
-    // console.log("detail api - id", id)
+    // CONFIG.LOG("detail api - id", id)
 
     try {
       const res = await AxiosWrapper.get(
         `board/detail/${id}`
       );
-      // console.log("detail api - res", res);
+      // CONFIG.LOG("detail api - res", res);
       return res;
     } catch (error) {
       // throw error;
@@ -64,7 +65,7 @@ const BoardAPI = {
   },
   edit: async (payload) => {
 
-    console.log("edit payload", payload);
+    CONFIG.LOG("edit payload", payload);
 
     try {
       const res = await AxiosWrapper.post('board/edit', payload);
@@ -77,7 +78,7 @@ const BoardAPI = {
   },
   delete: async (payload) => {
 
-    console.log("delete id", payload)
+    CONFIG.LOG("delete id", payload)
 
     try {
       const res = await AxiosWrapper.post('board/delete', payload);

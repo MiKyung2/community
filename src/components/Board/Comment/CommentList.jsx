@@ -4,6 +4,7 @@ import { Comment, Tooltip, Avatar } from 'antd';
 import { DislikeOutlined, LikeOutlined, DislikeFilled, LikeFilled } from '@ant-design/icons';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useRouter } from 'next/router';
+import {CONFIG} from '../../../utils/CONFIG';
 import moment from 'moment';
 // import {comment_dummy} from '../comment_dummy';
 
@@ -21,14 +22,14 @@ return useObserver(() => {
     });
 
     const like = () => {
-        console.log("like clicked!");
+        CONFIG.LOG("like clicked!");
         state.likes = 1;
         state.dislikes = 0;
         state.action = 'liked'
       };
   
       const dislike = () => {
-        console.log("dislike clicked!");
+        CONFIG.LOG("dislike clicked!");
         state.likes = 0;
         state.dislikes = 1;
         state.action = 'disliked'

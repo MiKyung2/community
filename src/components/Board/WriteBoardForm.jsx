@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Select, Input, Button, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import CKEditor from 'ckeditor4-react';
+import {CONFIG} from '../../utils/CONFIG';
 
 const { Option } = Select;
 

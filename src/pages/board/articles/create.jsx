@@ -1,6 +1,7 @@
 import React from 'react';
 import { useObserver, useLocalStore } from 'mobx-react';
 import {useRouter} from 'next/router';
+import {CONFIG} from '../../../utils/CONFIG';
 import BoardAPI from "../../../api/board";
 
 import WriteBoardForm from '../../../components/Board/WriteBoardForm';
@@ -28,7 +29,7 @@ const CreateBoard = (props) => {
                 contents: state.contents,
             }
 
-            console.log("새글 submit", formData);
+            CONFIG.LOG("새글 submit", formData);
 
             BoardAPI.write(formData);
 
@@ -37,25 +38,25 @@ const CreateBoard = (props) => {
         }
 
         const onCancel = (e) => {
-            // console.log("새 글 작성 - 취소");
+            // CONFIG.LOG("새 글 작성 - 취소");
             // 글목록 or 해당 글로 이동
             router.push('/board', `/board`);
         }	
 
     
         const onChangeSelect = (e) => {
-            // console.log("게시판 선택", e);
+            // CONFIG.LOG("게시판 선택", e);
             state.select = e;
         }
 
         const onChangeTitle = (e) => {
-            // console.log("title!!!", e.target.value);
+            // CONFIG.LOG("title!!!", e.target.value);
             state.title = e.target.value;
         }
 
         const onChangeEditor = (e) => {
             // input data 변경 
-            // console.log("onEditorChange!", e.editor.getData());
+            // CONFIG.LOG("onEditorChange!", e.editor.getData());
             const dataFromEditor =  e.editor.getData();
             state.contents = dataFromEditor;
         }

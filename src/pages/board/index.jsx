@@ -6,6 +6,7 @@ import { Row, Table, Button } from "antd";
 import { EditOutlined } from '@ant-design/icons';
 import SearchInput from "../../components/SearchInput";
 import {useRouter} from "next/router";
+import {CONFIG} from '../../utils/CONFIG';
 
 const columns = [
   {
@@ -58,7 +59,7 @@ const columns = [
 
 
 const BoardPage = (props) => {
-  console.log("boardpage props", props);
+  CONFIG.LOG("boardpage props", props);
 
   return useObserver(() => {
     const router = useRouter();
@@ -73,30 +74,30 @@ const BoardPage = (props) => {
       };
     });
 
-    console.log("index-props:", props.listByLike)
+    CONFIG.LOG("index-props:", props.listByLike)
 
     const onClickFilter = (selectedFilter) => {
-      // console.log("onclickFIlter", e.target.id);
+      // CONFIG.LOG("onclickFIlter", e.target.id);
       const target = selectedFilter.target.id;
 
       switch (target) {
         case 'filter_newest' :
-          console.log("최신순!!");
+          CONFIG.LOG("최신순!!");
           break;
         case 'filter_like' :
-          // console.log("좋아요순!!");
+          // CONFIG.LOG("좋아요순!!");
           state.dataSource = props.listByLike;
           break;
         case 'filter_comment' :
-          // console.log("댓글순!!");
+          // CONFIG.LOG("댓글순!!");
           state.dataSource = props.listByComment;
           break;
         case 'filter_view' :
-          // console.log("조회수순!!");
+          // CONFIG.LOG("조회수순!!");
           state.dataSource = props.listByViewCnt;
           break;
         default :
-          console.log("default-최신순?");
+          CONFIG.LOG("default-최신순?");
           // console.error("filter error");
       }
     }
@@ -111,7 +112,7 @@ const BoardPage = (props) => {
     }
 
     const onChangePage = (page, pageSize) => {
-      // console.log("page:", page, "pageSize", pageSize);
+      // CONFIG.LOG("page:", page, "pageSize", pageSize);
       state.page.currentPage = page;
     }
 
