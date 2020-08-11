@@ -1,17 +1,25 @@
+import React, {useEffect} from 'react'
 import { useRouter } from "next/router";
-
+import { useObserver, useLocalStore } from 'mobx-react';
 import { Layout, Menu, Badge, List, Avatar, Popover, Button } from "antd";
 const { Header } = Layout;
 
 import { MessageOutlined, BellOutlined, UserOutlined } from "@ant-design/icons";
-
+import useApp from '../../hooks/app';
 import routes from "../../routes";
 import styled from "styled-components";
-
-import { useObserver } from "mobx-react";
+import { AppContext } from '../App/context';
 
 const LayoutHeader = (props) => {
   return useObserver(() => {
+    const global = React.useContext(AppContext);
+
+    const state = useLocalStore(() => {
+      return {
+        login: false
+      };
+    });
+
     const router = useRouter();
     const routerAsPath = router.asPath.split("/");
 
@@ -36,6 +44,7 @@ const LayoutHeader = (props) => {
       },
     ];
 
+    
     return (
       <Header className={props.className}>
         <div className="logo" />
@@ -55,6 +64,13 @@ const LayoutHeader = (props) => {
               {i.name}
             </Menu.Item>
           ))}
+         <Menu.Item
+              onClick={() => {
+                router.push('/accounts/signin');
+              }}
+            >
+              로그인
+          </Menu.Item>
         </Menu>
         <div className="alert-menu">
           <Popover
@@ -62,11 +78,7 @@ const LayoutHeader = (props) => {
             content={<div>content</div>}
             trigger="click"
           >
-            <Button
-              onClick={() => {
-                router.push("/notes");
-              }}
-            >
+            <Button onClick={() => { router.push("/notes")}}>
               <Badge count={cnt.commentNotReadCnt}>
                 <a href="#" className="head-example">
                   <MessageOutlined />
@@ -81,11 +93,7 @@ const LayoutHeader = (props) => {
               </a>
             </Badge>
           </Button>
-          <Button
-            onClick={() => {
-              router.push("/profile");
-            }}
-          >
+          <Button onClick={() => { router.push("/profile")}}>
             <Badge count={cnt.followNotReadCnt}>
               <a href="#" className="head-example">
                 <UserOutlined />
@@ -95,7 +103,7 @@ const LayoutHeader = (props) => {
         </div>
       </Header>
     );
-  });
+  })
 };
 
 export default styled(LayoutHeader)`

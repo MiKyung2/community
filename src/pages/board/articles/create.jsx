@@ -28,20 +28,26 @@ const CreateBoard = (props) => {
                 contents: state.contents,
             }
 
+<<<<<<< HEAD
             console.log("새글 submit", formData);
 
+=======
+>>>>>>> e2df469... edit accounts
             BoardAPI.write(formData);
 
             // 글목록 or 해당 글로 이동
             router.push('/board', `/board`);
         }
 
+<<<<<<< HEAD
         const onCancel = (e) => {
             // console.log("새 글 작성 - 취소");
             // 글목록 or 해당 글로 이동
             router.push('/board', `/board`);
         }	
 
+=======
+>>>>>>> e2df469... edit accounts
     
         const onChangeSelect = (e) => {
             // console.log("게시판 선택", e);
@@ -56,8 +62,12 @@ const CreateBoard = (props) => {
         const onChangeEditor = (e) => {
             // input data 변경 
             // console.log("onEditorChange!", e.editor.getData());
+<<<<<<< HEAD
             const dataFromEditor =  e.editor.getData();
             state.contents = dataFromEditor;
+=======
+            state.content = e.editor.getData();
+>>>>>>> e2df469... edit accounts
         }
     
        			      
