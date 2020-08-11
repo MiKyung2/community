@@ -1,13 +1,14 @@
-import React, {useEffect} from 'react'
-import { useRouter } from "next/router";
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
-import { Layout, Menu, Badge, List, Avatar, Popover, Button } from "antd";
+import { useCookies } from 'react-cookie';
+import { Layout, Menu, Badge, List, Avatar, Popover, Button } from 'antd';
 const { Header } = Layout;
 
-import { MessageOutlined, BellOutlined, UserOutlined } from "@ant-design/icons";
+import { MessageOutlined, BellOutlined, UserOutlined } from '@ant-design/icons';
 import useApp from '../../hooks/app';
-import routes from "../../routes";
-import styled from "styled-components";
+import routes from '../../routes';
+import styled from 'styled-components';
 import { AppContext } from '../App/context';
 
 const LayoutHeader = (props) => {
@@ -15,12 +16,12 @@ const LayoutHeader = (props) => {
     const global = React.useContext(AppContext);
     const state = useLocalStore(() => {
       return {
-        login: false
+        login: false,
       };
     });
-
+    const [cookies, _, removeCookie] = useCookies(['token', 'id']);
     const router = useRouter();
-    const routerAsPath = router.asPath.split("/");
+    const routerAsPath = router.asPath.split('/');
 
     const cnt = {
       commentNotReadCnt: 1,
@@ -30,33 +31,41 @@ const LayoutHeader = (props) => {
 
     const data = [
       {
-        title: "Ant Design Title 1",
+        title: 'Ant Design Title 1',
       },
       {
-        title: "Ant Design Title 2",
+        title: 'Ant Design Title 2',
       },
       {
-        title: "Ant Design Title 3",
+        title: 'Ant Design Title 3',
       },
       {
-        title: "Ant Design Title 4",
+        title: 'Ant Design Title 4',
       },
     ];
 
     useEffect(() => {
-      if(global.state.user?.token) {
+      if (cookies.token) {
         state.login = true;
       }
-    },[global.state.user?.token]);
-    
+      if (!cookies.token) {
+        state.login = false;
+      }
+    }, [cookies.token]);
+
+    const removeCookies = () => {
+      removeCookie('token');
+      removeCookie('id');
+    };
+
     return (
       <Header className={props.className}>
-        <div className="logo" />
+        <div className='logo' />
         <Menu
-          className="main-menu"
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={["1"]}
+          className='main-menu'
+          theme='dark'
+          mode='horizontal'
+          defaultSelectedKeys={['1']}
         >
           {routes.map((i) => (
             <Menu.Item
@@ -68,23 +77,31 @@ const LayoutHeader = (props) => {
               {i.name}
             </Menu.Item>
           ))}
-          {state.login ? null : (<Menu.Item
+          {state.login ? (
+            <Menu.Item onClick={removeCookies}>로그아웃</Menu.Item>
+          ) : (
+            <Menu.Item
               onClick={() => {
                 router.push('/accounts/signin');
               }}
             >
               로그인
-          </Menu.Item>)}
+            </Menu.Item>
+          )}
         </Menu>
-        <div className="alert-menu">
+        <div className='alert-menu'>
           <Popover
-            placement="bottomRight"
+            placement='bottomRight'
             content={<div>content</div>}
-            trigger="click"
+            trigger='click'
           >
-            <Button onClick={() => { router.push("/notes")}}>
+            <Button
+              onClick={() => {
+                router.push('/notes');
+              }}
+            >
               <Badge count={cnt.commentNotReadCnt}>
-                <a href="#" className="head-example">
+                <a href='#' className='head-example'>
                   <MessageOutlined />
                 </a>
               </Badge>
@@ -92,14 +109,18 @@ const LayoutHeader = (props) => {
           </Popover>
           <Button>
             <Badge count={cnt.boardNotReadCnt}>
-              <a href="#" className="head-example">
+              <a href='#' className='head-example'>
                 <BellOutlined />
               </a>
             </Badge>
           </Button>
-          <Button onClick={() => { router.push("/profile")}}>
+          <Button
+            onClick={() => {
+              router.push('/profile');
+            }}
+          >
             <Badge count={cnt.followNotReadCnt}>
-              <a href="#" className="head-example">
+              <a href='#' className='head-example'>
                 <UserOutlined />
               </a>
             </Badge>
@@ -107,7 +128,7 @@ const LayoutHeader = (props) => {
         </div>
       </Header>
     );
-  })
+  });
 };
 
 export default styled(LayoutHeader)`
