@@ -1,13 +1,11 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link';
 import Router from 'next/router'
-
 import { useObserver, useLocalStore } from 'mobx-react';
-import styled from 'styled-components';
-
+import { useCookies } from 'react-cookie';
 import { Form, Input, Button, Checkbox, Row, Col } from 'antd';
+import styled from 'styled-components';
 import AuthAPI from '../../api/auth';
-
 import { AppContext } from '../../components/App/context';
 
 const SignIn = (props) => {
@@ -24,6 +22,7 @@ const SignIn = (props) => {
         },
       };
     });
+    const [_, setCookie] = useCookies(['token', 'id']);
 
     const onLogin = async () => {
       const resAuth = await AuthAPI.login(state);
@@ -31,10 +30,12 @@ const SignIn = (props) => {
     };
 
     useEffect(() => {
-      if(global.state.user?.token) {
+      if (global.state.user?.token) {
         Router.push('/');
+        setCookie('token', global.state.user?.token);
+        setCookie('id', global.state.user?.id);
       }
-    },[global.state.user?.token]);
+    }, [global.state.user?.token]);
 
 
     return (
@@ -89,7 +90,7 @@ const SignIn = (props) => {
               />
             </Form.Item>
 
-            <Form.Item  valuePropName='checked'>
+            <Form.Item valuePropName='checked'>
               <Checkbox>로그인 유지</Checkbox>
             </Form.Item>
 
@@ -98,7 +99,7 @@ const SignIn = (props) => {
                 className='button'
                 type='primary'
                 htmlType='submit'
-                // onClick={() => {}}
+              // onClick={() => {}}
               >
                 로그인
               </Button>
