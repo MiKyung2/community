@@ -25,10 +25,9 @@ const Signup = (props) => {
     });
 
     const onSignup = async () => {
-      await AuthAPI.signup();
+      await AuthAPI.signup(state);
     };
   
-
     return (
       <div className={props.className}>
         <h1 className='title'>LOGO</h1>

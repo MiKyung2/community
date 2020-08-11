@@ -20,10 +20,6 @@ const initializer = (props) => {
 };
 
 const dispatch = ($) => {
-  const signup = () => {
-    console.log('signup message')
-  };
-
   const login = (data) => {
     $.state.user.email = data.userId;
     $.state.user.token = data.token;
@@ -34,7 +30,6 @@ const dispatch = ($) => {
   };
 
   return {
-    signup,
     login,
     logout,
   };

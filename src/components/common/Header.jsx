@@ -13,7 +13,6 @@ import { AppContext } from '../App/context';
 const LayoutHeader = (props) => {
   return useObserver(() => {
     const global = React.useContext(AppContext);
-
     const state = useLocalStore(() => {
       return {
         login: false
@@ -44,6 +43,11 @@ const LayoutHeader = (props) => {
       },
     ];
 
+    useEffect(() => {
+      if(global.state.user?.token) {
+        state.login = true;
+      }
+    },[global.state.user?.token]);
     
     return (
       <Header className={props.className}>
@@ -64,13 +68,13 @@ const LayoutHeader = (props) => {
               {i.name}
             </Menu.Item>
           ))}
-         <Menu.Item
+          {state.login ? null : (<Menu.Item
               onClick={() => {
                 router.push('/accounts/signin');
               }}
             >
               로그인
-          </Menu.Item>
+          </Menu.Item>)}
         </Menu>
         <div className="alert-menu">
           <Popover
