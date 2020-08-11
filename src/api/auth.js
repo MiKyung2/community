@@ -4,13 +4,11 @@ import AxiosWrapper from './axiosWrapper';
 const AuthAPI = {
   signup:  async (payload) => {
     try {
-      const res = await axios.post('http://141.164.41.213:8081/v1/api/user', {
+      const res = await AxiosWrapper.post('/user', {
         nickname: payload.value.nickname,
         password: payload.value.password1,
         userId: payload.value.email,
       });
-
-      console.log(res)
 
       return res;
     } catch (error) {
