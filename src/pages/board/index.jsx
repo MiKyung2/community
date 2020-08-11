@@ -73,6 +73,8 @@ const BoardPage = (props) => {
       };
     });
 
+    console.log("index-props:", props.listByLike)
+
     const onClickFilter = (selectedFilter) => {
       // console.log("onclickFIlter", e.target.id);
       const target = selectedFilter.target.id;
@@ -102,15 +104,8 @@ const BoardPage = (props) => {
     // 해당 게시물 이동
     const onClickTableRow = (record, rowIndex) => {
       return {
-        onClick: () => {
-          const currentPage = state.page.currentPage;
-          const pageSize = state.page.pageSize;
-          const dataIndex = (currentPage - 1) * pageSize + rowIndex;
-          const currentDataId = state.dataSource[dataIndex].id;
-          
-          router.push('/board/[id]', `/board/${currentDataId}`);
-          // console.log("해당 게시물 id", state.dataSource[dataIndex].id);
-
+        onClick: () => {       
+          router.push('/board/[id]', `/board/${record.id}`);
         }
       }
     }

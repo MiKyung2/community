@@ -28,15 +28,17 @@ const SearchInput = ({ onSubmitSearchInput }) => {
         keyword: searchKeyword
       }
 
-      onSubmit(searchTerm);
+      // onSubmit(searchTerm);
+
+      onSubmitSearchInput(state.menu, searchKeyword);
 
     }
 
-    const onSubmit = async (searchTerm) => {
-      const boardListSearchRes = await BoardAPI.search(searchTerm)
+    // const onSubmit = async (searchTerm) => {
+    //   const boardListSearchRes = await BoardAPI.search(searchTerm)
 
-      onSubmitSearchInput(boardListSearchRes.body.content);
-    }
+    //   onSubmitSearchInput(boardListSearchRes.body.content);
+    // }
 
     const onClickMenu = (e) => {
       
