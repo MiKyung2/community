@@ -66,7 +66,15 @@ const ProfileCard = ({ loading, data, onOpenNote }) => {
                 description={data.gitAddr || "-"}
               />
               <div>
-                {router.query?.id ? (
+                {true ? (
+                  <Button
+                    onClick={() => {
+                      router.push("/profile/edit");
+                    }}
+                  >
+                    프로필 수정
+                  </Button>
+                ) : (
                   <>
                     <Button 
                       style={{ marginRight: "8px" }} 
@@ -82,14 +90,6 @@ const ProfileCard = ({ loading, data, onOpenNote }) => {
                     >팔로잉</Button>
                     <Button onClick={onOpenNote}>쪽지 보내기</Button>
                   </>
-                ) : (
-                  <Button
-                    onClick={() => {
-                      router.push("/profile/edit");
-                    }}
-                  >
-                    프로필 수정
-                  </Button>
                 )}
               </div>
             </div>
