@@ -16,6 +16,7 @@
     "next": "^9.4.4",
     "postcss-loader": "^3.0.0",
     "react": "^16.13.1",
+    "react-cookie": "^4.0.3",
     "react-dom": "^16.13.1",
     "socket.io-client": "^2.3.0",
     "style-loader": "^1.2.1",

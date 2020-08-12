@@ -7,12 +7,13 @@ import GlobalStyle from "../styles/global";
 import { AppContext } from "../components/App/context";
 import useApp from "../hooks/app";
 import { observerBatching } from "mobx-react-lite";
+import { CookiesProvider, Cookies } from "react-cookie";
 
 observerBatching();
 
 function App(props) {
+  const app = useApp(props);
   return useObserver(() => {
-    const app = useApp(props);
     return (
       <>
         <GlobalStyle />
@@ -42,9 +43,11 @@ function App(props) {
           />
         </Head>
         <AppContext.Provider value={app}>
+        <CookiesProvider >
           <Layout>
             <props.Component {...props.pageProps} />
           </Layout>
+        </CookiesProvider>
         </AppContext.Provider>
       </>
     );
