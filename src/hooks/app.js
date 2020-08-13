@@ -20,13 +20,14 @@ const initializer = (props) => {
 };
 
 const dispatch = ($) => {
+
   const login = (data) => {
-    $.state.user.email = data.userId;
+    $.state.user.id = data.userPkId;
     $.state.user.token = data.token;
   };
 
   const logout = () => {
-    $.state.user.token = '';
+    $.state.user.token = null;
   };
 
   return {

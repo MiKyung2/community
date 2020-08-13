@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useObserver, useLocalStore } from 'mobx-react';
 import styled from 'styled-components';
 
-import { Form, Input, Button, Checkbox, Row, Col } from 'antd';
+import { Form, Input, Button, Checkbox, Row, Col, message } from 'antd';
 
 // import useApp from '../../hooks/app';
 import AuthAPI from '../../api/auth';
@@ -13,7 +13,7 @@ const Signup = (props) => {
     const state = useLocalStore(() => {
       return {
         loading: false,
-        list: [],
+        confirm: false,
         value: {
           nickname: '',
           id: '',
@@ -25,14 +25,28 @@ const Signup = (props) => {
     });
 
     const onSignup = async () => {
-      await AuthAPI.signup(state);
+      if (state.confirm) {
+        if (
+          state.value.nickname &&
+          state.value.id &&
+          state.value.email &&
+          state.value.password1 &&
+          state.value.password2
+        ) {
+          const resAuth = await AuthAPI.signup(state);
+          if (resAuth.code === 200) {
+            state.loading = true;
+          } else {
+            message.error('회원가입 실패');
+          }
+        } else message.info('모든 빈 칸에 입력을 부탁드립니다.');
+      } else message.info('개인 정보 취급에 동의 부탁드립니다.');
     };
-  
+
     return (
       <div className={props.className}>
         <h1 className='title'>LOGO</h1>
         <Form
-
           initialValues={{
             remember: true,
           }}
@@ -42,20 +56,7 @@ const Signup = (props) => {
           }}
         >
           <div className='wrapper'>
-            <Form.Item 
-              className='center form-item'
-              // name='nickname'
-              // rules={[
-              //   {
-              //     type: 'nickname',
-              //     message: 'The input is not valid nickname!',
-              //   },
-              //   {
-              //     required: true,
-              //     message: 'Please input your nickname!',
-              //   },
-              // ]}
-            >
+            <Form.Item className='center form-item'>
               <Input
                 className='input'
                 placeholder='활동 닉네임'
@@ -65,7 +66,7 @@ const Signup = (props) => {
                 }}
               />
             </Form.Item>
-            <Form.Item className='center form-item' >
+            <Form.Item className='center form-item'>
               <Input
                 className='input input-id'
                 placeholder='아이디를 입력해주세요'
@@ -78,7 +79,7 @@ const Signup = (props) => {
                 중복 확인
               </Button>
             </Form.Item>
-            <Form.Item className='center form-item' >
+            <Form.Item className='center form-item'>
               <Input
                 className='input'
                 placeholder='이메일을 입력해주세요'
@@ -111,17 +112,15 @@ const Signup = (props) => {
               />
             </Form.Item>
             <Form.Item valuePropName='checked'>
-              <Checkbox>개인 정보 취급 방침 동의</Checkbox>
+              <Checkbox onClick={() => (state.confirm = !state.confirm)}>
+                개인 정보 취급 방침 동의
+              </Checkbox>
               <Link href='signup/privacy'>
                 <a className='privacy'>보기</a>
               </Link>
             </Form.Item>
             <Form.Item>
-              <Button
-                className='button'
-                type='primary'
-                htmlType='submit'
-              >
+              <Button className='button' type='primary' htmlType='submit'>
                 회원 가입
               </Button>
             </Form.Item>
@@ -130,7 +129,8 @@ const Signup = (props) => {
       </div>
     );
   });
-};``
+};
+``;
 
 export default styled(Signup)`
   & {
