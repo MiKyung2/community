@@ -1,34 +1,33 @@
 import AxiosWrapper from "./axiosWrapper";
-import {CONFIG} from '../utils/CONFIG';
+import CONFIG from '../utils/CONFIG';
+import {dummy} from '../data/dummy';
 
  // `board/page?gb=${gb}&keyword=${keyword}&offset=${offset}&pageNumber=${pageNumber}&pageSize=${pageSize}&sort=${sort}`
 
 
 const BoardAPI = {
   list: async (payload) => {
-
-    const {gb, sort} = payload;
-
     try {
-      const res = await AxiosWrapper.get(
-        `board/page?gb=${gb}&sort=${sort}`
-      );
-
-      return res;
+      if (CONFIG.NODE_ENV == "test") {
+        return dummy;
+      } else {
+        const {gb, sort} = payload;
+        const res = await AxiosWrapper.get(
+          `board/page?gb=${gb}&sort=${sort}`
+        );
+        return res;
+      }
     } catch (error) {
       // throw error;
       console.error(error);
     }
   },
   search: async (payload) => {
-
-    const {gb, sort, keyword} = payload;
-
     try {
+      const {gb, sort, keyword} = payload;
       const res = await AxiosWrapper.get(
         `board/page?gb=${gb}&sort=${sort}&keyword=${keyword}`
       );
-
       return res;
     } catch (error) {
       // throw error;
@@ -36,16 +35,11 @@ const BoardAPI = {
     }
   },
   detail: async (payload) => {
-
-    const {id} = payload;
-
-    // CONFIG.LOG("detail api - id", id)
-
     try {
+      const {id} = payload;
       const res = await AxiosWrapper.get(
         `board/detail/${id}`
       );
-      // CONFIG.LOG("detail api - res", res);
       return res;
     } catch (error) {
       // throw error;
@@ -53,10 +47,8 @@ const BoardAPI = {
     }
   },
   write: async (payload) => {
-
     try {
       const res = await AxiosWrapper.post('board/write', payload);
-
       return res;
     } catch (error) {
       // throw error;
@@ -64,12 +56,8 @@ const BoardAPI = {
     }
   },
   edit: async (payload) => {
-
-    CONFIG.LOG("edit payload", payload);
-
     try {
       const res = await AxiosWrapper.post('board/edit', payload);
-
       return res;
     } catch (error) {
       // throw error;
@@ -77,12 +65,8 @@ const BoardAPI = {
     }
   },
   delete: async (payload) => {
-
-    CONFIG.LOG("delete id", payload)
-
     try {
       const res = await AxiosWrapper.post('board/delete', payload);
-
       return res;
     } catch (error) {
       // throw error;

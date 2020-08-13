@@ -1,7 +1,7 @@
 import React from 'react';
 import { useObserver, useLocalStore } from 'mobx-react';
 import {useRouter} from 'next/router';
-import {CONFIG} from '../../../utils/CONFIG';
+// import {CONFIG} from '../../../utils/CONFIG';
 import BoardAPI from "../../../api/board";
 
 import WriteBoardForm from '../../../components/Board/WriteBoardForm';
@@ -29,7 +29,7 @@ const CreateBoard = (props) => {
                 contents: state.contents,
             }
 
-            CONFIG.LOG("새글 submit", formData);
+            // CONFIG.LOG("새글 submit", formData);
 
             BoardAPI.write(formData);
 

@@ -6,7 +6,7 @@ import { Row, Table, Button } from "antd";
 import { EditOutlined } from '@ant-design/icons';
 import SearchInput from "../../components/SearchInput";
 import {useRouter} from "next/router";
-import {CONFIG} from '../../utils/CONFIG';
+// import {CONFIG} from '../../utils/CONFIG';
 
 const columns = [
   {
@@ -59,7 +59,7 @@ const columns = [
 
 
 const BoardPage = (props) => {
-  CONFIG.LOG("boardpage props", props);
+  // CONFIG.LOG("boardpage props", props);
 
   return useObserver(() => {
     const router = useRouter();
@@ -74,7 +74,7 @@ const BoardPage = (props) => {
       };
     });
 
-    CONFIG.LOG("index-props:", props.listByLike)
+    // CONFIG.LOG("index-props:", props.listByLike)
 
     const onClickFilter = (selectedFilter) => {
       // CONFIG.LOG("onclickFIlter", e.target.id);
@@ -82,7 +82,7 @@ const BoardPage = (props) => {
 
       switch (target) {
         case 'filter_newest' :
-          CONFIG.LOG("최신순!!");
+          // CONFIG.LOG("최신순!!");
           break;
         case 'filter_like' :
           // CONFIG.LOG("좋아요순!!");
@@ -97,7 +97,7 @@ const BoardPage = (props) => {
           state.dataSource = props.listByViewCnt;
           break;
         default :
-          CONFIG.LOG("default-최신순?");
+          // CONFIG.LOG("default-최신순?");
           // console.error("filter error");
       }
     }

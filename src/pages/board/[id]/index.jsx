@@ -4,7 +4,7 @@ import { Button, Row } from 'antd';
 import { EyeOutlined, CommentOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useRouter } from 'next/router';
-import {CONFIG} from '../../../utils/CONFIG';
+// import {CONFIG} from '../../../utils/CONFIG';
 import BoardAPI from "../../../api/board";
 import CommentList from '../../../components/Board/Comment/CommentList';
 import AddComment from '../../../components/Board/Comment/AddComment';
@@ -41,16 +41,17 @@ const Board = (props) => {
     const onClickDelete = async() => {
       // CONFIG.LOG("글 삭제! - 헤당 게시글 id", queryId);
       
-      const boardDeleteRes = await BoardAPI.delete({ 
-        id: queryId
-      });
+      
+      // const boardDeleteRes = await BoardAPI.delete({ 
+      //   id: queryId
+      // });
       // CONFIG.LOG("글 삭제 후 res", boardDeleteRes);
 
-      router.push('/board');
+      // router.push('/board');
     }
     
     const onClickLikeDislike = () => {
-      CONFIG.LOG("clicked like or dislike!")
+      // CONFIG.LOG("clicked like or dislike!")
     }
     
 
