@@ -1,5 +1,5 @@
 import Link from 'next/link';
-
+import { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
 import styled from 'styled-components';
 
@@ -10,6 +10,7 @@ import AuthAPI from '../../api/auth';
 
 const Signup = (props) => {
   return useObserver(() => {
+    const router = useRouter();
     const state = useLocalStore(() => {
       return {
         loading: false,
@@ -25,6 +26,7 @@ const Signup = (props) => {
     });
 
     const onSignup = async () => {
+      state.loading = true;
       if (state.confirm) {
         if (
           state.value.nickname &&
@@ -34,14 +36,28 @@ const Signup = (props) => {
           state.value.password2
         ) {
           const resAuth = await AuthAPI.signup(state);
-          if (resAuth.code === 200) {
-            state.loading = true;
-          } else {
-            message.error('회원가입 실패');
+          if (resAuth.code === '200') {
+            router.push({
+              pathname: '/accounts/result/success',
+              query: { nickname: state.value.nickname },
+            });
+            state.loading = false;
+          }
+          if (resAuth.code === '500') {
+            router.push('/accounts/result/fail');
+            state.loading = false;
           }
         } else message.info('모든 빈 칸에 입력을 부탁드립니다.');
       } else message.info('개인 정보 취급에 동의 부탁드립니다.');
     };
+
+    if (state.loading) {
+      return (
+        <div className={props.className}>
+          <h1 className='title'>Loading...</h1>
+        </div>
+      );
+    }
 
     return (
       <div className={props.className}>
