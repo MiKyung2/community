@@ -6,7 +6,7 @@ import { Row, Table, Button } from "antd";
 import { EditOutlined } from '@ant-design/icons';
 import SearchInput from "../../components/SearchInput";
 import { useRouter } from "next/router";
-// import {CONFIG} from '../../utils/CONFIG';
+import CONFIG from '../../utils/CONFIG';
 import { numFormatter } from '../../utils/numFormatter';
 
 const useNumberFormatter = (num) => {
@@ -133,6 +133,8 @@ const BoardPage = (props) => {
       router.push("/board/articles/create");
     };
 
+    
+    // CONFIG.LOG("hi", state.dataSource);
 
 
     return (
@@ -165,7 +167,11 @@ const BoardPage = (props) => {
           columns={columns}
           dataSource={state.dataSource}
           onRow={onClickTableRow}
-          pagination={{ pageSize: state.page.pageSize, onChange: onChangePage }}
+          pagination={{ 
+            pageSize: state.page.pageSize, 
+            onChange: onChangePage, 
+            // total: 500
+          }}
           scroll={true}
         />        
       </div>

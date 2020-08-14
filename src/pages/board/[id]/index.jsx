@@ -4,7 +4,7 @@ import { Button, Row, Modal } from 'antd';
 import { EyeOutlined, CommentOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useRouter } from 'next/router';
-// import {CONFIG} from '../../../utils/CONFIG';
+import CONFIG from '../../../utils/CONFIG';
 import { numFormatter } from '../../../utils/numFormatter';
 import ReactHtmlParser from 'react-html-parser';
 
