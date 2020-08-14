@@ -5,8 +5,9 @@ import BoardAPI from "../../api/board";
 import { Row, Table, Button } from "antd";
 import { EditOutlined } from '@ant-design/icons';
 import SearchInput from "../../components/SearchInput";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 // import {CONFIG} from '../../utils/CONFIG';
+import { numFormatter } from '../../utils/numFormatter';
 
 const columns = [
   {
@@ -21,10 +22,12 @@ const columns = [
     title: "좋아요",
     dataIndex: "rowLike",
     key: "rowLike",
+    render: like => <span>{like > 0 ? numFormatter(like) : 0}</span>
   }, {
     title: "조회수",
     dataIndex: "viewCount",
     key: "viewCount",
+    render: view => <span>{view > 0 ? numFormatter(view) : 0}</span>
   }, {
     title: "댓글수",
     dataIndex: "commentCnt",

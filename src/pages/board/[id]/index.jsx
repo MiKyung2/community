@@ -1,10 +1,12 @@
 import React from 'react';
 import styled, {ServerStyleSheet, injectGlobal} from 'styled-components';
-import { Button, Row } from 'antd';
+import { Button, Row, Modal } from 'antd';
 import { EyeOutlined, CommentOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useRouter } from 'next/router';
 // import {CONFIG} from '../../../utils/CONFIG';
+import ReactHtmlParser from 'react-html-parser';
+
 import BoardAPI from "../../../api/board";
 import CommentList from '../../../components/Board/Comment/CommentList';
 import AddComment from '../../../components/Board/Comment/AddComment';
@@ -23,7 +25,8 @@ const Board = (props) => {
 
     const state = useLocalStore(() => {
       return {
-        data: boardProps.board.body
+        data: boardProps.board.body,
+        visible: false
       };
     });
 
@@ -33,26 +36,33 @@ const Board = (props) => {
       router.push('/board');
     }
 
+    const onClickLikeDislike = () => {
+      // CONFIG.LOG("clicked like or dislike!")
+    }
+
     const onClickEdit = () => {
       // CONFIG.LOG("글 수정 페이지로 이동!");
       router.push(`/board/${queryId}/modify`);
     }
 
-    const onClickDelete = async() => {
-      // CONFIG.LOG("글 삭제! - 헤당 게시글 id", queryId);
-      
-      
-      // const boardDeleteRes = await BoardAPI.delete({ 
-      //   id: queryId
-      // });
-      // CONFIG.LOG("글 삭제 후 res", boardDeleteRes);
+    const onClickDelete = () => {
+      state.visible = true;
+    }
 
-      // router.push('/board');
+    const handleCancel = (e) => {
+      state.visible = false;
     }
     
-    const onClickLikeDislike = () => {
-      // CONFIG.LOG("clicked like or dislike!")
+    const handleOK = async() => {
+      const boardDeleteRes = await BoardAPI.delete({ 
+        id: queryId
+      });
+      // CONFIG.LOG("글 삭제 후 res", boardDeleteRes);
+      router.push('/board');
+      state.visible = false;
     }
+
+    
     
 
     return (
@@ -86,11 +96,18 @@ const Board = (props) => {
               </Row>
             </Row>
 
+            {/* 삭제 확인 메세지 */}
+            <Modal 
+              visible={state.visible}
+              onOk={handleOK}
+              onCancel={handleCancel}
+            >
+              <p>정말 삭제하시겠습니까?</p>
+            </Modal>
+
 
             {/* 게시글 내용 */}
-            <div className="main_content ">
-              <div dangerouslySetInnerHTML={ { __html: state.data.contents } }></div>
-            </div>
+            <div className="main_content">{ReactHtmlParser(`${state.data.contents}`)}</div>
           </div>
 
 
