@@ -56,6 +56,7 @@ const LayoutHeader = (props) => {
     const removeCookies = () => {
       removeCookie('token');
       removeCookie('id');
+      router.reload();
     };
 
     return (
