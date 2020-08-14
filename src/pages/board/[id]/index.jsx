@@ -64,7 +64,9 @@ const Board = (props) => {
     }
 
     const useNumberFormatter = (num) => {
-      return num > 0 ? numFormatter(num) : 0
+      if(num < 0) return 0;
+      if(num < 1000) return num;
+      return numFormatter(num);
     }
 
     return (
