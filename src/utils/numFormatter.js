@@ -1,4 +1,8 @@
 export const numFormatter = (number) => {
+
+  if(number <= 0) return 0;
+  if(number < 1000) return number;
+
   const SYMBOL = ["", "K", "M", "G", "T", "P", "E"];
 
   const num = Math.abs(number);

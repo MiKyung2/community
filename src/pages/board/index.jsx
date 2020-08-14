@@ -9,12 +9,6 @@ import { useRouter } from "next/router";
 import CONFIG from '../../utils/CONFIG';
 import { numFormatter } from '../../utils/numFormatter';
 
-const useNumberFormatter = (num) => {
-  if(num < 0) return 0;
-  if(num < 1000) return num;
-  return numFormatter(num);
-}
-
 const columns = [
   {
     title: "제목",
@@ -28,17 +22,17 @@ const columns = [
     title: "좋아요",
     dataIndex: "rowLike",
     key: "rowLike",
-    render: like => <span>{useNumberFormatter(like)}</span>
+    render: like => <span>{numFormatter(like)}</span>
   }, {
     title: "조회수",
     dataIndex: "viewCount",
     key: "viewCount",
-    render: view => <span>{useNumberFormatter(view)}</span>
+    render: view => <span>{numFormatter(view)}</span>
   }, {
     title: "댓글수",
     dataIndex: "commentCnt",
     key: "commentCnt",
-    render: comment => <span>{useNumberFormatter(comment)}</span>
+    render: comment => <span>{numFormatter(comment)}</span>
   },
   {
     title: "날짜",

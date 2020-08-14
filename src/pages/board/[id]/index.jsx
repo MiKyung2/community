@@ -63,12 +63,6 @@ const Board = (props) => {
       state.visible = false;
     }
 
-    const useNumberFormatter = (num) => {
-      if(num < 0) return 0;
-      if(num < 1000) return num;
-      return numFormatter(num);
-    }
-
     return (
       <div className={props.className}>
           <Row justify="space-between" className="header_top">
@@ -87,8 +81,8 @@ const Board = (props) => {
             <Row justify="space-between" className="main_container_top">
               {/* 해당 게시글 조회수 & 댓글수 & 좋아요수 */}
               <Row>
-                <span className="main_container_top_left "><EyeOutlined /> {useNumberFormatter(state.data.viewCount)}</span>
-                <span className="main_container_top_left "><LikeOutlined onClick={onClickLikeDislike} /> {useNumberFormatter(state.data.rowLike)}</span>
+                <span className="main_container_top_left "><EyeOutlined /> {numFormatter(state.data.viewCount)}</span>
+                <span className="main_container_top_left "><LikeOutlined onClick={onClickLikeDislike} /> {numFormatter(state.data.rowLike)}</span>
                 <span className="main_container_top_left "><DislikeOutlined onClick={onClickLikeDislike} /> {numFormatter(state.data.rowDisLike)}</span>
                 {/* <span className="main_container_top_left "><CommentOutlined /> {state.data.commentCnt}</span> */}
               </Row>
