@@ -10,7 +10,9 @@ import CONFIG from '../../utils/CONFIG';
 import { numFormatter } from '../../utils/numFormatter';
 
 const useNumberFormatter = (num) => {
-  return num > 0 ? numFormatter(num) : 0
+  if(num < 0) return 0;
+  if(num < 1000) return num;
+  return numFormatter(num);
 }
 
 const columns = [
@@ -36,6 +38,7 @@ const columns = [
     title: "댓글수",
     dataIndex: "commentCnt",
     key: "commentCnt",
+    render: comment => <span>{useNumberFormatter(comment)}</span>
   },
   {
     title: "날짜",
@@ -134,7 +137,7 @@ const BoardPage = (props) => {
     };
 
     
-    // CONFIG.LOG("hi", state.dataSource);
+    // CONFIG.LOG(state.dataSource.length);
 
 
     return (
