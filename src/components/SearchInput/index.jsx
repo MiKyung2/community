@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { useObserver, useLocalStore } from 'mobx-react';
 import BoardAPI from "../../api/board";
-import axios from 'axios';
 
 import { Input, Menu, Dropdown } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
@@ -9,7 +8,7 @@ const { Search } = Input;
 
 
 
-const SearchInput = () => {
+const SearchInput = ({ onSubmitSearchInput }) => {
 
   return useObserver(() => {
 
@@ -21,8 +20,7 @@ const SearchInput = () => {
       }
     });
 
-    const onSearch = async (searchKeyword) => {
-      // 검색 키워드로 게시판 목록 api 요청
+    const onSearch = (searchKeyword) => {
 
       const searchTerm = {
         gb: state.menu,
@@ -30,45 +28,44 @@ const SearchInput = () => {
         keyword: searchKeyword
       }
 
-      console.log("검색!", searchTerm);
+      onSubmit(searchTerm);
 
+    }
 
+    const onSubmit = async (searchTerm) => {
+      const boardListSearchRes = await BoardAPI.search(searchTerm)
 
-
-
-      
-      const {gb, sort, keyword} = searchTerm;
-      const res = await axios.get(`http://141.164.41.213:8081/v1/api/board/page?gb=${gb}&keyword=${keyword}&sort=${sort}`)
-
-      console.log("검색 결과 api 데이터", res.data);
-
-
-
-
-
-
-
-
-      // const boardListRes = await BoardAPI.searchInput(searchTerm);
-      // console.log(boardListRes);
+      onSubmitSearchInput(boardListSearchRes.body.content);
     }
 
     const onClickMenu = (e) => {
-      // console.log("필터 menu clicked!", e.target.dataset.name);
       
       const target = e.target.dataset.name;
-    
-      if(target === "title") {
-        console.log("제목 필터 clicked!");
-        // 제목 필터로 검색
-        state.menu = target;
-        state.filter = target;
-      } else {
-        console.log("글쓴이 필터 clicked!");
-        // 글쓴이 필터로 검색
-        state.menu = target;
-        state.filter = target;
-      } 
+
+      state.menu = target;
+      state.filter = target;
+
+    }
+
+    const filterName = () => {
+
+      let filter;
+
+      switch(state.filter) {
+        case 'title' :
+          filter = "제목"
+          break;
+        case 'writer' :
+          filter = "글쓴이"
+          break;
+        case 'contents' :
+          filter = "내용"
+          break;
+        default :
+          filter = '필터'
+      }
+
+      return filter;
     }
     
     const menu = (
@@ -83,25 +80,13 @@ const SearchInput = () => {
             글쓴이
           </a>
         </Menu.Item>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" data-name="contents" onClick={onClickMenu}>
+            내용
+          </a>
+        </Menu.Item>
       </Menu>
     );
-
-    const filterName = () => {
-
-      let filter;
-      
-      if(state.filter === null) {
-        filter = "필터"
-      } else if (state.filter === "title") {
-        filter = "제목"
-      } else if (state.filter === "writer") {
-        filter = "글쓴이"
-      } else {
-        console.log("검색 필터 이름 에러.")
-      }
-
-      return filter;
-    }
 
     return (
       <div>
