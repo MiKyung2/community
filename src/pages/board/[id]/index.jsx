@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import CONFIG from '../../../utils/CONFIG';
 import { numFormatter } from '../../../utils/numFormatter';
 import ReactHtmlParser from 'react-html-parser';
+import { DiscussionEmbed } from 'disqus-react';
 
 import BoardAPI from "../../../api/board";
 import CommentList from '../../../components/Board/Comment/CommentList';
@@ -30,6 +31,14 @@ const Board = (props) => {
         visible: false
       };
     });
+
+    const disqusShortname = "toy-community";
+    const disqusConfig = {
+      // url: `http://localhost:3000/board/${queryId}`,
+      url: `${CONFIG.API_BASE_URL}/board/${queryId}`,
+      identifier: queryId,
+      title: state.data.title,
+    }
 
     
     const onClickBackToList = () => {
@@ -113,11 +122,15 @@ const Board = (props) => {
           <div>
             <h3>댓글</h3>
 
-            {/* 댓글 - 리스트 */}
-            <CommentList />
+            <DiscussionEmbed 
+              shortname={disqusShortname} 
+              config={disqusConfig} 
+            />
 
+            {/* 댓글 - 리스트 */}
+            {/* <CommentList /> */}
             {/* 댓글 - 새댓글 등록 */}
-            <AddComment />
+            {/* <AddComment /> */}
           </div>
       </div>
     );

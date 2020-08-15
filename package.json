@@ -10,6 +10,7 @@
     "cookie": "^0.4.1",
     "cross-env": "^7.0.2",
     "css-loader": "^3.6.0",
+    "disqus-react": "^1.0.9",
     "eslint-config-airbnb": "18.1.0",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
