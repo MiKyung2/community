@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useObserver, useLocalStore } from 'mobx-react';
 import BoardAPI from "../../api/board";
-import {CONFIG} from '../../utils/CONFIG';
+import CONFIG from '../../utils/CONFIG';
 
 import { Input, Menu, Dropdown } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
@@ -29,17 +29,17 @@ const SearchInput = ({ onSubmitSearchInput }) => {
         keyword: searchKeyword
       }
 
-      // onSubmit(searchTerm);
+      onSubmit(searchTerm);
 
-      onSubmitSearchInput(state.menu, searchKeyword);
+      // onSubmitSearchInput(state.menu, searchKeyword);
 
     }
 
-    // const onSubmit = async (searchTerm) => {
-    //   const boardListSearchRes = await BoardAPI.search(searchTerm)
+    const onSubmit = async (searchTerm) => {
+      const boardListSearchRes = await BoardAPI.search(searchTerm)
 
-    //   onSubmitSearchInput(boardListSearchRes.body.content);
-    // }
+      onSubmitSearchInput(boardListSearchRes.body.content);
+    }
 
     const onClickMenu = (e) => {
       
