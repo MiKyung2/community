@@ -9,7 +9,7 @@ const { Search } = Input;
 
 
 
-const SearchInput = ({ onSubmitSearchInput }) => {
+const SearchInput = ({ onSearch }) => {
 
   return useObserver(() => {
 
@@ -21,24 +21,14 @@ const SearchInput = ({ onSubmitSearchInput }) => {
       }
     });
 
-    const onSearch = (searchKeyword) => {
+    const onSubmit = (searchKeyword) => {
 
       const searchTerm = {
         gb: state.menu,
-        sort: state.menu,
+        sort: "date",
         keyword: searchKeyword
       }
-
-      onSubmit(searchTerm);
-
-      // onSubmitSearchInput(state.menu, searchKeyword);
-
-    }
-
-    const onSubmit = async (searchTerm) => {
-      const boardListSearchRes = await BoardAPI.search(searchTerm)
-
-      onSubmitSearchInput(boardListSearchRes.body.content);
+      onSearch(searchTerm);
     }
 
     const onClickMenu = (e) => {
@@ -101,7 +91,7 @@ const SearchInput = ({ onSubmitSearchInput }) => {
         </Dropdown>
         <Search 
           placeholder="검색어를 입력하세요." 
-          onSearch={onSearch} 
+          onSearch={onSubmit} 
           onClick={(e) => e.target.value=""}
           enterButton 
         />

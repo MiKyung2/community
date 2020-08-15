@@ -11,24 +11,12 @@ const BoardAPI = {
       if (CONFIG.NODE_ENV == "test") {
         return dummy;
       } else {
-        const {currentPage, gb, size, sort} = payload;
-        const res = await AxiosWrapper.get(
-          `board/page?currentPage=${currentPage}&gb=${gb}&size=${size}&sort=${sort}`
-        );
-        return res;
-      }
-    } catch (error) {
-      // throw error;
-      console.error(error);
-    }
-  },
-  search: async (payload) => {
-    try {
-      const {gb, sort, keyword} = payload;
+      const {currentPage, gb, keyword, size, sort} = payload;
       const res = await AxiosWrapper.get(
-        `board/page?gb=${gb}&sort=${sort}&keyword=${keyword}`
-      );
+        `board/page?currentPage=${currentPage}&gb=${gb}&keyword=${keyword}&size=${size}&sort=${sort}`
+        );
       return res;
+      }
     } catch (error) {
       // throw error;
       console.error(error);

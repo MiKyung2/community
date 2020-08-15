@@ -42,21 +42,21 @@ const columns = [
 ];
 
  // 최신순 | 좋아요순 | 댓글순 | 조회수순
- const filterLists = [
+ const sortLists = [
   {
-    id: 'filter_newest',
+    id: 'sort_newest',
     name: '최신순'
   },
   {
-    id: 'filter_like',
+    id: 'sort_like',
     name: '좋아요순'
   },
   {
-    id: 'filter_comment',
+    id: 'sort_comment',
     name: '댓글순'
   },
   {
-    id: 'filter_view',
+    id: 'sort_view',
     name: '조회수순'
   },
 ];
@@ -74,50 +74,55 @@ const BoardPage = (props) => {
         page: {
           currentPage: 1,
           gb: 'title',
+          keyword: '',
           size: 20,
           sort: "date",
+          tablePage: 1,
+          total: 200
         },
       };
     });
 
     const fetchListData = async() => {
-      const { currentPage, gb, size, sort } = state.page;
+      const { currentPage, keyword, gb, size, sort } = state.page;
       const nextData = await BoardAPI.list({ 
         currentPage,
+        keyword,
         gb,
         size,
         sort
        });
 
        state.dataSource = nextData.body.content;
-
-      //  CONFIG.LOG(nextPageData.body.content);
     }
 
+    const moveToFirstPage = () => {
+      state.page.tablePage = 1;  
+      state.page.currentPage = 1;
+    }
 
-    const onClickFilter = (selectedFilter) => {
-      // CONFIG.LOG("onclickFIlter", e.target.id);
+    const onChangeSort = (selectedFilter) => {
       const target = selectedFilter.target.id;
 
       switch (target) {
-        case 'filter_newest' :
-          // CONFIG.LOG("최신순!!");
+        case 'sort_newest' :
           state.page.sort = "date";
+          moveToFirstPage();
           fetchListData();
           break;
-        case 'filter_like' :
-          // CONFIG.LOG("좋아요순!!");
+        case 'sort_like' :   
           state.page.sort = "like";
+          moveToFirstPage();
           fetchListData();
           break;
-        case 'filter_comment' :
-          // CONFIG.LOG("댓글순!!");
+        case 'sort_comment' :
           state.page.sort = "commentCnt";
+          moveToFirstPage();
           fetchListData();
           break;
-        case 'filter_view' :
-          // CONFIG.LOG("조회수순!!");
+        case 'sort_view' :
           state.page.sort = "viewCount";
+          moveToFirstPage();
           fetchListData();
           break;
         default :
@@ -128,10 +133,23 @@ const BoardPage = (props) => {
 
     // 페이지 변경
     const onChangePage = (page, pageSize) => {
-      // console.log("page:", page, "pageSize", pageSize);
+      state.page.tablePage = page;
       state.page.currentPage = page;
       fetchListData();
     }
+
+    // 필터&검색
+    const onSearch = (searchTerm) => {
+    const {gb, keyword, sort} = searchTerm;
+
+    state.page.currentPage = 1;
+    state.page.gb = gb;
+    state.page.keyword = keyword;
+    state.page.sort = sort;
+
+    fetchListData();
+    console.log("search data length", state.dataSource.length);
+  }
 
     // 해당 게시물 이동
     const onClickTableRow = (record, rowIndex) => {
@@ -140,11 +158,6 @@ const BoardPage = (props) => {
           router.push('/board/[id]', `/board/${record.id}`);
         }
       }
-    }
-
-    // 필터&검색
-    const onSubmitSearchInput = (searchResult) => {
-      state.dataSource = searchResult;
     }
 
     // 새글쓰기로 이동
@@ -168,13 +181,13 @@ const BoardPage = (props) => {
         <Row align="bottom" justify="space-between" className="filter_container">
           {/* 좋아요순 | 댓글순 | 조회수순 */}
           <ul className="filter">
-            {filterLists && filterLists.map(list => (
-              <li id={list.id} onClick={onClickFilter}>{list.name}</li>
+            {sortLists && sortLists.map(list => (
+              <li id={list.id} onClick={onChangeSort}>{list.name}</li>
             ))}
           </ul>
 
           {/* 검색바 */}
-          <SearchInput onSubmitSearchInput={onSubmitSearchInput} />
+          <SearchInput onSearch={onSearch} />
         </Row>
 
         {/* 테이블 & 리스트 */}
@@ -184,8 +197,9 @@ const BoardPage = (props) => {
           onRow={onClickTableRow}
           pagination={{ 
             pageSize: state.page.size, 
-            total: 200,
+            total: state.page.total,
             onChange: onChangePage, 
+            current: state.page.tablePage
           }}
           scroll={true}
         />        
@@ -199,6 +213,7 @@ export const getStaticProps = async () => {
   const boardListByDate = await BoardAPI.list({ 
     currentPage: 1,
     gb: "title",
+    keyword: '',
     size: 20,
     sort: "date"
    });
