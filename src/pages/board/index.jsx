@@ -9,6 +9,10 @@ import { useRouter } from "next/router";
 import CONFIG from '../../utils/CONFIG';
 import { numFormatter } from '../../utils/numFormatter';
 
+// import useBoardList from '../../hooks/boardList';
+
+// console.log("test mobx", useBoardList.state)
+
 const columns = [
   {
     title: "제목",
@@ -63,7 +67,7 @@ const columns = [
 
 
 const BoardPage = (props) => {
-  // CONFIG.LOG("boardpage props", props);
+  console.log("boardpage props", props);
 
   return useObserver(() => {
     const router = useRouter();
@@ -180,27 +184,27 @@ export const getStaticProps = async () => {
   // 좋아요순
   const boardListByLike = await BoardAPI.list({ 
     gb: "title",
-    sort: "like"
+    sort: "like",
    });
+
 
   // 댓글순
-  const boardListByComment = await BoardAPI.list({ 
-    gb: "title",
-    sort: "commentCnt"
-   });
+  // const boardListByComment = await BoardAPI.list({ 
+  //   gb: "title",
+  //   sort: "commentCnt"
+  //  });
 
   // 조회수순
-  const boardListByViewCnt = await BoardAPI.list({ 
-    gb: "title",
-    sort: "viewCount"
-   });
-
+  // const boardListByViewCnt = await BoardAPI.list({ 
+  //   gb: "title",
+  //   sort: "viewCount"
+  //  });
 
   return {
     props: {
       listByLike: boardListByLike.body.content,
-      listByComment: boardListByComment.body.content,
-      listByViewCnt: boardListByViewCnt.body.content
+      // listByComment: boardListByComment.body.content,
+      // listByViewCnt: boardListByViewCnt.body.content
     },
   };
 };
