@@ -70,15 +70,30 @@ const BoardPage = (props) => {
 
     const state = useLocalStore(() => {
       return {
-        dataSource: props.listByLike,
+        dataSource: props.listByDate,
         page: {
-          pageSize: 10,
           currentPage: 1,
+          gb: 'title',
+          size: 20,
+          sort: "date",
         },
       };
     });
 
-    // CONFIG.LOG("index-props:", props.listByLike)
+    const fetchListData = async() => {
+      const { currentPage, gb, size, sort } = state.page;
+      const nextData = await BoardAPI.list({ 
+        currentPage,
+        gb,
+        size,
+        sort
+       });
+
+       state.dataSource = nextData.body.content;
+
+      //  CONFIG.LOG(nextPageData.body.content);
+    }
+
 
     const onClickFilter = (selectedFilter) => {
       // CONFIG.LOG("onclickFIlter", e.target.id);
@@ -87,23 +102,35 @@ const BoardPage = (props) => {
       switch (target) {
         case 'filter_newest' :
           // CONFIG.LOG("최신순!!");
+          state.page.sort = "date";
+          fetchListData();
           break;
         case 'filter_like' :
           // CONFIG.LOG("좋아요순!!");
-          state.dataSource = props.listByLike;
+          state.page.sort = "like";
+          fetchListData();
           break;
         case 'filter_comment' :
           // CONFIG.LOG("댓글순!!");
-          state.dataSource = props.listByComment;
+          state.page.sort = "commentCnt";
+          fetchListData();
           break;
         case 'filter_view' :
           // CONFIG.LOG("조회수순!!");
-          state.dataSource = props.listByViewCnt;
+          state.page.sort = "viewCount";
+          fetchListData();
           break;
         default :
           // CONFIG.LOG("default-최신순?");
           // console.error("filter error");
       }
+    }
+
+    // 페이지 변경
+    const onChangePage = (page, pageSize) => {
+      // console.log("page:", page, "pageSize", pageSize);
+      state.page.currentPage = page;
+      fetchListData();
     }
 
     // 해당 게시물 이동
@@ -115,11 +142,6 @@ const BoardPage = (props) => {
       }
     }
 
-    const onChangePage = (page, pageSize) => {
-      // CONFIG.LOG("page:", page, "pageSize", pageSize);
-      state.page.currentPage = page;
-    }
-
     // 필터&검색
     const onSubmitSearchInput = (searchResult) => {
       state.dataSource = searchResult;
@@ -129,10 +151,6 @@ const BoardPage = (props) => {
     const onClickNewPostBtn = () => {
       router.push("/board/articles/create");
     };
-
-    
-    // CONFIG.LOG(state.dataSource.length);
-
 
     return (
       <div className={props.className}>
@@ -165,9 +183,9 @@ const BoardPage = (props) => {
           dataSource={state.dataSource}
           onRow={onClickTableRow}
           pagination={{ 
-            pageSize: state.page.pageSize, 
+            pageSize: state.page.size, 
+            total: 200,
             onChange: onChangePage, 
-            // total: 500
           }}
           scroll={true}
         />        
@@ -177,30 +195,17 @@ const BoardPage = (props) => {
 };
 
 export const getStaticProps = async () => {
-  // 좋아요순
-  const boardListByLike = await BoardAPI.list({ 
+  // 최신순
+  const boardListByDate = await BoardAPI.list({ 
+    currentPage: 1,
     gb: "title",
-    sort: "like"
+    size: 20,
+    sort: "date"
    });
-
-  // 댓글순
-  const boardListByComment = await BoardAPI.list({ 
-    gb: "title",
-    sort: "commentCnt"
-   });
-
-  // 조회수순
-  const boardListByViewCnt = await BoardAPI.list({ 
-    gb: "title",
-    sort: "viewCount"
-   });
-
 
   return {
     props: {
-      listByLike: boardListByLike.body.content,
-      listByComment: boardListByComment.body.content,
-      listByViewCnt: boardListByViewCnt.body.content
+      listByDate: boardListByDate.body.content,
     },
   };
 };

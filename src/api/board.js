@@ -11,9 +11,9 @@ const BoardAPI = {
       if (CONFIG.NODE_ENV == "test") {
         return dummy;
       } else {
-        const {gb, sort} = payload;
+        const {currentPage, gb, size, sort} = payload;
         const res = await AxiosWrapper.get(
-          `board/page?gb=${gb}&sort=${sort}`
+          `board/page?currentPage=${currentPage}&gb=${gb}&size=${size}&sort=${sort}`
         );
         return res;
       }
