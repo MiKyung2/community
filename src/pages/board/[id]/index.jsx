@@ -54,10 +54,11 @@ const Board = (props) => {
       state.visible = false;
     }
     
-    const handleOK = async() => {
-      const boardDeleteRes = await BoardAPI.delete({ 
+    const handleOK = () => {
+      const boardDeleteRes = async() => await BoardAPI.delete({ 
         id: queryId
       });
+      boardDeleteRes();
       // CONFIG.LOG("글 삭제 후 res", boardDeleteRes);
       router.push('/board');
       state.visible = false;
@@ -110,14 +111,14 @@ const Board = (props) => {
 
 
           {/* 댓글 */}
-          <div>
+          <div className="comment-section">
             <h3>댓글</h3>
 
             {/* 댓글 - 리스트 */}
-            <CommentList />
+            <CommentList queryId={queryId} />
 
             {/* 댓글 - 새댓글 등록 */}
-            <AddComment />
+            <AddComment queryId={queryId} />
           </div>
       </div>
     );
@@ -182,6 +183,11 @@ export default styled(Board)`
       flex: 9;
       margin-top: 50px;
       padding: 0 30px 30px 30px;
+    }
+    .comment-section {
+      > h3 {
+        margin-bottom: 15px;
+      }
     }
   }
 `;
