@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useCookies } from 'react-cookie';
@@ -8,36 +7,31 @@ import styled from 'styled-components';
 import AuthAPI from '../../api/auth';
 import { AppContext } from '../../components/App/context';
 
-const SignIn = (props) => {
+const FindPwd = (props) => {
   const global = React.useContext(AppContext);
   const router = useRouter();
   return useObserver(() => {
     const state = useLocalStore(() => {
       return {
         loading: false,
-        list: [],
         value: {
           email: '',
-          password: '',
         },
       };
     });
-    const [_, setCookie] = useCookies(['token', 'id']);
 
-    const onLogin = async () => {
-      const resAuth = await AuthAPI.login(state);
-      if (resAuth === '500') {
-        message.error('회원정보를 다시 한 번 확인해 주세요');
-        return;
-      }
-      global.action.login(resAuth.data.body);
+    const onFindPassword = async () => {
+      const resAuth = await AuthAPI.find_pass(state);
+
+      // if (resAuth === '500') {
+      //   message.error('회원정보를 다시 한 번 확인해 주세요');
+      //   return;
+      // }
     };
 
     useEffect(() => {
       if (global.state.user?.token) {
         Router.push('/');
-        setCookie('token', global.state.user?.token);
-        setCookie('id', global.state.user?.id);
       }
     }, [global.state.user?.token]);
 
@@ -54,16 +48,7 @@ const SignIn = (props) => {
           }}
         >
           <div className='wrapper'>
-            <Form.Item
-              className='center'
-              name='email'
-              rules={[
-                {
-                  required: true,
-                  message: '이메일을 입력해주세요.',
-                },
-              ]}
-            >
+            <Form.Item className='center' name='email'>
               <Input
                 className='input'
                 id='email'
@@ -74,69 +59,24 @@ const SignIn = (props) => {
                 }}
               />
             </Form.Item>
-
-            <Form.Item
-              className='center'
-              rules={[
-                {
-                  required: true,
-                  message: '비밀번호를 입력해주세요.',
-                },
-              ]}
-            >
-              <Input.Password
-                className='input'
-                type='password'
-                value={state.value.password}
-                placeholder='비밀번호를 입력해주세요.'
-                onChange={(e) => {
-                  state.value.password = e.target.value;
-                }}
-              />
-            </Form.Item>
-            <Form.Item valuePropName='checked'>
-              <Checkbox>로그인 유지</Checkbox>
-            </Form.Item>
             <Form.Item>
               <Button
                 className='button'
                 type='primary'
                 htmlType='submit'
-                onClick={() => onLogin()}
+                onClick={() => onFindPassword()}
               >
-                로그인
-              </Button>
-            </Form.Item>
-            <Form.Item>
-              <Button
-                className='button'
-                htmlType='submit'
-                onClick={() => router.push('/accounts/signup')}
-              >
-                회원가입
+                비밀번호 찾기
               </Button>
             </Form.Item>
           </div>
-          <Row className='right lost_info_wrapper'>
-            <Col>
-              <Link href='find_id'>
-                <a>이메일 찾기</a>
-              </Link>
-            </Col>
-            <Col className='vertical-line' />
-            <Col>
-              <Link href='find_pwd'>
-                <a>비밀번호를 찾기</a>
-              </Link>
-            </Col>
-          </Row>
         </Form>
       </div>
     );
   });
 };
 
-export default styled(SignIn)`
+export default styled(FindPwd)`
   & {
     height: 75vh;
     overflow: scroll;

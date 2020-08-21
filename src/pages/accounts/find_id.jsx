@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import AuthAPI from '../../api/auth';
 import { AppContext } from '../../components/App/context';
 
-const SignIn = (props) => {
+const FindId = (props) => {
   const global = React.useContext(AppContext);
   const router = useRouter();
   return useObserver(() => {
@@ -43,6 +43,7 @@ const SignIn = (props) => {
 
     return (
       <div className={props.className}>
+        <h1 className='center'>아이디 찾기에 관해서는 논의가 필요하다</h1>
         <Form
           name='basic'
           initialValues={{
@@ -74,69 +75,25 @@ const SignIn = (props) => {
                 }}
               />
             </Form.Item>
-
-            <Form.Item
-              className='center'
-              rules={[
-                {
-                  required: true,
-                  message: '비밀번호를 입력해주세요.',
-                },
-              ]}
-            >
-              <Input.Password
-                className='input'
-                type='password'
-                value={state.value.password}
-                placeholder='비밀번호를 입력해주세요.'
-                onChange={(e) => {
-                  state.value.password = e.target.value;
-                }}
-              />
-            </Form.Item>
-            <Form.Item valuePropName='checked'>
-              <Checkbox>로그인 유지</Checkbox>
-            </Form.Item>
             <Form.Item>
               <Button
                 className='button'
                 type='primary'
                 htmlType='submit'
                 onClick={() => onLogin()}
+                disabled
               >
-                로그인
-              </Button>
-            </Form.Item>
-            <Form.Item>
-              <Button
-                className='button'
-                htmlType='submit'
-                onClick={() => router.push('/accounts/signup')}
-              >
-                회원가입
+                아이디 찾기
               </Button>
             </Form.Item>
           </div>
-          <Row className='right lost_info_wrapper'>
-            <Col>
-              <Link href='find_id'>
-                <a>이메일 찾기</a>
-              </Link>
-            </Col>
-            <Col className='vertical-line' />
-            <Col>
-              <Link href='find_pwd'>
-                <a>비밀번호를 찾기</a>
-              </Link>
-            </Col>
-          </Row>
         </Form>
       </div>
     );
   });
 };
 
-export default styled(SignIn)`
+export default styled(FindId)`
   & {
     height: 75vh;
     overflow: scroll;
