@@ -3,6 +3,8 @@ import { useObserver, useLocalStore } from 'mobx-react';
 import {useRouter} from 'next/router';
 // import {CONFIG} from '../../../utils/CONFIG';
 import BoardAPI from "../../../api/board";
+import { Modal } from 'antd';
+
 
 import WriteBoardForm from '../../../components/Board/WriteBoardForm';
 
@@ -21,11 +23,14 @@ const EditBoard = (props) => {
                 writer: props.props.board.body.writer,
                 // select: props.board.body.select,
                 title: props.props.board.body.title,
-                contents: props.props.board.body.contents
+                contents: props.props.board.body.contents,
+                modal: {
+                    visible: false
+                }
             }
         });
 
-        const onSubmitForm = async (e) => {
+        const onSubmitForm = (e) => {
             e.preventDefault();
 
             const formData = {
@@ -35,40 +40,40 @@ const EditBoard = (props) => {
                 contents: state.contents,
             }
 
-            // CONFIG.LOG("게시물 수정!!!!", formData);
-            const boardEditRes = await BoardAPI.edit(formData);
-            // CONFIG.LOG("글 수정 후 res", boardEditRes);
+            const boardEditRes = async() => await BoardAPI.edit(formData);
+            boardEditRes();
 
-            // 글목록 or 해당 글로 이동
             router.push('/board/[id]', `/board/${state.id}`);
         }
 
-        const onCancel = (e) => {
-            // CONFIG.LOG("새 글 작성 - 취소");
-            // 글목록 or 해당 글로 이동
-            router.push('/board/[id]', `/board/${state.id}`);
+        const onCancel = () => {
+            state.modal.visible = true;
         }	
 
-    
+        const handleOk = () => {
+            router.push('/board/[id]', `/board/${state.id}`);
+        }
+
+        const handleCancel = () => {
+            state.modal.visible = false;
+        }
+
         const onChangeSelect = (e) => {
-            // CONFIG.LOG("게시판 선택", e);
             state.select = e;
         }
 
         const onChangeTitle = (e) => {
-            // CONFIG.LOG("title!!!", e.target.value);
             state.title = e.target.value;
         }
 
         const onChangeEditor = (e) => {
-            // input data 변경 
-            // CONFIG.LOG("onEditorChange!", e.editor.getData());
             state.contents = e.editor.getData();
-        }			      
+        }	
+        
     
     
       return (
-
+        <>
         <WriteBoardForm 
             boardType="게시글 수정"
             // boardSelect={state.select}
@@ -82,6 +87,16 @@ const EditBoard = (props) => {
             onChangeEditor = {onChangeEditor}
         />
 
+        {/* 취소 확인 메세지 */}
+        <Modal 
+        visible={state.modal.visible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        >
+            <p>정말 게시글 수정을 취소하시겠습니까?</p>
+        </Modal>
+      </>
+
       );
     })
 };
@@ -90,9 +105,8 @@ EditBoard.getInitialProps = async({ query }) => {
 
     const boardDetailRes = await BoardAPI.detail({ 
         id: query.id
-        });
+    });
 
-        // CONFIG.LOG("boardDetailRes", boardDetailRes)
     return {
         props: {
         board: boardDetailRes,

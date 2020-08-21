@@ -3,6 +3,7 @@ import { useObserver, useLocalStore } from 'mobx-react';
 import {useRouter} from 'next/router';
 // import {CONFIG} from '../../../utils/CONFIG';
 import BoardAPI from "../../../api/board";
+import { Modal } from 'antd';
 
 import WriteBoardForm from '../../../components/Board/WriteBoardForm';
 
@@ -14,7 +15,10 @@ const CreateBoard = (props) => {
             return {
                 select: '',
                 title: '',
-                contents: ''
+                contents: '',
+                modal: {
+                    visible: false
+                }
             }
         });
 
@@ -29,34 +33,33 @@ const CreateBoard = (props) => {
                 contents: state.contents,
             }
 
-            // CONFIG.LOG("새글 submit", formData);
-
             BoardAPI.write(formData);
 
-            // 글목록 or 해당 글로 이동
             router.push('/board', `/board`);
         }
 
         const onCancel = (e) => {
-            // CONFIG.LOG("새 글 작성 - 취소");
-            // 글목록 or 해당 글로 이동
-            router.push('/board', `/board`);
+            state.modal.visible = true;
         }	
+
+        const handleOk = () => {
+            router.push('/board', `/board`);
+        }
+
+        const handleCancel = () => {
+            state.modal.visible = false;
+        }
 
     
         const onChangeSelect = (e) => {
-            // CONFIG.LOG("게시판 선택", e);
             state.select = e;
         }
 
         const onChangeTitle = (e) => {
-            // CONFIG.LOG("title!!!", e.target.value);
             state.title = e.target.value;
         }
 
         const onChangeEditor = (e) => {
-            // input data 변경 
-            // CONFIG.LOG("onEditorChange!", e.editor.getData());
             const dataFromEditor =  e.editor.getData();
             state.contents = dataFromEditor;
         }
@@ -65,6 +68,7 @@ const CreateBoard = (props) => {
     
     
       return (
+        <>
 
         <WriteBoardForm 
             boardType="새 글 작성"
@@ -78,6 +82,17 @@ const CreateBoard = (props) => {
             onChangeTitle = {onChangeTitle}
             onChangeEditor = {onChangeEditor}
         />
+
+        {/* 취소 확인 메세지 */}
+        <Modal 
+        visible={state.modal.visible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        >
+            <p>정말 작성을 취소하시겠습니까?</p>
+        </Modal>
+
+        </>
         
       );
     })

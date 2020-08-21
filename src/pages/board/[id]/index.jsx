@@ -19,10 +19,8 @@ const Board = (props) => {
   
   const router = useRouter();
   const queryId = router.query.id;
-  console.log("router", router)
 
   const boardProps = props.props;
-  // CONFIG.LOG("게시물 props", props.props.board.body)
 
   return useObserver(() => {
 
@@ -35,7 +33,6 @@ const Board = (props) => {
 
     
     const onClickBackToList = () => {
-      // CONFIG.LOG("글목록으로 돌아가기");
       router.push('/board');
     }
 
@@ -44,7 +41,6 @@ const Board = (props) => {
     }
 
     const onClickEdit = () => {
-      // CONFIG.LOG("글 수정 페이지로 이동!");
       router.push(`/board/${queryId}/modify`);
     }
 
@@ -52,16 +48,15 @@ const Board = (props) => {
       state.visible = true;
     }
 
-    const handleCancel = (e) => {
+    const handleCancelDelete = (e) => {
       state.visible = false;
     }
     
-    const handleOK = () => {
+    const handleOkDelete = () => {
       const boardDeleteRes = async() => await BoardAPI.delete({ 
         id: queryId
       });
       boardDeleteRes();
-      // CONFIG.LOG("글 삭제 후 res", boardDeleteRes);
       router.push('/board');
       state.visible = false;
     }
@@ -100,8 +95,8 @@ const Board = (props) => {
             {/* 삭제 확인 메세지 */}
             <Modal 
               visible={state.visible}
-              onOk={handleOK}
-              onCancel={handleCancel}
+              onOk={handleOkDelete}
+              onCancel={handleCancelDelete}
             >
               <p>정말 삭제하시겠습니까?</p>
             </Modal>
