@@ -205,7 +205,7 @@ const BoardPage = (props) => {
           {/* 좋아요순 | 댓글순 | 조회수순 */}
           <ul className="filter">
             {sortLists && sortLists.map(list => (
-              <li id={list.id} onClick={onChangeSort}>{list.name}</li>
+              <li key={list.id} id={list.id} onClick={onChangeSort}>{list.name}</li>
             ))}
           </ul>
 
@@ -222,7 +222,7 @@ const BoardPage = (props) => {
             pageSize: state.page.size, 
             total: state.page.total,
             onChange: onChangePage, 
-            current: state.page.tablePage
+            current: state.page.tablePage,
           }}
           scroll={true}
         />        

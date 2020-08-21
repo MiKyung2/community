@@ -44,8 +44,8 @@ const WriteBoardForm = (props) => {
                     <form onSubmit={onSubmitForm}>
                         {/* 게시판 선택 */}
                         <Select defaultValue="default" className="select" onChange={onChangeSelect}>
-                            {options && options.map(option => (
-                                <Option value={option.value}>{option.text}</Option>
+                            {options && options.map((option, index) => (
+                                <Option key={index} value={option.value}>{option.text}</Option>
                             ))}
                         </Select>
                         

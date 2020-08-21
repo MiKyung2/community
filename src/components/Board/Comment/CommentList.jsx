@@ -36,7 +36,7 @@ const CommentList = ({queryId}) => {
     return (
       <>
       {state.comments && state.comments.map(comment => (
-        <EachComment data={comment} />
+        <EachComment key={comment.id} data={comment} />
       ))}
       </>
     )
