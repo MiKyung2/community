@@ -2,7 +2,7 @@ import axios from 'axios';
 import AxiosWrapper from './axiosWrapper';
 
 const AuthAPI = {
-  signup:  async (payload) => {
+  signup: async (payload) => {
     try {
       const res = await AxiosWrapper.post('/user', {
         nickname: payload.value.nickname,
@@ -18,13 +18,16 @@ const AuthAPI = {
 
   login: async (payload) => {
     try {
-      const res = await AxiosWrapper.post('/user/login', {
-        id: payload.value.email,
-        password: payload.value.password,
-      });
+      const res = await axios.post(
+        'http://141.164.41.213:8081/v1/api/user/login',
+        {
+          id: payload.value.email,
+          password: payload.value.password,
+        },
+      );
       return res;
     } catch (error) {
-      throw error;
+      return '500';
     }
   },
   logout: async (payload) => {
@@ -39,6 +42,23 @@ const AuthAPI = {
       return res;
     } catch (error) {
       throw error;
+    }
+  },
+  find_pass: async (payload) => {
+    console.log('start');
+    try {
+      const res = await axios.put(
+        `http://141.164.41.213:8081/v1/api/user/find/password?id=1&user_id=${payload.value.email}`,
+        // {
+        //   id: '1',
+        //   user_id: payload.value.email,
+        // },
+      );
+      console.log(res);
+      return res;
+    } catch (error) {
+      console.log(error);
+      return '500';
     }
   },
 };

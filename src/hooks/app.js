@@ -20,10 +20,9 @@ const initializer = (props) => {
 };
 
 const dispatch = ($) => {
-
   const login = (data) => {
-    $.state.user.id = data.userPkId;
-    $.state.user.token = data.token;
+    $.state.user.id = data?.userPkId;
+    $.state.user.token = data?.token;
   };
 
   const logout = () => {
