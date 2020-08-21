@@ -63,7 +63,7 @@ const ProfileCard = ({ loading, data, onOpenNote }) => {
                   />
                 }
                 title={data.nickname || ""}
-                description={data.gitAddr || "-"}
+                description={<a style={{ textDecoration: "underline" }} href={data.gitAddr} target="_blank">{data.gitAddr || "-"}</a>}
               />
               <div>
                 {true ? (
