@@ -26,7 +26,7 @@ const CommentAPI = {
   },
   event: async (payload) => {
     try {
-        const { id, itemGb } = payload
+        // const { id, itemGb } = payload
       const res = await AxiosWrapper.post('comment/event/like', payload);
       return res;
     } catch (error) {
@@ -34,15 +34,15 @@ const CommentAPI = {
       console.error(error);
     }
   },
-//   delete: async (payload) => {
-//     try {
-//       const res = await AxiosWrapper.post('board/delete', payload);
-//       return res;
-//     } catch (error) {
-//       // throw error;
-//       console.error(error);
-//     }
-//   },
+  delete: async (payload) => {
+    try {
+      const res = await AxiosWrapper.post('comment/remove', payload);
+      return res;
+    } catch (error) {
+      // throw error;
+      console.error(error);
+    }
+  },
 };
 
 export default CommentAPI;
