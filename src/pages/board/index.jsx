@@ -2,12 +2,13 @@ import React from "react";
 import styled from "styled-components";
 import { useObserver, useLocalStore } from "mobx-react";
 import BoardAPI from "../../api/board";
-import { Row, Table, Button } from "antd";
+import { Row, Table, Button, Tooltip } from "antd";
 import { EditOutlined } from '@ant-design/icons';
 import SearchInput from "../../components/SearchInput";
 import { useRouter } from "next/router";
 import CONFIG from '../../utils/CONFIG';
 import { numFormatter } from '../../utils/numFormatter';
+import { formatDateWithTooltip } from '../../utils/dateFormatter';
 
 const columns = [
   {
@@ -38,6 +39,11 @@ const columns = [
     title: "날짜",
     dataIndex: "createdDate",
     key: "createdDate",
+    render: date => (
+        <span>
+          {formatDateWithTooltip(date)}
+        </span>
+      )
   },
 ];
 
@@ -93,7 +99,8 @@ const BoardPage = (props) => {
         sort
        });
 
-       state.dataSource = nextData.body.content;
+      state.dataSource = nextData.body.content;
+      console.log("board data res:", nextData);
     }
 
     const moveToFirstPage = () => {
@@ -147,9 +154,25 @@ const BoardPage = (props) => {
     state.page.keyword = keyword;
     state.page.sort = sort;
 
+    // const testFetch = async() => {
+    //   const { currentPage, keyword, gb, size, sort } = state.page;
+    //   const nextData = await BoardAPI.list({ 
+    //     currentPage,
+    //     keyword,
+    //     gb,
+    //     size,
+    //     sort
+    //    });
+
+    //   state.dataSource = nextData.body.content;
+    //   console.log("search data length", nextData.body.content);
+    //   state.page.total = nextData.body.content.length
+    // }
+    // testFetch();
+
     fetchListData();
-    console.log("search data length", state.dataSource.length);
-  }
+
+    }
 
     // 해당 게시물 이동
     const onClickTableRow = (record, rowIndex) => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled, {ServerStyleSheet, injectGlobal} from 'styled-components';
 import { Button, Row, Modal } from 'antd';
 import { EyeOutlined, CommentOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
@@ -6,6 +6,7 @@ import { useObserver, useLocalStore } from 'mobx-react';
 import { useRouter } from 'next/router';
 import CONFIG from '../../../utils/CONFIG';
 import { numFormatter } from '../../../utils/numFormatter';
+import { formatDate } from '../../../utils/dateFormatter';
 import ReactHtmlParser from 'react-html-parser';
 
 import BoardAPI from "../../../api/board";
@@ -15,9 +16,10 @@ import AddComment from '../../../components/Board/Comment/AddComment';
 
 const Board = (props) => {
   // CONFIG.LOG("Board props", props)
-
+  
   const router = useRouter();
   const queryId = router.query.id;
+  console.log("router", router)
 
   const boardProps = props.props;
   // CONFIG.LOG("게시물 props", props.props.board.body)
@@ -72,7 +74,7 @@ const Board = (props) => {
           </Row>
 
           <div className="header_bottom">
-            <span><strong>작성일:</strong> {state.data.createdDate}</span>
+            <span><strong>작성일:</strong> {formatDate(state.data.createdDate)}</span>
             <span><strong>작성자:</strong> {state.data.writer}</span>
           </div>
           
