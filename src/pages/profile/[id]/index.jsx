@@ -4,7 +4,7 @@ import { useObserver, useLocalStore } from "mobx-react";
 import { Tabs } from "antd";
 const { TabPane } = Tabs;
 
-import ProfileTabList from "../../components/profile/ProfileList";
+import ProfileTabList from "../../../components/profile/ProfileList";
 import ProfileCard from "../../../components/profile/ProfileCard";
 import SendNote from "../../../components/note/SendNote";
 import UserAPI from "../../../api/user";
@@ -17,6 +17,10 @@ const ProfilePage = (props) => {
         tabActive: "1",
         send: {
           open: false,
+          receiveUser: {
+            id: 0,
+            user: "",
+          },
         },
       };
     });
@@ -45,6 +49,10 @@ const ProfilePage = (props) => {
           </TabPane>
         </Tabs>
         <SendNote
+          receiveUser={{
+            id: props.profile.id,
+            userId: props.profile.userId,
+          }}
           visible={state.send.open}
           onCancel={() => {
             state.send.open = false;
@@ -55,13 +63,11 @@ const ProfilePage = (props) => {
   });
 };
 
-ProfilePage.getInitialProps = async () => {
-  const profileRes = await UserAPI.get({ id: 1 });
-
-  console.log("profile : ", JSON.stringify(profileRes, null, 3));
+ProfilePage.getInitialProps = async (ctx) => {
+  const profileRes = await UserAPI.get({ id: ctx.query.id });
 
   return {
-    profile: {},
+    profile: profileRes.body,
     theLatestDate: [
       {
         key: 1,

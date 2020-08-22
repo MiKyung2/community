@@ -5,25 +5,33 @@ import { AppContext } from "../App/context";
 
 const SendNote = (props) => {
   return useObserver(() => {
+    const user = { id: "8", userId: "123jmk@naver.com", nickname: "nick" };
     const global = React.useContext(AppContext);
-    const [form] = Form.useForm();
     const state = useLocalStore(() => {
       return {
         confirmLoading: false,
         error: "",
+        form: [
+          { "name": "revId", "value": props?.receiveUser?.userId || "" },
+        ],
       };
     });
 
     const handleOk = () => {
       state.confirmLoading = true;
-      form.submit();
+      const result = { sendId: user.userId };
+      state.form.map((d) => {
+        result[d.name[0]] = d.value;
+      });
+
+      onFinish(result);
     };
 
-    const onFinish = (values) => {
+    const onFinish = (form) => {
       (async () => {
         try {
           const res = await NoteAPI.post({
-            data: Object.assign(values, { sendId: "보낸 사람" }),
+            data: form,
           });
           props.onFinish();
         } catch (error) {
@@ -65,7 +73,13 @@ const SendNote = (props) => {
             </Button>,
           ]}
         >
-          <Form layout="horizontal" onFinish={onFinish} form={form}>
+          <Form 
+            layout="horizontal" 
+            fields={state.form} 
+            onFieldsChange={(changedFields, allFields) => {
+              state.form = allFields;
+            }}
+          >
             <Form.Item name="revId">
               <Input
                 style={{

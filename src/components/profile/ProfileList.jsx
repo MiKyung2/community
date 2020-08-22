@@ -27,7 +27,8 @@ const ProfileList = (props) => {
               e.preventDefault() ;
               router.push(`/profile/${item.user.id}`); 
             }}
-          >{item.user.nickname}</div>
+          >{item.user}</div>
+          {/* item.user.nickname */}
         </List.Item>
       )}
     >

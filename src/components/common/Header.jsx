@@ -57,28 +57,12 @@ const LayoutHeader = (props) => {
     });
     const [cookies, _, removeCookie] = useCookies(['token', 'id']);
     const router = useRouter();
-    const routerAsPath = router.asPath.split('/');
 
     const cnt = {
       commentNotReadCnt: 1,
       boardNotReadCnt: 2,
       followNotReadCnt: 3,
     };
-
-    const data = [
-      {
-        title: 'Ant Design Title 1',
-      },
-      {
-        title: 'Ant Design Title 2',
-      },
-      {
-        title: 'Ant Design Title 3',
-      },
-      {
-        title: 'Ant Design Title 4',
-      },
-    ];
 
     useEffect(() => {
       if (cookies.token) {
@@ -126,35 +110,38 @@ const LayoutHeader = (props) => {
             </Menu.Item>
           )}
         </Menu>
-        <div className='alert-menu'>
-          <Button
-            onClick={() => {
-              router.push('/notes');
-            }}
-          >
-            <Badge count={cnt.commentNotReadCnt}>
-              <MessageOutlined />
-            </Badge>
-          </Button>
-          <Popover
-            placement='bottomRight'
-            content={<ProfileTabList loading={false} dataSource={theLatestDate} />}
-            trigger='click'
-          >
-            <Button>
-              <Badge count={cnt.boardNotReadCnt}>
-                <BellOutlined />
+        {state.login ? (
+          <div className='alert-menu'>
+            <Button
+              onClick={() => {
+                router.push('/notes');
+              }}
+            >
+              <Badge count={cnt.commentNotReadCnt}>
+                <MessageOutlined />
               </Badge>
             </Button>
-          </Popover>
-          <Button
-            onClick={() => {
-              router.push('/profile');
-            }}
-          >
-            <UserOutlined />
-          </Button>
-        </div>
+            <Popover
+              placement='bottomRight'
+              content={<ProfileTabList loading={false} dataSource={theLatestDate} />}
+              trigger='click'
+            >
+              <Button>
+                <Badge count={cnt.boardNotReadCnt}>
+                  <BellOutlined />
+                </Badge>
+              </Button>
+            </Popover>
+            <Button
+              onClick={() => {
+                router.push(`/profile/${global.state.user.id}`);
+              }}
+            >
+              <UserOutlined />
+            </Button>
+          </div>
+        ) : null}
+        
       </Header>
     );
   });

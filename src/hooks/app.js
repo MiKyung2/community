@@ -7,7 +7,7 @@ const initializer = (props) => {
   const state = {
     status: { loading: false },
     user: {
-      id: '',
+      id: '8',
       email: '',
       name: '',
       token: '',

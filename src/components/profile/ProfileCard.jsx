@@ -15,6 +15,8 @@ const { Meta } = Card;
 const ProfileCard = ({ loading, data, onOpenNote }) => {
   return useObserver(() => {
     const router = useRouter();
+    const { id } = router.query;
+    const userId = 8;
 
     return (
       <Row>
@@ -66,7 +68,7 @@ const ProfileCard = ({ loading, data, onOpenNote }) => {
                 description={<a style={{ textDecoration: "underline" }} href={data.gitAddr} target="_blank">{data.gitAddr || "-"}</a>}
               />
               <div>
-                {true ? (
+                {id == userId ? (
                   <Button
                     onClick={() => {
                       router.push("/profile/edit");
@@ -79,13 +81,13 @@ const ProfileCard = ({ loading, data, onOpenNote }) => {
                     <Button 
                       style={{ marginRight: "8px" }} 
                       onClick={() => { 
-                        UserAPI.follow({ followed_id: 0, following_id: 0 });
+                        UserAPI.follow({ followed_id: id, following_id: userId });
                       }}
                     >팔로우</Button>
                     <Button 
                       style={{ marginRight: "8px" }} 
                       onClick={() => { 
-                        UserAPI.unfollow({ followed_id: 0, following_id: 0 });
+                        UserAPI.unfollow({ followed_id: id, following_id: userId });
                       }}
                     >팔로잉</Button>
                     <Button onClick={onOpenNote}>쪽지 보내기</Button>
