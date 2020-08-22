@@ -5,17 +5,18 @@ import styled from 'styled-components';
 
 import { Form, Input, Button, Checkbox, Row, Col, message } from 'antd';
 
-// import useApp from '../../hooks/app';
 import AuthAPI from '../../api/auth';
 
-const validateMessages = {
-  // required: '${name} is required!',
-  required: '빈칸을 채워주세요',
-  types: {
-    email: '이메일을 정확하게 입력해주세요',
-    password: '비밀번호는 영문 + 숫자 조합 8자리 이상',
-  },
-};
+import { inputRules } from '../../components/accounts/validator';
+
+// const validateMessages = {
+//   // required: '${name} is required!',
+
+//   types: {
+//     email: '이메일을 정확하게 입력해주세요',
+//     password: '비밀번호는 영문 + 숫자 조합 8자리 이상',
+//   },
+// };
 
 const Signup = (props) => {
   return useObserver(() => {
@@ -34,12 +35,14 @@ const Signup = (props) => {
       };
     });
 
+    const [form] = Form.useForm();
+
     const onSignup = async () => {
       state.loading = true;
       if (state.confirm) {
         if (
           state.value.nickname &&
-          state.value.id &&
+          // state.value.id &&
           state.value.email &&
           state.value.password1 &&
           state.value.password2
@@ -72,10 +75,7 @@ const Signup = (props) => {
       <div className={props.className}>
         <h1 className='title'>LOGO</h1>
         <Form
-          initialValues={{
-            remember: true,
-          }}
-          validateMessages={validateMessages}
+          form={form}
           onFinish={() => onSignup()}
           onFinishFailed={() => {
             console.log('onFinishFailed');
@@ -85,11 +85,7 @@ const Signup = (props) => {
             <Form.Item
               className='center form-item'
               name={['user', 'nickname']}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
+              rules={inputRules.nickname}
             >
               <Input
                 className='input'
@@ -98,9 +94,10 @@ const Signup = (props) => {
                 onChange={(e) => {
                   state.value.nickname = e.target.value;
                 }}
+                autoComplete='off'
               />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               className='center form-item'
               name={['user', 'id']}
               rules={[
@@ -120,15 +117,11 @@ const Signup = (props) => {
               <Button className='button-id' type='primary'>
                 중복 확인
               </Button>
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
               className='center form-item'
               name={['user', 'email']}
-              rules={[
-                {
-                  type: 'email',
-                },
-              ]}
+              rules={inputRules.email}
             >
               <Input
                 className='input'
@@ -137,19 +130,15 @@ const Signup = (props) => {
                 onChange={(e) => {
                   state.value.email = e.target.value;
                 }}
+                autoComplete='off'
               />
             </Form.Item>
             <Form.Item
               className='center form-item'
               name={['password']}
-              rules={[
-                {
-                  required: true,
-                  message: '비밀번호를 입력해주세요',
-                },
-                { min: 8, message: '비밀번호 8자리 이상' },
-              ]}
+              rules={inputRules.password}
               hasFeedback
+              autoComplete='off'
             >
               <Input
                 className='input'
@@ -159,6 +148,7 @@ const Signup = (props) => {
                 onChange={(e) => {
                   state.value.password1 = e.target.value;
                 }}
+                autoComplete='off'
               />
             </Form.Item>
             <Form.Item
@@ -166,21 +156,7 @@ const Signup = (props) => {
               name='confirm'
               dependencies={['password']}
               hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: '비밀번호를 확인해 주세요.',
-                },
-                ({ getFieldValue }) => ({
-                  validator(rule, value) {
-                    if (!value || getFieldValue('password') === value) {
-                      return Promise.resolve();
-                    }
-
-                    return Promise.reject('비밀번호가 일치하지 않습니다.');
-                  },
-                }),
-              ]}
+              rules={inputRules.passwordCheck}
             >
               <Input
                 className='input'
@@ -190,6 +166,7 @@ const Signup = (props) => {
                 onChange={(e) => {
                   state.value.password2 = e.target.value;
                 }}
+                autoComplete='off'
               />
             </Form.Item>
             <Form.Item valuePropName='checked'>

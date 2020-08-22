@@ -48,8 +48,8 @@ const theLatestDate = [
 ];
 
 const LayoutHeader = (props) => {
+  const global = React.useContext(AppContext);
   return useObserver(() => {
-    const global = React.useContext(AppContext);
     const state = useLocalStore(() => {
       return {
         login: false,
