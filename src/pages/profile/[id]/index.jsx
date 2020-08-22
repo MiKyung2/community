@@ -92,24 +92,36 @@ ProfilePage.getInitialProps = async (ctx) => {
     theLatestDate: [
       {
         key: 1,
+        boardId: 1,
         title: "게시물에 댓글을 남겼습니다.",
         description: "[모집중] 토이프로젝트 모집합니다.",
         time: "2분 전",
-        writer: "김코딩",
+        user: {
+          id: 1,
+          nickname: "김코딩",
+        }
       },
       {
         key: 2,
+        boardId: 2,
         title: "게시물에 댓글을 남겼습니다.",
         description: "[모집중] 토이프로젝트 모집합니다.",
         time: "2분 전",
-        writer: "김코딩",
+        user: {
+          id: 1,
+          nickname: "김코딩",
+        }
       },
       {
         key: 3,
+        boardId: 3,
         title: "게시물에 댓글을 남겼습니다.",
         description: "[모집중] 토이프로젝트 모집합니다.",
         time: "2분 전",
-        writer: "김코딩",
+        user: {
+          id: 1,
+          nickname: "김코딩",
+        }
       },
     ],
   };

@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 const ProfileList = (props) => {
   const router = useRouter();
-
+console.log("props : ", JSON.stringify(props, null, 3));
   return (
     <List
       dataSource={props.dataSource}
@@ -27,8 +27,7 @@ const ProfileList = (props) => {
               e.preventDefault() ;
               router.push(`/profile/${item.user.id}`); 
             }}
-          >{item.user}</div>
-          {/* item.user.nickname */}
+          >{item.user.nickname}</div>
         </List.Item>
       )}
     >
