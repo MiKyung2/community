@@ -33,7 +33,7 @@ const ProfileCard = ({ loading, data, onOpenNote }) => {
               title="팔로잉"
               value={data.followingCnt || 0}
               onClick={() => {
-                router.push("/profile/following");
+                router.push(`/profile/[id]/[cate]`,`/profile/${id}/following`);
               }}
             />,
             <BottomAction
@@ -41,7 +41,7 @@ const ProfileCard = ({ loading, data, onOpenNote }) => {
               title="팔로워"
               value={data.followerCnt || 0}
               onClick={() => {
-                router.push("/profile/followers");
+                router.push(`/profile/[id]/[cate]`,`/profile/${id}/followers`);
               }}
             />,
           ]}

@@ -50,6 +50,7 @@ const Notes = (props) => {
           });
 
           state.delete.selectedRowKeys = [];
+          getCurrentList();
         } catch (error) {
           // state.error = true;
         } finally {
@@ -194,7 +195,7 @@ const Notes = (props) => {
 
 Notes.getInitialProps = async () => {
   try {
-    const receiveList = await NoteAPI.receiveList({ userId: 1 });
+    const receiveList = await NoteAPI.receiveList({ userId: 8 });
     return {
       receiveList,
     };
