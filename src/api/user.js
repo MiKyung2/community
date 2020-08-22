@@ -61,7 +61,7 @@ const UserAPI = {
   },
   follow: async (payload) => {
     try {
-      const res = await AxiosWrapper.post(payload.data);
+      const res = await AxiosWrapper.post("user/follow", payload.data);
       return res;
     } catch (error) {
       console.log(error);
@@ -69,7 +69,7 @@ const UserAPI = {
   },
   unfollow: async (payload) => {
     try {
-      const res = await AxiosWrapper.delete(payload.data);
+      const res = await AxiosWrapper.delete("user/unfollow", payload.data);
       return res;
     } catch (error) {
       console.log(error);

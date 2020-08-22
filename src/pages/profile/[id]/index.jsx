@@ -8,9 +8,13 @@ import ProfileTabList from "../../../components/profile/ProfileList";
 import ProfileCard from "../../../components/profile/ProfileCard";
 import SendNote from "../../../components/note/SendNote";
 import UserAPI from "../../../api/user";
+import { AppContext } from '../../../components/App/context';
+import { useRouter } from "next/router";
 
 const ProfilePage = (props) => {
   return useObserver(() => {
+    const global = React.useContext(AppContext);
+    const router = useRouter();
     const state = useLocalStore(() => {
       return {
         loading: false,
@@ -22,17 +26,34 @@ const ProfilePage = (props) => {
             user: "",
           },
         },
+        profile: props.profile,
       };
     });
+
+    React.useEffect(() => {
+      if (global.state.srr) return;
+
+      getProfile();
+    }, []);
+
+    const getProfile = () => {
+      (async () => {
+        const profileRes = await UserAPI.get({ id: router.query.id });
+        state.profile = profileRes.body;
+      })();
+    };
 
     return (
       <div className={props.className}>
         {/* 프로필 상세 */}
         <ProfileCard
           loading={state.loading}
-          data={props.profile}
+          data={state.profile}
           onOpenNote={() => {
             state.send.open = true;
+          }}
+          onUpdate={() => {
+            getProfile();
           }}
         />
 
@@ -50,8 +71,8 @@ const ProfilePage = (props) => {
         </Tabs>
         <SendNote
           receiveUser={{
-            id: props.profile.id,
-            userId: props.profile.userId,
+            id: state.profile.id,
+            userId: state.profile.userId,
           }}
           visible={state.send.open}
           onCancel={() => {

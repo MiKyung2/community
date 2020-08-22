@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Avatar, Row, Col, Card, Skeleton, Button } from "antd";
+import { Popconfirm, message, Avatar, Row, Col, Card, Skeleton, Button } from "antd";
 import {
   EditOutlined,
   EllipsisOutlined,
@@ -12,7 +12,7 @@ import UserAPI from "../../api/user";
 
 const { Meta } = Card;
 
-const ProfileCard = ({ loading, data, onOpenNote }) => {
+const ProfileCard = ({ loading, data, onOpenNote, onUpdate }) => {
   return useObserver(() => {
     const router = useRouter();
     const { id } = router.query;
@@ -31,7 +31,7 @@ const ProfileCard = ({ loading, data, onOpenNote }) => {
             <BottomAction
               icon={<EditOutlined style={{ marginRight: "8px" }} key="edit" />}
               title="팔로잉"
-              value={data.followingCnt || 0}
+              value={data.followingList.cnt || 0}
               onClick={() => {
                 router.push(`/profile/[id]/[cate]`,`/profile/${id}/following`);
               }}
@@ -39,7 +39,7 @@ const ProfileCard = ({ loading, data, onOpenNote }) => {
             <BottomAction
               icon={<EllipsisOutlined style={{ marginRight: "8px" }} key="ellipsis" />}
               title="팔로워"
-              value={data.followerCnt || 0}
+              value={data.followedList.cnt || 0}
               onClick={() => {
                 router.push(`/profile/[id]/[cate]`,`/profile/${id}/followers`);
               }}
@@ -78,18 +78,31 @@ const ProfileCard = ({ loading, data, onOpenNote }) => {
                   </Button>
                 ) : (
                   <>
-                    <Button 
-                      style={{ marginRight: "8px" }} 
-                      onClick={() => { 
-                        UserAPI.follow({ followed_id: id, following_id: userId });
-                      }}
-                    >팔로우</Button>
-                    <Button 
-                      style={{ marginRight: "8px" }} 
-                      onClick={() => { 
-                        UserAPI.unfollow({ followed_id: id, following_id: userId });
-                      }}
-                    >팔로잉</Button>
+                    {data?.followedList?.followed_users.find((d) => d.id === userId) ? (
+                      <Popconfirm
+                        placement="bottomRight"
+                        title="팔로우를 취소하시겠습니까?"
+                        onConfirm={() => {
+                          UserAPI.unfollow({ data: { followed_id: id, following_id: userId } });
+                          // message.info("팔로우가 취소됬습니다.");
+                        }}
+                        okText="확인"
+                        cancelText="취소"
+                      >
+                        <Button
+                          type="primary"
+                          style={{ marginRight: "8px" }}
+                        >팔로우</Button>
+                      </Popconfirm>
+                    ) : (
+                      <Button
+                        type="primary"
+                        style={{ marginRight: "8px" }} 
+                        onClick={() => { 
+                          UserAPI.follow({ data: { followed_id: id, following_id: userId } });
+                          onUpdate();
+                      }}>팔로우하기</Button>
+                    )}
                     <Button onClick={onOpenNote}>쪽지 보내기</Button>
                   </>
                 )}
