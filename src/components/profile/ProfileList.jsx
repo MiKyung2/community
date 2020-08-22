@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 
 const ProfileList = (props) => {
   const router = useRouter();
-console.log("props : ", JSON.stringify(props, null, 3));
   return (
     <List
       dataSource={props.dataSource}
