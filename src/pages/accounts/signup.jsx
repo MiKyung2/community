@@ -8,6 +8,15 @@ import { Form, Input, Button, Checkbox, Row, Col, message } from 'antd';
 // import useApp from '../../hooks/app';
 import AuthAPI from '../../api/auth';
 
+const validateMessages = {
+  // required: '${name} is required!',
+  required: '빈칸을 채워주세요',
+  types: {
+    email: '이메일을 정확하게 입력해주세요',
+    password: '비밀번호는 영문 + 숫자 조합 8자리 이상',
+  },
+};
+
 const Signup = (props) => {
   return useObserver(() => {
     const router = useRouter();
@@ -66,13 +75,22 @@ const Signup = (props) => {
           initialValues={{
             remember: true,
           }}
+          validateMessages={validateMessages}
           onFinish={() => onSignup()}
           onFinishFailed={() => {
             console.log('onFinishFailed');
           }}
         >
           <div className='wrapper'>
-            <Form.Item className='center form-item'>
+            <Form.Item
+              className='center form-item'
+              name={['user', 'nickname']}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
               <Input
                 className='input'
                 placeholder='활동 닉네임'
@@ -82,7 +100,15 @@ const Signup = (props) => {
                 }}
               />
             </Form.Item>
-            <Form.Item className='center form-item'>
+            <Form.Item
+              className='center form-item'
+              name={['user', 'id']}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
               <Input
                 className='input input-id'
                 placeholder='아이디를 입력해주세요'
@@ -95,7 +121,15 @@ const Signup = (props) => {
                 중복 확인
               </Button>
             </Form.Item>
-            <Form.Item className='center form-item'>
+            <Form.Item
+              className='center form-item'
+              name={['user', 'email']}
+              rules={[
+                {
+                  type: 'email',
+                },
+              ]}
+            >
               <Input
                 className='input'
                 placeholder='이메일을 입력해주세요'
@@ -105,7 +139,18 @@ const Signup = (props) => {
                 }}
               />
             </Form.Item>
-            <Form.Item className='center form-item'>
+            <Form.Item
+              className='center form-item'
+              name={['password']}
+              rules={[
+                {
+                  required: true,
+                  message: '비밀번호를 입력해주세요',
+                },
+                { min: 8, message: '비밀번호 8자리 이상' },
+              ]}
+              hasFeedback
+            >
               <Input
                 className='input'
                 type='password'
@@ -116,7 +161,27 @@ const Signup = (props) => {
                 }}
               />
             </Form.Item>
-            <Form.Item className='center form-item'>
+            <Form.Item
+              className='center form-item'
+              name='confirm'
+              dependencies={['password']}
+              hasFeedback
+              rules={[
+                {
+                  required: true,
+                  message: '비밀번호를 확인해 주세요.',
+                },
+                ({ getFieldValue }) => ({
+                  validator(rule, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+
+                    return Promise.reject('비밀번호가 일치하지 않습니다.');
+                  },
+                }),
+              ]}
+            >
               <Input
                 className='input'
                 type='password'
