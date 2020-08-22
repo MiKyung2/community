@@ -3,9 +3,10 @@ import * as React from "react";
 
 import { useRouter, NextRouter } from "next/router";
 
-import { useLocalStore } from "mobx-react-lite";s
+import { useLocalStore } from "mobx-react-lite";
 import { AppContext } from "../components/App/context";
 import { IBoardListProps } from "../components/Board/List";
+import CONFIG from '../utils/CONFIG';
 
 const initializer = (props) => {
   return {
@@ -16,7 +17,7 @@ const initializer = (props) => {
 
 const action = (props, $) => {
   const router = useRouter();
-  const app = React.useContsext(AppContext);
+  const app = React.useContext(AppContext);
 
   return {};
 };
