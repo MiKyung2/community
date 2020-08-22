@@ -9,7 +9,7 @@ import moment from 'moment';
 import EachComment from './EachComment';
 
 
-const CommentList = ({queryId}) => {
+const CommentList = (props) => {
 
   return useObserver(() => {
 
@@ -18,20 +18,9 @@ const CommentList = ({queryId}) => {
             likes: 0,
             dislikes: 0,
             action: null,
-            comments: []
+            comments: props.data
         };
     });
-
-    useEffect(() => {
-      const commentList = async() => { 
-        const comments = await CommentAPI.get({ 
-            id: queryId
-        });
-        console.log("comment res", comments.body);
-        state.comments = comments.body;
-      };
-      commentList();
-    }, []);
 
     return (
       <>
@@ -43,20 +32,5 @@ const CommentList = ({queryId}) => {
 });
 }
 
-
-// CommentList.getInitialProps = async({ query }) => {
-
-  
-//   const commentList = await CommentAPI.get({ 
-//     id: query.id
-//   });
-
-//   console.log("hi comment list?", commentList);
-//   return {
-//     props: {
-//       comments: commentList,
-//     }
-//   };
-// }
 
 export default CommentList;

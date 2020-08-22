@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import styled, {ServerStyleSheet, injectGlobal} from 'styled-components';
 import { Button, Row, Modal } from 'antd';
-import { EyeOutlined, CommentOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
+import { EyeOutlined, CommentOutlined, LikeOutlined, DislikeOutlined, DislikeFilled, LikeFilled } from '@ant-design/icons';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useRouter } from 'next/router';
 import CONFIG from '../../../utils/CONFIG';
@@ -10,16 +10,15 @@ import { formatDate } from '../../../utils/dateFormatter';
 import ReactHtmlParser from 'react-html-parser';
 
 import BoardAPI from "../../../api/board";
-import CommentList from '../../../components/Board/Comment/CommentList';
-import AddComment from '../../../components/Board/Comment/AddComment';
+import CommentAPI from "../../../api/comment";
+import Comments from "../../../components/Board/Comment/Comments";
 
 
 const Board = (props) => {
-  // CONFIG.LOG("Board props", props)
   
   const router = useRouter();
   const queryId = router.query.id;
-
+  
   const boardProps = props.props;
 
   return useObserver(() => {
@@ -27,18 +26,25 @@ const Board = (props) => {
     const state = useLocalStore(() => {
       return {
         data: boardProps.board.body,
-        visible: false
+        comments: boardProps.comments.body,
+        visible: false,
+        action: null
       };
     });
-
     
     const onClickBackToList = () => {
       router.push('/board');
     }
 
-    const onClickLikeDislike = () => {
-      // CONFIG.LOG("clicked like or dislike!")
-    }
+    const onClickLike = async() => {
+      await BoardAPI.event({id: queryId, itemGb: "L"});
+      state.action = "liked";
+    };
+
+    const onClickDislike = async() => {
+      await BoardAPI.event({id: queryId, itemGb: "D"});
+      state.action = "disliked";
+    };
 
     const onClickEdit = () => {
       router.push(`/board/${queryId}/modify`);
@@ -80,8 +86,8 @@ const Board = (props) => {
               {/* 해당 게시글 조회수 & 댓글수 & 좋아요수 */}
               <Row>
                 <span className="main_container_top_left "><EyeOutlined /> {numFormatter(state.data.viewCount)}</span>
-                <span className="main_container_top_left "><LikeOutlined onClick={onClickLikeDislike} /> {numFormatter(state.data.rowLike)}</span>
-                <span className="main_container_top_left "><DislikeOutlined onClick={onClickLikeDislike} /> {numFormatter(state.data.rowDisLike)}</span>
+                <span className="main_container_top_left event" onClick={onClickLike}>{state.action === 'liked' ? <LikeFilled /> : <LikeOutlined />} {numFormatter(state.data.rowLike)}</span>
+                <span className="main_container_top_left event" onClick={onClickDislike}>{state.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />} {numFormatter(state.data.rowDisLike)}</span>
                 {/* <span className="main_container_top_left "><CommentOutlined /> {state.data.commentCnt}</span> */}
               </Row>
 
@@ -110,12 +116,8 @@ const Board = (props) => {
           {/* 댓글 */}
           <div className="comment-section">
             <h3>댓글</h3>
-
-            {/* 댓글 - 리스트 */}
-            <CommentList queryId={queryId} />
-
-            {/* 댓글 - 새댓글 등록 */}
-            <AddComment queryId={queryId} />
+            {/* <Comments queryId={queryId} data={state.comments} /> */}
+            <Comments queryId={queryId} data={boardProps.comments.body} />
           </div>
       </div>
     );
@@ -128,11 +130,16 @@ Board.getInitialProps = async({ query }) => {
 
   const boardDetailRes = await BoardAPI.detail({ 
     id: query.id
-   });
-  //  CONFIG.LOG("boardDetailRes", boardDetailRes)
+  });
+
+  const comments = await CommentAPI.get({ 
+    id: query.id
+  });
+
   return {
     props: {
       board: boardDetailRes,
+      comments
     }
   };
 
@@ -173,6 +180,9 @@ export default styled(Board)`
     .main_container_top_left {
       margin-right: 10px;
       color: gray;
+      &.event {
+        cursor: pointer;
+      }
     }
     .main_content {
       /* border: 1px solid red; */

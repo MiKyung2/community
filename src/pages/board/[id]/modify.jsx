@@ -43,7 +43,7 @@ const EditBoard = (props) => {
             const boardEditRes = async() => await BoardAPI.edit(formData);
             boardEditRes();
 
-            router.push('/board/[id]', `/board/${state.id}`);
+            router.replace('/board/[id]', `/board/${state.id}`);
         }
 
         const onCancel = () => {

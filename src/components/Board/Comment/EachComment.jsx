@@ -24,6 +24,7 @@ const EachComment = (props) => {
             comment: {
               writer: '',
               contents: '',
+              createdDate: '',
               likes: 0,
               dislikes: 0
             },
@@ -36,6 +37,7 @@ const EachComment = (props) => {
     useEffect(() => {
       state.comment.writer = data.writer;
       state.comment.contents = data.title;
+      state.comment.createdDate = data.createdDate;
       state.comment.likes = data.rowLike;
       state.comment.dislikes = data.rowDisLike;
     }, []);
@@ -102,8 +104,8 @@ const EachComment = (props) => {
           </p>
         }
         datetime={
-          <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-            <span>{moment().fromNow()}</span>
+          <Tooltip title={moment(state.comment.createdDate).format('YYYY-MM-DD HH:mm:ss')}>
+            <span>{moment(state.comment.createdDate).fromNow()}</span>
           </Tooltip>
         }
         />
@@ -119,22 +121,6 @@ const EachComment = (props) => {
     )
 });
 }
-
-
-// CommentList.getInitialProps = async({ query }) => {
-
-  
-//   const commentList = await CommentAPI.get({ 
-//     id: query.id
-//   });
-
-//   console.log("hi comment list?", commentList);
-//   return {
-//     props: {
-//       comments: commentList,
-//     }
-//   };
-// }
 
 export default styled(EachComment)`
   /* border: 1px solid green; */

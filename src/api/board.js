@@ -52,6 +52,15 @@ const BoardAPI = {
       console.error(error);
     }
   },
+  event: async (payload) => {
+    try {
+      const res = await AxiosWrapper.post('board/event/like', payload);
+      return res;
+    } catch (error) {
+      // throw error;
+      console.error(error);
+    }
+  },
   delete: async (payload) => {
     try {
       const res = await AxiosWrapper.post('board/delete', payload);

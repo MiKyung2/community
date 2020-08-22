@@ -10,6 +10,8 @@ import moment from 'moment';
 // const { TextArea } = Input;
 
 const AddComment = (props) => {
+
+  const {addComment} = props;
     
     return useObserver(() => {
 
@@ -32,8 +34,11 @@ const AddComment = (props) => {
           rowLike: 0,
           viewCount: 0
         }
+        // const postComment = await CommentAPI.post(payload);
         const postComment = async() => await CommentAPI.post(payload);
+        // console.log("등록됨:",postComment);
         postComment();
+        addComment(payload);
       }
 
       const onChangeTextArea = (e) => {
@@ -42,7 +47,7 @@ const AddComment = (props) => {
 
       const onSubmitComment = (e) => {
         e.preventDefault();
-        registerComment();
+        registerComment();        
         state.value = "";
       }
 

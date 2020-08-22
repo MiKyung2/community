@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useObserver, useLocalStore } from "mobx-react";
 import BoardAPI from "../../api/board";
@@ -89,6 +89,19 @@ const BoardPage = (props) => {
       };
     });
 
+    useEffect(() => {
+      const updateList = async() => await BoardAPI.list({ 
+        currentPage: 1,
+        gb: "title",
+        keyword: '',
+        size: 20,
+        sort: "date"
+       });
+       updateList();
+
+    }, []);
+    
+
     const fetchListData = async() => {
       const { currentPage, keyword, gb, size, sort } = state.page;
       const nextData = await BoardAPI.list({ 
@@ -100,7 +113,6 @@ const BoardPage = (props) => {
        });
 
       state.dataSource = nextData.body.content;
-      console.log("board data res:", nextData);
     }
 
     const moveToFirstPage = () => {
