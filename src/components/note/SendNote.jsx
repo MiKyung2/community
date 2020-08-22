@@ -25,6 +25,7 @@ const SendNote = (props) => {
           const res = await NoteAPI.post({
             data: Object.assign(values, { sendId: "보낸 사람" }),
           });
+          props.onFinish();
         } catch (error) {
           state.error = true;
         } finally {
