@@ -1,15 +1,14 @@
-import { Tabs } from "antd";
-import { useLocalStore, useObserver } from "mobx-react";
-import { useRouter } from "next/router";
-import React from "react";
-import styled from "styled-components";
-import UserAPI from "../../../api/user";
+import { Tabs } from 'antd';
+import { useLocalStore, useObserver } from 'mobx-react';
+import { useRouter } from 'next/router';
+import React from 'react';
+import styled from 'styled-components';
+import UserAPI from '../../../api/user';
 import { AppContext } from '../../../components/App/context';
-import SendNote from "../../../components/note/SendNote";
-import ProfileCard from "../../../components/profile/ProfileCard";
-import ProfileTabList from "../../../components/profile/ProfileList";
+import SendNote from '../../../components/note/SendNote';
+import ProfileCard from '../../../components/profile/ProfileCard';
+import ProfileTabList from '../../../components/profile/ProfileList';
 const { TabPane } = Tabs;
-
 
 const ProfilePage = (props) => {
   return useObserver(() => {
@@ -18,12 +17,12 @@ const ProfilePage = (props) => {
     const state = useLocalStore(() => {
       return {
         loading: false,
-        tabActive: "1",
+        tabActive: '1',
         send: {
           open: false,
           receiveUser: {
             id: 0,
-            user: "",
+            user: '',
           },
         },
         profile: props.profile,
@@ -58,14 +57,14 @@ const ProfilePage = (props) => {
         />
 
         {/* 게시물 탭 */}
-        <Tabs large="true" type="card" defaultActiveKey="1">
-          <TabPane tab="최근 활동" key="1">
+        <Tabs large='true' type='card' defaultActiveKey='1'>
+          <TabPane tab='최근 활동' key='1'>
             <ProfileTabList loading={false} dataSource={props.theLatestDate} />
           </TabPane>
-          <TabPane tab="게시물" key="2">
+          <TabPane tab='게시물' key='2'>
             <ProfileTabList loading={false} dataSource={props.theLatestDate} />
           </TabPane>
-          <TabPane tab="스크랩" key="3">
+          <TabPane tab='스크랩' key='3'>
             <ProfileTabList loading={false} dataSource={props.theLatestDate} />
           </TabPane>
         </Tabs>
@@ -93,35 +92,35 @@ ProfilePage.getInitialProps = async (ctx) => {
       {
         key: 1,
         boardId: 1,
-        title: "게시물에 댓글을 남겼습니다.",
-        description: "[모집중] 토이프로젝트 모집합니다.",
-        time: "2분 전",
+        title: '게시물에 댓글을 남겼습니다.',
+        description: '[모집중] 토이프로젝트 모집합니다.',
+        time: '2분 전',
         user: {
           id: 1,
-          nickname: "김코딩",
-        }
+          nickname: '김코딩',
+        },
       },
       {
         key: 2,
         boardId: 2,
-        title: "게시물에 댓글을 남겼습니다.",
-        description: "[모집중] 토이프로젝트 모집합니다.",
-        time: "2분 전",
+        title: '게시물에 댓글을 남겼습니다.',
+        description: '[모집중] 토이프로젝트 모집합니다.',
+        time: '2분 전',
         user: {
           id: 1,
-          nickname: "김코딩",
-        }
+          nickname: '김코딩',
+        },
       },
       {
         key: 3,
         boardId: 3,
-        title: "게시물에 댓글을 남겼습니다.",
-        description: "[모집중] 토이프로젝트 모집합니다.",
-        time: "2분 전",
+        title: '게시물에 댓글을 남겼습니다.',
+        description: '[모집중] 토이프로젝트 모집합니다.',
+        time: '2분 전',
         user: {
           id: 1,
-          nickname: "김코딩",
-        }
+          nickname: '김코딩',
+        },
       },
     ],
   };
