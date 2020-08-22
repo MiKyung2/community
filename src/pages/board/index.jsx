@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useObserver, useLocalStore } from "mobx-react";
 import BoardAPI from "../../api/board";
-import { Row, Table, Button } from "antd";
+import { Row, Table, Button, Tooltip } from "antd";
 import { EditOutlined } from '@ant-design/icons';
 import SearchInput from "../../components/SearchInput";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
+import CONFIG from '../../utils/CONFIG';
+import { numFormatter } from '../../utils/numFormatter';
+import { formatDateWithTooltip } from '../../utils/dateFormatter';
 
 const columns = [
   {
@@ -20,117 +23,182 @@ const columns = [
     title: "좋아요",
     dataIndex: "rowLike",
     key: "rowLike",
+    render: like => <span>{numFormatter(like)}</span>
   }, {
     title: "조회수",
     dataIndex: "viewCount",
     key: "viewCount",
+    render: view => <span>{numFormatter(view)}</span>
   }, {
     title: "댓글수",
     dataIndex: "commentCnt",
     key: "commentCnt",
+    render: comment => <span>{numFormatter(comment)}</span>
   },
   {
     title: "날짜",
     dataIndex: "createdDate",
     key: "createdDate",
+    render: date => (
+        <span>
+          {formatDateWithTooltip(date)}
+        </span>
+      )
   },
 ];
 
  // 최신순 | 좋아요순 | 댓글순 | 조회수순
- const filterLists = [
+ const sortLists = [
   {
-    id: 'filter_newest',
+    id: 'sort_newest',
     name: '최신순'
   },
   {
-    id: 'filter_like',
+    id: 'sort_like',
     name: '좋아요순'
   },
   {
-    id: 'filter_comment',
+    id: 'sort_comment',
     name: '댓글순'
   },
   {
-    id: 'filter_view',
+    id: 'sort_view',
     name: '조회수순'
   },
 ];
 
 
 const BoardPage = (props) => {
-  console.log("boardpage props", props);
+  // CONFIG.LOG("boardpage props", props);
 
   return useObserver(() => {
     const router = useRouter();
 
     const state = useLocalStore(() => {
       return {
-        dataSource: props.listByLike,
+        dataSource: props.listByDate,
         page: {
-          pageSize: 10,
           currentPage: 1,
+          gb: 'title',
+          keyword: '',
+          size: 20,
+          sort: "date",
+          tablePage: 1,
+          total: 200
         },
       };
     });
 
-    const onClickFilter = (selectedFilter) => {
-      // console.log("onclickFIlter", e.target.id);
+    useEffect(() => {
+      const updateList = async() => await BoardAPI.list({ 
+        currentPage: 1,
+        gb: "title",
+        keyword: '',
+        size: 20,
+        sort: "date"
+       });
+       updateList();
+
+    }, []);
+    
+
+    const fetchListData = async() => {
+      const { currentPage, keyword, gb, size, sort } = state.page;
+      const nextData = await BoardAPI.list({ 
+        currentPage,
+        keyword,
+        gb,
+        size,
+        sort
+       });
+
+      state.dataSource = nextData.body.content;
+    }
+
+    const moveToFirstPage = () => {
+      state.page.tablePage = 1;  
+      state.page.currentPage = 1;
+    }
+
+    const onChangeSort = (selectedFilter) => {
       const target = selectedFilter.target.id;
 
       switch (target) {
-        case 'filter_newest' :
-          console.log("최신순!!");
+        case 'sort_newest' :
+          state.page.sort = "date";
+          moveToFirstPage();
+          fetchListData();
           break;
-        case 'filter_like' :
-          // console.log("좋아요순!!");
-          state.dataSource = props.listByLike;
+        case 'sort_like' :   
+          state.page.sort = "like";
+          moveToFirstPage();
+          fetchListData();
           break;
-        case 'filter_comment' :
-          // console.log("댓글순!!");
-          state.dataSource = props.listByComment;
+        case 'sort_comment' :
+          state.page.sort = "commentCnt";
+          moveToFirstPage();
+          fetchListData();
           break;
-        case 'filter_view' :
-          // console.log("조회수순!!");
-          state.dataSource = props.listByViewCnt;
+        case 'sort_view' :
+          state.page.sort = "viewCount";
+          moveToFirstPage();
+          fetchListData();
           break;
         default :
-          console.log("default-최신순?");
+          // CONFIG.LOG("default-최신순?");
           // console.error("filter error");
       }
+    }
+
+    // 페이지 변경
+    const onChangePage = (page, pageSize) => {
+      state.page.tablePage = page;
+      state.page.currentPage = page;
+      fetchListData();
+    }
+
+    // 필터&검색
+    const onSearch = (searchTerm) => {
+    const {gb, keyword, sort} = searchTerm;
+
+    state.page.currentPage = 1;
+    state.page.gb = gb;
+    state.page.keyword = keyword;
+    state.page.sort = sort;
+
+    // const testFetch = async() => {
+    //   const { currentPage, keyword, gb, size, sort } = state.page;
+    //   const nextData = await BoardAPI.list({ 
+    //     currentPage,
+    //     keyword,
+    //     gb,
+    //     size,
+    //     sort
+    //    });
+
+    //   state.dataSource = nextData.body.content;
+    //   console.log("search data length", nextData.body.content);
+    //   state.page.total = nextData.body.content.length
+    // }
+    // testFetch();
+
+    fetchListData();
+
     }
 
     // 해당 게시물 이동
     const onClickTableRow = (record, rowIndex) => {
       return {
-        onClick: () => {
-          const currentPage = state.page.currentPage;
-          const pageSize = state.page.pageSize;
-          const dataIndex = (currentPage - 1) * pageSize + rowIndex;
-          const currentDataId = state.dataSource[dataIndex].id;
-          
-          router.push('/board/[id]', `/board/${currentDataId}`);
-          // console.log("해당 게시물 id", state.dataSource[dataIndex].id);
-
+        onClick: () => {       
+          router.push('/board/[id]', `/board/${record.id}`);
         }
       }
-    }
-
-    const onChangePage = (page, pageSize) => {
-      // console.log("page:", page, "pageSize", pageSize);
-      state.page.currentPage = page;
-    }
-
-    // 필터&검색
-    const onSubmitSearchInput = (searchResult) => {
-      state.dataSource = searchResult;
     }
 
     // 새글쓰기로 이동
     const onClickNewPostBtn = () => {
       router.push("/board/articles/create");
     };
-
-
 
     return (
       <div className={props.className}>
@@ -148,13 +216,13 @@ const BoardPage = (props) => {
         <Row align="bottom" justify="space-between" className="filter_container">
           {/* 좋아요순 | 댓글순 | 조회수순 */}
           <ul className="filter">
-            {filterLists && filterLists.map(list => (
-              <li id={list.id} onClick={onClickFilter}>{list.name}</li>
+            {sortLists && sortLists.map(list => (
+              <li key={list.id} id={list.id} onClick={onChangeSort}>{list.name}</li>
             ))}
           </ul>
 
           {/* 검색바 */}
-          <SearchInput onSubmitSearchInput={onSubmitSearchInput} />
+          <SearchInput onSearch={onSearch} />
         </Row>
 
         {/* 테이블 & 리스트 */}
@@ -162,7 +230,12 @@ const BoardPage = (props) => {
           columns={columns}
           dataSource={state.dataSource}
           onRow={onClickTableRow}
-          pagination={{ pageSize: state.page.pageSize, onChange: onChangePage }}
+          pagination={{ 
+            pageSize: state.page.size, 
+            total: state.page.total,
+            onChange: onChangePage, 
+            current: state.page.tablePage,
+          }}
           scroll={true}
         />        
       </div>
@@ -171,30 +244,18 @@ const BoardPage = (props) => {
 };
 
 export const getStaticProps = async () => {
-  // 좋아요순
-  const boardListByLike = await BoardAPI.list({ 
+  // 최신순
+  const boardListByDate = await BoardAPI.list({ 
+    currentPage: 1,
     gb: "title",
-    sort: "like"
+    keyword: '',
+    size: 20,
+    sort: "date"
    });
-
-  // 댓글순
-  const boardListByComment = await BoardAPI.list({ 
-    gb: "title",
-    sort: "commentCnt"
-   });
-
-  // 조회수순
-  const boardListByViewCnt = await BoardAPI.list({ 
-    gb: "title",
-    sort: "viewCount"
-   });
-
 
   return {
     props: {
-      listByLike: boardListByLike.body.content,
-      listByComment: boardListByComment.body.content,
-      listByViewCnt: boardListByViewCnt.body.content
+      listByDate: boardListByDate.body.content,
     },
   };
 };

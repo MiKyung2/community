@@ -1,57 +1,71 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled, {ServerStyleSheet, injectGlobal} from 'styled-components';
-import { Button, Row } from 'antd';
-import { EyeOutlined, CommentOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
+import { Button, Row, Modal } from 'antd';
+import { EyeOutlined, CommentOutlined, LikeOutlined, DislikeOutlined, DislikeFilled, LikeFilled } from '@ant-design/icons';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useRouter } from 'next/router';
+import CONFIG from '../../../utils/CONFIG';
+import { numFormatter } from '../../../utils/numFormatter';
+import { formatDate } from '../../../utils/dateFormatter';
+import ReactHtmlParser from 'react-html-parser';
+
 import BoardAPI from "../../../api/board";
-import CommentList from '../../../components/Board/Comment/CommentList';
-import AddComment from '../../../components/Board/Comment/AddComment';
+import CommentAPI from "../../../api/comment";
+import Comments from "../../../components/Board/Comment/Comments";
 
 
 const Board = (props) => {
-  // console.log("Board props", props)
-
+  
   const router = useRouter();
   const queryId = router.query.id;
-
+  
   const boardProps = props.props;
-  // console.log("게시물 props", props.props.board.body)
 
   return useObserver(() => {
 
     const state = useLocalStore(() => {
       return {
-        data: boardProps.board.body
+        data: boardProps.board.body,
+        comments: boardProps.comments.body,
+        visible: false,
+        action: null
       };
     });
-
     
     const onClickBackToList = () => {
-      // console.log("글목록으로 돌아가기");
       router.push('/board');
     }
 
+    const onClickLike = async() => {
+      await BoardAPI.event({id: queryId, itemGb: "L"});
+      state.action = "liked";
+    };
+
+    const onClickDislike = async() => {
+      await BoardAPI.event({id: queryId, itemGb: "D"});
+      state.action = "disliked";
+    };
+
     const onClickEdit = () => {
-      // console.log("글 수정 페이지로 이동!");
       router.push(`/board/${queryId}/modify`);
     }
 
-    const onClickDelete = async() => {
-      // console.log("글 삭제! - 헤당 게시글 id", queryId);
-      
-      const boardDeleteRes = await BoardAPI.delete({ 
+    const onClickDelete = () => {
+      state.visible = true;
+    }
+
+    const handleCancelDelete = (e) => {
+      state.visible = false;
+    }
+    
+    const handleOkDelete = () => {
+      const boardDeleteRes = async() => await BoardAPI.delete({ 
         id: queryId
       });
-      // console.log("글 삭제 후 res", boardDeleteRes);
-
+      boardDeleteRes();
       router.push('/board');
+      state.visible = false;
     }
-    
-    const onClickLikeDislike = () => {
-      console.log("clicked like or dislike!")
-    }
-    
 
     return (
       <div className={props.className}>
@@ -61,7 +75,7 @@ const Board = (props) => {
           </Row>
 
           <div className="header_bottom">
-            <span><strong>작성일:</strong> {state.data.createdDate}</span>
+            <span><strong>작성일:</strong> {formatDate(state.data.createdDate)}</span>
             <span><strong>작성자:</strong> {state.data.writer}</span>
           </div>
           
@@ -71,9 +85,9 @@ const Board = (props) => {
             <Row justify="space-between" className="main_container_top">
               {/* 해당 게시글 조회수 & 댓글수 & 좋아요수 */}
               <Row>
-                <span className="main_container_top_left "><EyeOutlined /> {state.data.viewCount}</span>
-                <span className="main_container_top_left "><LikeOutlined onClick={onClickLikeDislike} /> {state.data.rowLike}</span>
-                <span className="main_container_top_left "><DislikeOutlined onClick={onClickLikeDislike} /> {state.data.rowDisLike}</span>
+                <span className="main_container_top_left "><EyeOutlined /> {numFormatter(state.data.viewCount)}</span>
+                <span className="main_container_top_left event" onClick={onClickLike}>{state.action === 'liked' ? <LikeFilled /> : <LikeOutlined />} {numFormatter(state.data.rowLike)}</span>
+                <span className="main_container_top_left event" onClick={onClickDislike}>{state.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />} {numFormatter(state.data.rowDisLike)}</span>
                 {/* <span className="main_container_top_left "><CommentOutlined /> {state.data.commentCnt}</span> */}
               </Row>
 
@@ -84,23 +98,26 @@ const Board = (props) => {
               </Row>
             </Row>
 
+            {/* 삭제 확인 메세지 */}
+            <Modal 
+              visible={state.visible}
+              onOk={handleOkDelete}
+              onCancel={handleCancelDelete}
+            >
+              <p>정말 삭제하시겠습니까?</p>
+            </Modal>
+
 
             {/* 게시글 내용 */}
-            <div className="main_content ">
-              <div dangerouslySetInnerHTML={ { __html: state.data.contents } }></div>
-            </div>
+            <div className="main_content">{ReactHtmlParser(`${state.data.contents}`)}</div>
           </div>
 
 
           {/* 댓글 */}
-          <div>
+          <div className="comment-section">
             <h3>댓글</h3>
-
-            {/* 댓글 - 리스트 */}
-            <CommentList />
-
-            {/* 댓글 - 새댓글 등록 */}
-            <AddComment />
+            {/* <Comments queryId={queryId} data={state.comments} /> */}
+            <Comments queryId={queryId} data={boardProps.comments.body} />
           </div>
       </div>
     );
@@ -113,11 +130,16 @@ Board.getInitialProps = async({ query }) => {
 
   const boardDetailRes = await BoardAPI.detail({ 
     id: query.id
-   });
-  //  console.log("boardDetailRes", boardDetailRes)
+  });
+
+  const comments = await CommentAPI.get({ 
+    id: query.id
+  });
+
   return {
     props: {
       board: boardDetailRes,
+      comments
     }
   };
 
@@ -158,6 +180,9 @@ export default styled(Board)`
     .main_container_top_left {
       margin-right: 10px;
       color: gray;
+      &.event {
+        cursor: pointer;
+      }
     }
     .main_content {
       /* border: 1px solid red; */
@@ -165,6 +190,11 @@ export default styled(Board)`
       flex: 9;
       margin-top: 50px;
       padding: 0 30px 30px 30px;
+    }
+    .comment-section {
+      > h3 {
+        margin-bottom: 15px;
+      }
     }
   }
 `;
