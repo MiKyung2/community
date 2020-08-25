@@ -1,11 +1,7 @@
-import React, {createElement, useEffect, useState} from 'react';
-import styled from 'styled-components';
-import { useObserver, useLocalStore } from 'mobx-react';
-import { useRouter } from 'next/router';
-import CommentAPI from '../../../api/comment';
-import CONFIG from '../../../utils/CONFIG';
-import CommentList from './CommentList';
+import { useLocalStore, useObserver } from 'mobx-react';
+import React from 'react';
 import AddComment from './AddComment';
+import CommentList from './CommentList';
 
 
 const Comments = (props) => {
@@ -20,29 +16,14 @@ const Comments = (props) => {
                 queryId: props.queryId
             };
         });
-
-        const [TempComments, setComments] = useState(props.data);
-
-        const addTemporaryNewComment = (payload) => {
-            // console.log("current comments:", comments)
-            // console.log("add new comment", payload);
-            // const newTempComments = comments.concat(payload);
-            // setComments(newTempComments);
-
-            console.log("current:", TempComments);
-            const newTempComments = TempComments.concat(payload);
-            console.log("newD:", newTempComments);
-            setComments(newTempComments);
-        }
-
         return (
-        <>
-            {/* <CommentList data={state.comments} /> */}
-            <CommentList data={TempComments} />
-            <AddComment queryId={state.queryId} addComment={addTemporaryNewComment} />
-        </>
+            <>
+                {/* <CommentList data={state.comments} /> */}
+                <CommentList comments={state.comments} />
+                <AddComment queryId={state.queryId} comments={state.comments} />
+            </>
         )
-});
+    });
 }
 
 
