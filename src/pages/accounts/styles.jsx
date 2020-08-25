@@ -47,11 +47,12 @@ export const OuterWrapper = styled.div`
       margin: -15px auto 0 auto;
       width: 300px;
     }
-    .vertical-line {
-      margin: 0 5px;
-      height: 14px;
-      width: 1.2px;
-      background-color: black;
+    .find_pass {
+      cursor: pointer;
+      &:hover {
+        color: skyblue;
+        cursor: pointer;
+      }
     }
   }
 `;

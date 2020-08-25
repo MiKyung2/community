@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
@@ -8,6 +8,8 @@ import { OuterWrapper } from './styles';
 import AuthAPI from '../../api/auth';
 import { AppContext } from '../../components/App/context';
 import { inputRules } from '../../components/accounts/validator';
+
+import FindPassModal from '../../components/accounts/FindPassModal';
 
 const SignIn = (props) => {
   const global = React.useContext(AppContext);
@@ -23,6 +25,8 @@ const SignIn = (props) => {
         },
       };
     });
+
+    const [visible, setVisible] = React.useState(false);
 
     const [_, setCookie] = useCookies(['token', 'id']);
 
@@ -51,9 +55,15 @@ const SignIn = (props) => {
       >
         <Input
           className='input'
-          type={name === 'password' ? 'password' : 'text'}
-          value={name === 'password' ? state.value.password : state.value.email}
-          placeholder='이메일을 입력해주세요'
+          type={name.includes('email') ? 'text' : 'password'}
+          value={
+            name.includes('email') ? state.value.email : state.value.password
+          }
+          placeholder={
+            name.includes('email')
+              ? '이메일을 입력해주세요'
+              : '패스워드를 입력해주세요'
+          }
           onChange={(e) => {
             name === 'password'
               ? (state.value.password = e.target.value)
@@ -103,15 +113,10 @@ const SignIn = (props) => {
           </div>
           <Row className='right lost_info_wrapper'>
             <Col>
-              <Link href='find_id'>
-                <a>이메일 찾기</a>
-              </Link>
-            </Col>
-            <Col className='vertical-line' />
-            <Col>
-              <Link href='find_pwd'>
-                <a>비밀번호 찾기</a>
-              </Link>
+              <p className='find_pass' onClick={() => setVisible(true)}>
+                비밀번호 찾기
+              </p>
+              <FindPassModal visible={visible} setVisible={setVisible} />
             </Col>
           </Row>
         </Form>
