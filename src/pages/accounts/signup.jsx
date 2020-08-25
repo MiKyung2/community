@@ -2,25 +2,15 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
 import styled from 'styled-components';
-
 import { Form, Input, Button, Checkbox, Row, Col, message } from 'antd';
-
 import AuthAPI from '../../api/auth';
-
 import { inputRules } from '../../components/accounts/validator';
-
-// const validateMessages = {
-//   // required: '${name} is required!',
-
-//   types: {
-//     email: '이메일을 정확하게 입력해주세요',
-//     password: '비밀번호는 영문 + 숫자 조합 8자리 이상',
-//   },
-// };
+import PolicyModal from '../../components/accounts/PolicyModal';
 
 const Signup = (props) => {
   return useObserver(() => {
     const router = useRouter();
+    const [visible, setVisible] = React.useState(false);
     const state = useLocalStore(() => {
       return {
         loading: false,
@@ -173,9 +163,10 @@ const Signup = (props) => {
               <Checkbox onClick={() => (state.confirm = !state.confirm)}>
                 개인 정보 취급 방침 동의
               </Checkbox>
-              <Link href='signup/privacy'>
-                <a className='privacy'>보기</a>
-              </Link>
+              <p className='privacy' onClick={() => setVisible(true)}>
+                보기
+              </p>
+              <PolicyModal visible={visible} setVisible={setVisible} />
             </Form.Item>
             <Form.Item>
               <Button className='button' type='primary' htmlType='submit'>
