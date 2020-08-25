@@ -4,9 +4,10 @@ import Router, { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useCookies } from 'react-cookie';
 import { Form, Input, Button, Checkbox, Row, Col, message } from 'antd';
-import styled from 'styled-components';
+import { OuterWrapper } from './styles';
 import AuthAPI from '../../api/auth';
 import { AppContext } from '../../components/App/context';
+import { inputRules } from '../../components/accounts/validator';
 
 const SignIn = (props) => {
   const global = React.useContext(AppContext);
@@ -22,6 +23,7 @@ const SignIn = (props) => {
         },
       };
     });
+
     const [_, setCookie] = useCookies(['token', 'id']);
 
     const onLogin = async () => {
@@ -41,59 +43,41 @@ const SignIn = (props) => {
       }
     }, [global.state.user?.token]);
 
+    const formItemMaker = (name) => (
+      <Form.Item
+        className='center'
+        name={name}
+        rules={name === 'email' ? inputRules.email : null}
+      >
+        <Input
+          className='input'
+          type={name === 'password' ? 'password' : 'text'}
+          value={name === 'password' ? state.value.password : state.value.email}
+          placeholder='이메일을 입력해주세요'
+          onChange={(e) => {
+            name === 'password'
+              ? (state.value.password = e.target.value)
+              : (state.value.email = e.target.value);
+          }}
+          autoComplete='off'
+        />
+      </Form.Item>
+    );
+
     return (
-      <div className={props.className}>
+      <OuterWrapper className={props.className}>
         <Form
           name='basic'
           initialValues={{
             remember: true,
           }}
-          // onFinish={() => onLogin()}
           onFinishFailed={() => {
             console.log('onFinishFailed');
           }}
         >
           <div className='wrapper'>
-            <Form.Item
-              className='center'
-              name='email'
-              rules={[
-                {
-                  required: true,
-                  message: '이메일을 입력해주세요.',
-                },
-              ]}
-            >
-              <Input
-                className='input'
-                id='email'
-                value={state.value.email}
-                placeholder='이메일을 입력해주세요'
-                onChange={(e) => {
-                  state.value.email = e.target.value;
-                }}
-              />
-            </Form.Item>
-
-            <Form.Item
-              className='center'
-              rules={[
-                {
-                  required: true,
-                  message: '비밀번호를 입력해주세요.',
-                },
-              ]}
-            >
-              <Input.Password
-                className='input'
-                type='password'
-                value={state.value.password}
-                placeholder='비밀번호를 입력해주세요.'
-                onChange={(e) => {
-                  state.value.password = e.target.value;
-                }}
-              />
-            </Form.Item>
+            {formItemMaker('email')}
+            {formItemMaker('password')}
             <Form.Item valuePropName='checked'>
               <Checkbox>로그인 유지</Checkbox>
             </Form.Item>
@@ -126,68 +110,14 @@ const SignIn = (props) => {
             <Col className='vertical-line' />
             <Col>
               <Link href='find_pwd'>
-                <a>비밀번호를 찾기</a>
+                <a>비밀번호 찾기</a>
               </Link>
             </Col>
           </Row>
         </Form>
-      </div>
+      </OuterWrapper>
     );
   });
 };
 
-export default styled(SignIn)`
-  & {
-    height: 75vh;
-    overflow: scroll;
-    .title {
-      font-size: 2.3rem;
-      text-align: center;
-      margin-bottom: 100px;
-    }
-    .wrapper {
-      margin: 15px auto;
-      width: 300px;
-      .input {
-        height: 40px;
-      }
-    }
-    .button {
-      width: 100%;
-      height: 40px;
-      margin: -20px 0;
-    }
-    .center {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .right {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-    }
-    .login_logo {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: black;
-      font-size: 20px;
-      font-weight: bold;
-      color: #fff;
-    }
-    .lost_info_wrapper {
-      margin: -15px auto 0 auto;
-      width: 300px;
-    }
-    .vertical-line {
-      margin: 0 5px;
-      height: 14px;
-      width: 1.2px;
-      background-color: black;
-    }
-  }
-`;
+export default SignIn;

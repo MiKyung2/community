@@ -8,6 +8,7 @@ const AuthAPI = {
         nickname: payload.value.nickname,
         password: payload.value.password1,
         userId: payload.value.email,
+        email: payload.value.email,
       });
 
       return res;
@@ -35,15 +36,12 @@ const AuthAPI = {
       const res = await AxiosWrapper.get(
         'board/page?gb=title&keyword=title&offset=10&pageNumber=1&pageSize=10&sort=title',
       );
-      // const res = await AxiosWrapper.get(
-      //   `/board/page?pageNumber=10˝` + `&title=${payload.title}`
-      // );
-
       return res;
     } catch (error) {
       throw error;
     }
   },
+  find_email: async () => {},
   find_pass: async (payload) => {
     console.log('start');
     try {
@@ -54,7 +52,6 @@ const AuthAPI = {
         //   user_id: payload.value.email,
         // },
       );
-      console.log(res);
       return res;
     } catch (error) {
       console.log(error);
