@@ -43,13 +43,11 @@ const AuthAPI = {
   },
   find_email: async () => {},
   find_pass: async (payload) => {
-    console.log('start');
     try {
-      const res = await axios.put(
-        `http://141.164.41.213:8081/v1/api/user/find/password?id=1&user_id=${payload.value.email}`,
+      const res = await axios.get(
+        `http://141.164.41.213:8081/v1/api/user/find/password?user_id=${payload}`,
         // {
-        //   id: '1',
-        //   user_id: payload.value.email,
+        //   user_id: payload,
         // },
       );
       return res;
