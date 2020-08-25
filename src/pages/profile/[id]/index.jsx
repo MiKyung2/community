@@ -1,15 +1,15 @@
+import { Tabs } from "antd";
+import { useLocalStore, useObserver } from "mobx-react";
+import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
-import { useObserver, useLocalStore } from "mobx-react";
-import { Tabs } from "antd";
-const { TabPane } = Tabs;
-
-import ProfileTabList from "../../../components/profile/ProfileList";
-import ProfileCard from "../../../components/profile/ProfileCard";
-import SendNote from "../../../components/note/SendNote";
 import UserAPI from "../../../api/user";
 import { AppContext } from '../../../components/App/context';
-import { useRouter } from "next/router";
+import SendNote from "../../../components/note/SendNote";
+import ProfileCard from "../../../components/profile/ProfileCard";
+import ProfileTabList from "../../../components/profile/ProfileList";
+const { TabPane } = Tabs;
+
 
 const ProfilePage = (props) => {
   return useObserver(() => {

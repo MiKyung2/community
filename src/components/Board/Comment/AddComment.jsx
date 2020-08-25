@@ -1,68 +1,56 @@
-import React from 'react';
-import styled from 'styled-components';
 // import { Form, Button, List, Input, Avatar, Comment } from 'antd';
-import { useObserver, useLocalStore } from 'mobx-react';
-import { useRouter } from 'next/router';
+import { useObserver } from 'mobx-react';
+import React, { useState } from 'react';
+import styled from 'styled-components';
 import CommentAPI from '../../../api/comment';
-// import {CONFIG} from '../../../utils/CONFIG';
-import moment from 'moment';
 
 // const { TextArea } = Input;
 
 const AddComment = (props) => {
 
-  const {addComment} = props;
-    
-    return useObserver(() => {
+  const { queryId, comments } = props;
 
-      const state = useLocalStore(() => {
-          return {
-            value: ''
-          };
-      });
+  return useObserver(() => {
 
+    const [content, setContent] = useState('');
 
-      const registerComment = async() => {
-        const payload = {
-          boardId: props.queryId,
-          title: 'title',
-          content: state.value,
-          writer: 'allly',
-          id: 0,
-          itemGb: "string",
-          rowDisLike: 0,
-          rowLike: 0,
-          viewCount: 0
-        }
-        // const postComment = await CommentAPI.post(payload);
-        const postComment = async() => await CommentAPI.post(payload);
-        // console.log("등록됨:",postComment);
-        postComment();
-        addComment(payload);
+    const registerComment = async () => {
+      const payload = {
+        boardId: queryId,
+        title: 'title',
+        content: content,
+        writer: 'allly',
+        id: 0,
+        itemGb: "string",
+        rowDisLike: 0,
+        rowLike: 0,
+        viewCount: 0
       }
+      const resp = await CommentAPI.post(payload);
+      comments.push(resp.body);
+    }
 
-      const onChangeTextArea = (e) => {
-        state.value = e.target.value;
-      }
+    const onChangeTextArea = (e) => {
+      // state.value = e.target.value;
+      setContent(e.target.value);
+    }
 
-      const onSubmitComment = (e) => {
-        e.preventDefault();
-        registerComment();        
-        state.value = "";
-      }
+    const onSubmitComment = (e) => {
+      e.preventDefault();
+      registerComment();
+      setContent('');
+    }
 
-      return (
-        <div className={props.className}>
-          <form onSubmit={onSubmitComment}>
-            <textarea className="text-area" value={state.value} onChange={onChangeTextArea} />
-            <button type="submit" className="submit-btn">등록</button>
-          </form>
-        </div>
-      )
-    
-    });
+    return (
+      <div className={props.className}>
+        <form>
+          <textarea className="text-area" value={content} onChange={onChangeTextArea} />
+          <button type="submit" className="submit-btn" onClick={onSubmitComment}>등록</button>
+        </form>
+      </div>
+    )
 
-
+  });
 
 }
 

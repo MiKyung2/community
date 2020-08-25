@@ -1,24 +1,23 @@
-import React, {useEffect} from 'react';
-import styled, {ServerStyleSheet, injectGlobal} from 'styled-components';
-import { Button, Row, Modal } from 'antd';
-import { EyeOutlined, CommentOutlined, LikeOutlined, DislikeOutlined, DislikeFilled, LikeFilled } from '@ant-design/icons';
-import { useObserver, useLocalStore } from 'mobx-react';
+import { DislikeFilled, DislikeOutlined, EyeOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons';
+import { Button, Modal, Row } from 'antd';
+import { useLocalStore, useObserver } from 'mobx-react';
 import { useRouter } from 'next/router';
-import CONFIG from '../../../utils/CONFIG';
-import { numFormatter } from '../../../utils/numFormatter';
-import { formatDate } from '../../../utils/dateFormatter';
+import React from 'react';
 import ReactHtmlParser from 'react-html-parser';
-
+import styled from 'styled-components';
 import BoardAPI from "../../../api/board";
 import CommentAPI from "../../../api/comment";
 import Comments from "../../../components/Board/Comment/Comments";
+import { formatDate } from '../../../utils/dateFormatter';
+import { numFormatter } from '../../../utils/numFormatter';
+
 
 
 const Board = (props) => {
-  
+
   const router = useRouter();
   const queryId = router.query.id;
-  
+
   const boardProps = props.props;
 
   return useObserver(() => {
@@ -31,18 +30,18 @@ const Board = (props) => {
         action: null
       };
     });
-    
+
     const onClickBackToList = () => {
       router.push('/board');
     }
 
-    const onClickLike = async() => {
-      await BoardAPI.event({id: queryId, itemGb: "L"});
+    const onClickLike = async () => {
+      await BoardAPI.event({ id: queryId, itemGb: "L" });
       state.action = "liked";
     };
 
-    const onClickDislike = async() => {
-      await BoardAPI.event({id: queryId, itemGb: "D"});
+    const onClickDislike = async () => {
+      await BoardAPI.event({ id: queryId, itemGb: "D" });
       state.action = "disliked";
     };
 
@@ -57,9 +56,9 @@ const Board = (props) => {
     const handleCancelDelete = (e) => {
       state.visible = false;
     }
-    
+
     const handleOkDelete = () => {
-      const boardDeleteRes = async() => await BoardAPI.delete({ 
+      const boardDeleteRes = async () => await BoardAPI.delete({
         id: queryId
       });
       boardDeleteRes();
@@ -69,56 +68,56 @@ const Board = (props) => {
 
     return (
       <div className={props.className}>
-          <Row justify="space-between" className="header_top">
-            <h2>{state.data.title}</h2>
-            <Button type="default" onClick={onClickBackToList}>글 목록</Button>
-          </Row>
+        <Row justify="space-between" className="header_top">
+          <h2>{state.data.title}</h2>
+          <Button type="default" onClick={onClickBackToList}>글 목록</Button>
+        </Row>
 
-          <div className="header_bottom">
-            <span><strong>작성일:</strong> {formatDate(state.data.createdDate)}</span>
-            <span><strong>작성자:</strong> {state.data.writer}</span>
-          </div>
-          
-          
-          <div className="main_container">
+        <div className="header_bottom">
+          <span><strong>작성일:</strong> {formatDate(state.data.createdDate)}</span>
+          <span><strong>작성자:</strong> {state.data.writer}</span>
+        </div>
 
-            <Row justify="space-between" className="main_container_top">
-              {/* 해당 게시글 조회수 & 댓글수 & 좋아요수 */}
-              <Row>
-                <span className="main_container_top_left "><EyeOutlined /> {numFormatter(state.data.viewCount)}</span>
-                <span className="main_container_top_left event" onClick={onClickLike}>{state.action === 'liked' ? <LikeFilled /> : <LikeOutlined />} {numFormatter(state.data.rowLike)}</span>
-                <span className="main_container_top_left event" onClick={onClickDislike}>{state.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />} {numFormatter(state.data.rowDisLike)}</span>
-                {/* <span className="main_container_top_left "><CommentOutlined /> {state.data.commentCnt}</span> */}
-              </Row>
 
-              {/* 수정 & 삭제 */}
-              <Row>
-                <Button type="text" onClick={onClickEdit}>수정</Button>
-                <Button type="text" onClick={onClickDelete}>삭제</Button>
-              </Row>
+        <div className="main_container">
+
+          <Row justify="space-between" className="main_container_top">
+            {/* 해당 게시글 조회수 & 댓글수 & 좋아요수 */}
+            <Row>
+              <span className="main_container_top_left "><EyeOutlined /> {numFormatter(state.data.viewCount)}</span>
+              <span className="main_container_top_left event" onClick={onClickLike}>{state.action === 'liked' ? <LikeFilled /> : <LikeOutlined />} {numFormatter(state.data.rowLike)}</span>
+              <span className="main_container_top_left event" onClick={onClickDislike}>{state.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />} {numFormatter(state.data.rowDisLike)}</span>
+              {/* <span className="main_container_top_left "><CommentOutlined /> {state.data.commentCnt}</span> */}
             </Row>
 
-            {/* 삭제 확인 메세지 */}
-            <Modal 
-              visible={state.visible}
-              onOk={handleOkDelete}
-              onCancel={handleCancelDelete}
-            >
-              <p>정말 삭제하시겠습니까?</p>
-            </Modal>
+            {/* 수정 & 삭제 */}
+            <Row>
+              <Button type="text" onClick={onClickEdit}>수정</Button>
+              <Button type="text" onClick={onClickDelete}>삭제</Button>
+            </Row>
+          </Row>
+
+          {/* 삭제 확인 메세지 */}
+          <Modal
+            visible={state.visible}
+            onOk={handleOkDelete}
+            onCancel={handleCancelDelete}
+          >
+            <p>정말 삭제하시겠습니까?</p>
+          </Modal>
 
 
-            {/* 게시글 내용 */}
-            <div className="main_content">{ReactHtmlParser(`${state.data.contents}`)}</div>
-          </div>
+          {/* 게시글 내용 */}
+          <div className="main_content">{ReactHtmlParser(`${state.data.contents}`)}</div>
+        </div>
 
 
-          {/* 댓글 */}
-          <div className="comment-section">
-            <h3>댓글</h3>
-            {/* <Comments queryId={queryId} data={state.comments} /> */}
-            <Comments queryId={queryId} data={boardProps.comments.body} />
-          </div>
+        {/* 댓글 */}
+        <div className="comment-section">
+          <h3>댓글</h3>
+          {/* <Comments queryId={queryId} data={state.comments} /> */}
+          <Comments queryId={queryId} data={boardProps.comments.body} />
+        </div>
       </div>
     );
   });
@@ -126,13 +125,13 @@ const Board = (props) => {
 
 
 
-Board.getInitialProps = async({ query }) => {
+Board.getInitialProps = async ({ query }) => {
 
-  const boardDetailRes = await BoardAPI.detail({ 
+  const boardDetailRes = await BoardAPI.detail({
     id: query.id
   });
 
-  const comments = await CommentAPI.get({ 
+  const comments = await CommentAPI.get({
     id: query.id
   });
 
