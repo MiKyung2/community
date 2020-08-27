@@ -1,6 +1,7 @@
 import { EditOutlined } from '@ant-design/icons';
 import { Button, Row, Table } from "antd";
 import { useLocalStore, useObserver } from "mobx-react";
+import { toJS } from 'mobx';
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import styled from "styled-components";
@@ -69,14 +70,13 @@ const sortLists = [
 const BoardPage = (props) => {
   // CONFIG.LOG("boardpage props", props);
 
-  console.log(props.className)
 
   return useObserver(() => {
     const router = useRouter();
 
     const state = useLocalStore(() => {
       return {
-        dataSource: props.listByDate,
+        dataSource: props.listByDate.content,
         page: {
           currentPage: 1,
           gb: 'title',
@@ -84,7 +84,7 @@ const BoardPage = (props) => {
           size: 20,
           sort: "date",
           tablePage: 1,
-          total: 200
+          total: props.listByDate.totalElements
         },
       };
     });
@@ -113,8 +113,10 @@ const BoardPage = (props) => {
       });
 
       state.dataSource = nextData.body.content;
+      state.page.total = nextData.body.totalElements ? nextData.body.totalElements : state.page.total;
 
       console.log("search nextData:", nextData.body);
+      console.log("total:", toJS(state.page))
     }
 
     const moveToFirstPage = () => {
@@ -164,9 +166,10 @@ const BoardPage = (props) => {
     const {gb, keyword, sort} = searchTerm;
 
     state.page.currentPage = 1;
-    state.page.gb = gb;
-    state.page.keyword = keyword;
-    state.page.sort = sort;
+    state.page.tablePage = 1;
+    state.page.gb = gb ? gb : state.page.gb;
+    state.page.keyword = keyword ? keyword : state.page.keyword;
+    state.page.sort = sort ? sort : state.page.sort;
 
     fetchListData();
 
@@ -245,7 +248,7 @@ export const getStaticProps = async () => {
   // console.log(">> [server] : boardListByDate => ", boardListByDate);
   return {
     props: {
-      listByDate: boardListByDate.body.content,
+      listByDate: boardListByDate.body,
     },
   };
 };
