@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
@@ -10,7 +11,8 @@ import PolicyModal from '../../components/accounts/PolicyModal';
 const Signup = (props) => {
   return useObserver(() => {
     const router = useRouter();
-    const [visible, setVisible] = React.useState(false);
+    const [visible, setVisible] = useState(false);
+    const [confirm, setConfirm] = useState(false);
     const state = useLocalStore(() => {
       return {
         loading: false,
@@ -28,8 +30,8 @@ const Signup = (props) => {
     const [form] = Form.useForm();
 
     const onSignup = async () => {
-      state.loading = true;
-      if (state.confirm) {
+      if (confirm) {
+        state.loading = true;
         if (
           state.value.nickname &&
           // state.value.id &&
@@ -38,14 +40,16 @@ const Signup = (props) => {
           state.value.password2
         ) {
           const resAuth = await AuthAPI.signup(state);
-          if (resAuth.code === '200') {
+          if (resAuth.data.code === '200') {
             router.push({
               pathname: '/accounts/result/success',
-              query: { nickname: state.value.nickname },
+              query: {
+                nickname: state.value.nickname,
+                email: state.value.email,
+              },
             });
-            state.loading = false;
           }
-          if (resAuth.code === '500') {
+          if (resAuth.data.code === '500') {
             router.push('/accounts/result/fail');
             state.loading = false;
           }
@@ -57,9 +61,12 @@ const Signup = (props) => {
       return (
         <div className={props.className}>
           <h1 className='title'>Loading...</h1>
+          <h3 className='title'>3~4초의 시간이 소요됩니다.</h3>
         </div>
       );
     }
+
+    console.log('confirm: ', confirm);
 
     return (
       <div className={props.className}>
@@ -159,8 +166,13 @@ const Signup = (props) => {
                 autoComplete='off'
               />
             </Form.Item>
-            <Form.Item valuePropName='checked'>
-              <Checkbox onClick={() => (state.confirm = !state.confirm)}>
+            <Form.Item>
+              <Checkbox
+                onChange={(e) => {
+                  setConfirm(e.target.checked);
+                }}
+                checked={confirm}
+              >
                 개인 정보 취급 방침 동의
               </Checkbox>
               <p className='privacy' onClick={() => setVisible(true)}>
