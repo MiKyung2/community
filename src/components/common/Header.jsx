@@ -4,16 +4,52 @@ import { useObserver, useLocalStore } from 'mobx-react';
 import { useCookies } from 'react-cookie';
 import { Layout, Menu, Badge, List, Avatar, Popover, Button } from 'antd';
 const { Header } = Layout;
-
+import ProfileTabList from "../profile/ProfileList";
 import { MessageOutlined, BellOutlined, UserOutlined } from '@ant-design/icons';
 import useApp from '../../hooks/app';
 import routes from '../../routes';
 import styled from 'styled-components';
 import { AppContext } from '../App/context';
 
+const theLatestDate = [
+  {
+    key: 1,
+    boardId: 1,
+    title: "게시물에 댓글을 남겼습니다.",
+    description: "[모집중] 토이프로젝트 모집합니다.",
+    time: "2분 전",
+    user: {
+      id: 1,
+      nickname: "김코딩",
+    }
+  },
+  {
+    key: 2,
+    boardId: 2,
+    title: "게시물에 댓글을 남겼습니다.",
+    description: "[모집중] 토이프로젝트 모집합니다.",
+    time: "2분 전",
+    user: {
+      id: 1,
+      nickname: "김코딩",
+    }
+  },
+  {
+    key: 3,
+    boardId: 3,
+    title: "게시물에 댓글을 남겼습니다.",
+    description: "[모집중] 토이프로젝트 모집합니다.",
+    time: "2분 전",
+    user: {
+      id: 1,
+      nickname: "김코딩",
+    }
+  },
+];
+
 const LayoutHeader = (props) => {
+  const global = React.useContext(AppContext);
   return useObserver(() => {
-    const global = React.useContext(AppContext);
     const state = useLocalStore(() => {
       return {
         login: false,
@@ -21,28 +57,12 @@ const LayoutHeader = (props) => {
     });
     const [cookies, _, removeCookie] = useCookies(['token', 'id']);
     const router = useRouter();
-    const routerAsPath = router.asPath.split('/');
 
     const cnt = {
       commentNotReadCnt: 1,
       boardNotReadCnt: 2,
       followNotReadCnt: 3,
     };
-
-    const data = [
-      {
-        title: 'Ant Design Title 1',
-      },
-      {
-        title: 'Ant Design Title 2',
-      },
-      {
-        title: 'Ant Design Title 3',
-      },
-      {
-        title: 'Ant Design Title 4',
-      },
-    ];
 
     useEffect(() => {
       if (cookies.token) {
@@ -90,43 +110,38 @@ const LayoutHeader = (props) => {
             </Menu.Item>
           )}
         </Menu>
-        <div className='alert-menu'>
-          <Popover
-            placement='bottomRight'
-            content={<div>content</div>}
-            trigger='click'
-          >
+        {state.login ? (
+          <div className='alert-menu'>
             <Button
               onClick={() => {
                 router.push('/notes');
               }}
             >
               <Badge count={cnt.commentNotReadCnt}>
-                <a href='#' className='head-example'>
-                  <MessageOutlined />
-                </a>
+                <MessageOutlined />
               </Badge>
             </Button>
-          </Popover>
-          <Button>
-            <Badge count={cnt.boardNotReadCnt}>
-              <a href='#' className='head-example'>
-                <BellOutlined />
-              </a>
-            </Badge>
-          </Button>
-          <Button
-            onClick={() => {
-              router.push('/profile');
-            }}
-          >
-            <Badge count={cnt.followNotReadCnt}>
-              <a href='#' className='head-example'>
-                <UserOutlined />
-              </a>
-            </Badge>
-          </Button>
-        </div>
+            <Popover
+              placement='bottomRight'
+              content={<ProfileTabList loading={false} dataSource={theLatestDate} />}
+              trigger='click'
+            >
+              <Button>
+                <Badge count={cnt.boardNotReadCnt}>
+                  <BellOutlined />
+                </Badge>
+              </Button>
+            </Popover>
+            <Button
+              onClick={() => {
+                router.push(`/profile/${global.state.user.id}`);
+              }}
+            >
+              <UserOutlined />
+            </Button>
+          </div>
+        ) : null}
+        
       </Header>
     );
   });

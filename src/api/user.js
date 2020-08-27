@@ -37,9 +37,9 @@ const UserAPI = {
         return testUserData.followingList;
       } else {
         const res = await AxiosWrapper.get(
-          `user/following/following_id=${payload.userId}`
+          `user/following?following_id=${payload.userId}`
         );
-        return res;
+        return res.body.followingList;
       }
     } catch (error) {
       console.error(error);
@@ -51,9 +51,9 @@ const UserAPI = {
         return testUserData.followedList;
       } else {
         const res = await AxiosWrapper.get(
-          `user/follower/followed_id=${payload.userId}`
+          `user/follower?followed_id=${payload.userId}`
         );
-        return res;
+        return res.body.followedList;
       }
     } catch (error) {
       console.error(error);
@@ -61,7 +61,7 @@ const UserAPI = {
   },
   follow: async (payload) => {
     try {
-      const res = await AxiosWrapper.post(payload.data);
+      const res = await AxiosWrapper.post("user/follow", payload.data);
       return res;
     } catch (error) {
       console.log(error);
@@ -69,7 +69,7 @@ const UserAPI = {
   },
   unfollow: async (payload) => {
     try {
-      const res = await AxiosWrapper.delete(payload.data);
+      const res = await AxiosWrapper.delete("user/unfollow", payload.data);
       return res;
     } catch (error) {
       console.log(error);

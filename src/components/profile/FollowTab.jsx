@@ -9,10 +9,10 @@ const FollowTab = ({ data, tabActive, onChange }) => {
     return (
       <div>
         <Tabs defaultActiveKey={tabActive} onChange={onChange}>
-          <TabPane tab="팔로잉" key="1">
+          <TabPane tab="팔로잉" key="following">
             <FollowList data={data} />
           </TabPane>
-          <TabPane tab="팔로워" key="2">
+          <TabPane tab="팔로워" key="followers">
             <FollowList data={data} />
           </TabPane>
         </Tabs>

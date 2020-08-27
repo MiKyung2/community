@@ -8,6 +8,8 @@ import { AppContext } from "../components/App/context";
 import useApp from "../hooks/app";
 import { observerBatching } from "mobx-react-lite";
 import { CookiesProvider, Cookies } from "react-cookie";
+import NextApp, { AppContext as NextAppContext } from 'next/app';
+import cookie from 'cookie';
 
 observerBatching();
 
@@ -53,5 +55,28 @@ function App(props) {
     );
   });
 }
+
+App.getInitialProps = async (appContext) => {
+  const nextAppProps = await NextApp.getInitialProps(appContext);
+  const ctx = appContext.ctx;
+
+  const ssr = !!appContext.ctx.req;
+  const ck = cookie.parse(
+    (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
+  );
+
+  const token = ck.auth ?? '';
+
+  return {
+    ...nextAppProps,
+    ssr,
+    cookie,
+    init: {
+      user: {
+        token,
+      },
+    },
+  };
+};
 
 export default styled(App)``;

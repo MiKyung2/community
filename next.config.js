@@ -5,8 +5,8 @@ module.exports = {
   ) {
     return {
       "/": { page: "/" },
+      "/login": { page: "/login"},
       "/notes": { page: "/notes" },
-      "/profile": { page: "/profile" },
     };
   },
   publicRuntimeConfig: {

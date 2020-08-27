@@ -50,6 +50,7 @@ const Notes = (props) => {
           });
 
           state.delete.selectedRowKeys = [];
+          getCurrentList();
         } catch (error) {
           // state.error = true;
         } finally {
@@ -69,33 +70,47 @@ const Notes = (props) => {
 
     const hasSelected = state.delete.selectedRowKeys.length > 0;
 
-    React.useEffect(() => {
+    const getSendList = () => {
+      state.sendList = [];
+      (async () => {
+        try {
+          const res = await NoteAPI.sendList({ userId: 1 });
+          state.sendList = res;
+        } catch (error) {
+          state.error = true;
+        }
+      })();
+    };
+
+    const getReceiveList = () => {
+      state.receiveList = [];
+      (async () => {
+        try {
+          const res = await NoteAPI.receiveList({ userId: 1 });
+          state.receiveList = res;
+        } catch (error) {
+          state.error = true;
+        }
+      })();
+    };
+
+    const getCurrentList = () => {
       state.delete.selectedRowKeys = [];
 
       switch (state.tabActive) {
         case "R":
-          state.receiveList = [];
-          (async () => {
-            try {
-              const res = await NoteAPI.receiveList({ userId: 1 });
-              state.receiveList = res;
-            } catch (error) {
-              state.error = true;
-            }
-          })();
+          getReceiveList();
           break;
         case "S":
-          state.sendList = [];
-          (async () => {
-            try {
-              const res = await NoteAPI.sendList({ userId: 1 });
-              state.sendList = res;
-            } catch (error) {
-              state.error = true;
-            }
-          })();
+          getSendList();
           break;
       }
+    };
+
+    React.useEffect(() => {
+      state.delete.selectedRowKeys = [];
+
+      getCurrentList();
     }, [state.tabActive]);
 
     return (
@@ -142,6 +157,17 @@ const Notes = (props) => {
               rowSelection={rowSelection}
               columns={receiveColumns}
               dataSource={state.receiveList}
+              expandable={{
+                expandedRowRender: record => <p style={{ marginLeft: "110px" }}>{record.contents}</p>,
+                expandRowByClick: true,
+              }}
+              onRow={(record, rowIndex) => {
+                return {
+                  onClick: event => { 
+                    console.log(`${rowIndex} : ${record.id}`)
+                  },
+                }
+              }}
             />
           </TabPane>
           <TabPane tab="보낸 쪽지함" key="S">
@@ -158,6 +184,9 @@ const Notes = (props) => {
           onCancel={() => {
             state.send.open = false;
           }}
+          onFinish={() => { 
+            if (state.tabActive === "S") getSendList();
+          }}
         />
       </div>
     );
@@ -166,7 +195,7 @@ const Notes = (props) => {
 
 Notes.getInitialProps = async () => {
   try {
-    const receiveList = await NoteAPI.receiveList({ userId: 1 });
+    const receiveList = await NoteAPI.receiveList({ userId: 8 });
     return {
       receiveList,
     };

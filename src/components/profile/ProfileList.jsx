@@ -1,26 +1,32 @@
-import {
-  MessageOutlined,
-  LikeOutlined,
-  DislikeOutlined,
-  EyeOutlined,
-} from "@ant-design/icons";
 import { List, Avatar } from "antd";
-import IconText from "../common/IconText";
+import { useRouter } from "next/router";
 
 const ProfileList = (props) => {
+  const router = useRouter();
   return (
     <List
       dataSource={props.dataSource}
       renderItem={(item) => (
-        <List.Item key={item.title}>
+        <List.Item 
+          key={item.title} 
+          onClick={(e) => {
+            e.preventDefault();
+            router.push(`/board/${item.boardId}`);
+          }}
+        >
           <List.Item.Meta
             avatar={
               <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
             }
-            title={<a href="https://ant.design">{item.title}</a>}
+            title={item.title}
             description={item.description}
           />
-          <div>{item.writer}</div>
+          <div 
+            onClick={(e) => { 
+              e.preventDefault() ;
+              router.push(`/profile/${item.user.id}`); 
+            }}
+          >{item.user.nickname}</div>
         </List.Item>
       )}
     >
