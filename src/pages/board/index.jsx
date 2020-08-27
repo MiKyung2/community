@@ -113,6 +113,8 @@ const BoardPage = (props) => {
        });
 
       state.dataSource = nextData.body.content;
+
+      console.log("search nextData:", nextData.body);
     }
 
     const moveToFirstPage = () => {
@@ -165,22 +167,6 @@ const BoardPage = (props) => {
     state.page.gb = gb;
     state.page.keyword = keyword;
     state.page.sort = sort;
-
-    // const testFetch = async() => {
-    //   const { currentPage, keyword, gb, size, sort } = state.page;
-    //   const nextData = await BoardAPI.list({ 
-    //     currentPage,
-    //     keyword,
-    //     gb,
-    //     size,
-    //     sort
-    //    });
-
-    //   state.dataSource = nextData.body.content;
-    //   console.log("search data length", nextData.body.content);
-    //   state.page.total = nextData.body.content.length
-    // }
-    // testFetch();
 
     fetchListData();
 

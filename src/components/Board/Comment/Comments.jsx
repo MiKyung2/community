@@ -6,11 +6,10 @@ import CommentAPI from '../../../api/comment';
 import CONFIG from '../../../utils/CONFIG';
 import CommentList from './CommentList';
 import AddComment from './AddComment';
+import { toJS } from 'mobx';
 
 
 const Comments = (props) => {
-
-    console.log("Comments props", props);
 
     return useObserver(() => {
 
@@ -21,7 +20,9 @@ const Comments = (props) => {
             };
         });
 
-        const [TempComments, setComments] = useState(props.data);
+        // console.log("Comments state:", toJS(state.comments));
+
+        // const [TempComments, setComments] = useState(props.data);
 
         const addTemporaryNewComment = (payload) => {
             // console.log("current comments:", comments)
@@ -29,20 +30,24 @@ const Comments = (props) => {
             // const newTempComments = comments.concat(payload);
             // setComments(newTempComments);
 
-            console.log("current:", TempComments);
-            const newTempComments = TempComments.concat(payload);
+            const currentComments = toJS(state.comments)
+
+            console.log("current:", currentComments);
+            const newTempComments = currentComments.concat(payload);
             console.log("newD:", newTempComments);
-            setComments(newTempComments);
+            // setComments(newTempComments);
+            state.comments = currentComments.concat(payload);
+            
         }
 
         return (
         <>
-            {/* <CommentList data={state.comments} /> */}
-            <CommentList data={TempComments} />
+            <CommentList data={state.comments} />
+            {/* <CommentList data={TempComments} /> */}
             <AddComment queryId={state.queryId} addComment={addTemporaryNewComment} />
         </>
         )
-});
+    });
 }
 
 
