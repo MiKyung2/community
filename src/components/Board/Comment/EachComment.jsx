@@ -47,7 +47,7 @@ const EachComment = (props) => {
       state.comment.dislikes = data.rowDisLike;
 
       const getUserInfo = async() => {
-        if(!cookies) return null;
+        if(!cookies.token) return;
         const userInfo = await UserAPI.get({id: cookies.id});            
         state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
       };

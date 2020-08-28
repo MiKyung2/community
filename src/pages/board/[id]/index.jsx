@@ -41,9 +41,9 @@ const Board = (props) => {
 
     useEffect(() => {
       const getUserInfo = async() => {
-        if(!cookies) return null;
-        const userInfo = await UserAPI.get({id: cookies.id});            
-        state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
+        if(!cookies.token) return;
+          const userInfo = await UserAPI.get({id: cookies.id});            
+          state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
       };
       getUserInfo();
 

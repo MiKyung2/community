@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useObserver, useLocalStore } from 'mobx-react';
+import { toJS } from 'mobx';
+import { Modal } from 'antd';
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { useCookies } from 'react-cookie';
 import CommentAPI from '../../../api/comment';
@@ -9,13 +12,15 @@ import UserAPI from "../../../api/user";
 const AddComment = (props) => {
 
   const { queryId, comments } = props;
+  const router = useRouter();
 
   return useObserver(() => {
 
     const state = useLocalStore(() => {
       return {
           content: '',
-          user: []
+          user: [],
+          visible: false
       }
   });
 
@@ -24,8 +29,9 @@ const AddComment = (props) => {
 
   useEffect(() => {
     const getUserInfo = async() => {
+      if(!cookies.token) return;
       const userInfo = await UserAPI.get({id: cookies.id});            
-      state.user = userInfo.body;
+      state.user = userInfo.body; 
     };
     getUserInfo();
   }, []);
@@ -52,17 +58,46 @@ const AddComment = (props) => {
 
     const onSubmitComment = (e) => {
       e.preventDefault();
-      registerComment();
-      state.content = '';
+      if(cookies.token) {
+        registerComment();
+        state.content = '';
+      } else {
+        state.visible = true;
+      }
     }
 
+    const handleCancel = (e) => {
+      state.visible = false;
+      // state.content = '';
+    }
+
+    const handleOk = () => {
+      router.push('/accounts/signin');
+    }
+
+    
+
     return (
+      <>
       <div className={props.className}>
         <form>
           <textarea className="text-area" value={state.content} onChange={onChangeTextArea} />
           <button type="submit" className="submit-btn" onClick={onSubmitComment}>등록</button>
         </form>
       </div>
+
+      {/* 로그인 메세지 */}
+      <Modal
+      visible={state.visible}
+      onOk={handleOk}
+      onCancel={handleCancel}
+      >
+      <p>
+        댓글을 등록하려면 로그인 해주세요.
+        로그인 페이지로 이동하시겠습니까?
+      </p>
+     </Modal>
+     </>
     )
 
   });
