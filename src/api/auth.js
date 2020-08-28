@@ -20,7 +20,8 @@ const AuthAPI = {
   login: async (payload) => {
     try {
       const res = await axios.post(
-        'http://141.164.41.213:8081/v1/api/user/login',
+        // 'http://141.164.41.213:8081/v1/api/user/login',
+        "https://toyproject.okky.kro.kr:8443/v1/api/user/login",
         {
           id: payload.value.email,
           password: payload.value.password,
