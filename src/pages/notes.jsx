@@ -1,7 +1,11 @@
 import { useLocalStore, useObserver } from "mobx-react-lite";
-import { Table, Button, Tabs, Popconfirm, message } from "antd";
+import { Input, Menu, Select, Table, Button, Tabs, Popconfirm, message } from "antd";
 import NoteAPI from "../api/note";
 import SendNote from "../components/note/SendNote";
+import { SearchOutlined } from '@ant-design/icons';
+
+const { Option } = Select;
+const { Search } = Input;
 
 const { TabPane } = Tabs;
 
@@ -113,38 +117,58 @@ const Notes = (props) => {
       getCurrentList();
     }, [state.tabActive]);
 
+    // const menu = (
+    //   <Menu onClick={handleMenuClick}>
+    //     <Menu.Item key="title" icon={<UserOutlined />}>
+    //       제목
+    //     </Menu.Item>
+    //     <Menu.Item key="writer" icon={<UserOutlined />}>
+    //       보낸 사람
+    //     </Menu.Item>
+    //   </Menu>
+    // );
+
     return (
       <div>
-        <div style={{ marginBottom: 16 }}>
-          <Button
-            style={{ marginRight: 8 }}
-            type="primary"
-            onClick={() => {
-              state.send.open = true;
-            }}
-            loading={state.send.loading}
-          >
-            쪽지쓰기
-          </Button>
-          <Popconfirm
-            placement="bottomRight"
-            title="정말로 선택한 쪽지를 삭제하시겠습니까?"
-            disabled={!hasSelected}
-            onConfirm={() => {
-              message.info("선택하신 쪽지가 삭제되었습니다.");
-              onDelete();
-            }}
-            okText="확인"
-            cancelText="취소"
-          >
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
+          <div>
             <Button
+              style={{ marginRight: 8 }}
               type="primary"
-              disabled={!hasSelected}
-              loading={state.delete.loading}
+              onClick={() => {
+                state.send.open = true;
+              }}
+              loading={state.send.loading}
             >
-              삭제
+              쪽지쓰기
             </Button>
-          </Popconfirm>
+            <Popconfirm
+              placement="bottomRight"
+              title="정말로 선택한 쪽지를 삭제하시겠습니까?"
+              disabled={!hasSelected}
+              onConfirm={() => {
+                message.info("선택하신 쪽지가 삭제되었습니다.");
+                onDelete();
+              }}
+              okText="확인"
+              cancelText="취소"
+            >
+              <Button
+                type="primary"
+                disabled={!hasSelected}
+                loading={state.delete.loading}
+              >
+                삭제
+              </Button>
+            </Popconfirm>
+          </div>
+          <Input.Group compact style={{ width: "40%"}}>
+            <Select defaultValue="title" style={{ width: '35%' }}>
+              <Option value="title">제목</Option>
+              <Option value="writer">{state.tabActive === "R" ? "보낸 사람" : "받는 사람"}</Option>
+            </Select>
+            <Search style={{ width: "65%"}} placeholder="input search text" onSearch={value => console.log(value)} enterButton />
+          </Input.Group>
         </div>
         <Tabs
           defaultActiveKey={state.tabActive}
