@@ -34,6 +34,11 @@ export default styled(LayoutComponent)`
   & {
     height: 100%;
 
+    .layout-header {
+      height: 64px;
+      background: #001529;
+    }
+
     .layout-content {
       overflow: auto;
 
