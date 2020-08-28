@@ -27,9 +27,6 @@ const CreateBoard = (props) => {
                 user: []
             }
         });
-        
-
-
 
 
         // 글쓰는 유저 정보 가져오기
@@ -42,8 +39,6 @@ const CreateBoard = (props) => {
           };
           getUserInfo();
         }, [])
-
-
 
 
 

@@ -225,7 +225,7 @@ const BoardPage = (props) => {
         onCancel={handleCancel_LoginModal}
         >
           <p>
-            새글을 등록하려면 로그인 해주세요.
+            새글을 등록하려면 로그인 해주세요.<br/>
             로그인 페이지로 이동하시겠습니까?
           </p>
         </Modal>

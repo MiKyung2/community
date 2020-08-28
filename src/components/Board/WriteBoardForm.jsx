@@ -5,8 +5,7 @@ import { UserOutlined } from '@ant-design/icons';
 import CKEditor from 'ckeditor4-react';
 // import {CONFIG} from '../../utils/CONFIG';
 
-const { Option } = Select;
-
+// const { Option } = Select;
 // const options = [
 //     {
 //         value: 'default',
