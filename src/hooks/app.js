@@ -22,6 +22,7 @@ const dispatch = ($) => {
   const login = (data) => {
     $.state.user.id = data?.userPkId;
     $.state.user.token = data?.token;
+    console.log("login : ", data);
   };
 
   const logout = () => {

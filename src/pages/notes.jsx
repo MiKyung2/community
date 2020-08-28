@@ -175,6 +175,17 @@ const Notes = (props) => {
               rowSelection={rowSelection}
               columns={sendColumns}
               dataSource={state.sendList}
+              expandable={{
+                expandedRowRender: record => <p style={{ marginLeft: "110px" }}>{record.contents}</p>,
+                expandRowByClick: true,
+              }}
+              onRow={(record, rowIndex) => {
+                return {
+                  onClick: event => { 
+                    console.log(`${rowIndex} : ${record.id}`)
+                  },
+                }
+              }}
             />
           </TabPane>
         </Tabs>

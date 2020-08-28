@@ -1,5 +1,6 @@
 import axios from 'axios';
 import AxiosWrapper from './axiosWrapper';
+import CONFIG from "../utils/CONFIG";
 
 const AuthAPI = {
   signup: async (payload) => {
@@ -20,7 +21,7 @@ const AuthAPI = {
   login: async (payload) => {
     try {
       const res = await axios.post(
-        'http://141.164.41.213:8081/v1/api/user/login',
+        `${CONFIG.API_BASE_URL}/user/login`,
         {
           id: payload.value.email,
           password: payload.value.password,
@@ -45,7 +46,7 @@ const AuthAPI = {
   find_pass: async (payload) => {
     try {
       const res = await axios.get(
-        `http://141.164.41.213:8081/v1/api/user/find/password?user_id=${payload}`,
+        `${CONFIG.API_BASE_URL}/user/find/password?user_id=${payload}`,
         // {
         //   user_id: payload,
         // },

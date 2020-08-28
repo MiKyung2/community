@@ -9,6 +9,7 @@ import SendNote from '../../../components/note/SendNote';
 import ProfileCard from '../../../components/profile/ProfileCard';
 import ProfileTabList from '../../../components/profile/ProfileList';
 const { TabPane } = Tabs;
+import { toJS } from "mobx";
 
 const ProfilePage = (props) => {
   return useObserver(() => {
