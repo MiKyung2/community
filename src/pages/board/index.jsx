@@ -1,5 +1,5 @@
 import { EditOutlined } from '@ant-design/icons';
-import { Button, Row, Table, Modal } from "antd";
+import { Button, Row, Table, Modal, Tabs } from "antd";
 import { useLocalStore, useObserver } from "mobx-react";
 import { toJS } from 'mobx';
 import { useRouter } from "next/router";
@@ -11,6 +11,8 @@ import BoardAPI from "../../api/board";
 import SearchInput from "../../components/SearchInput";
 import { formatDateWithTooltip } from '../../utils/dateFormatter';
 import { numFormatter } from '../../utils/numFormatter';
+
+const { TabPane } = Tabs;
 
 const columns = [
   {
@@ -53,7 +55,7 @@ const columns = [
 const sortLists = [
   {
     id: 'sort_newest',
-    name: '최신순'
+    name: '최신순',
   },
   {
     id: 'sort_like',
@@ -127,7 +129,7 @@ const BoardPage = (props) => {
     }
 
     const onChangeSort = (selectedFilter) => {
-      const target = selectedFilter.target.id;
+      const target = selectedFilter;
 
       switch (target) {
         case 'sort_newest':
@@ -151,8 +153,8 @@ const BoardPage = (props) => {
           fetchListData();
           break;
         default:
-        // CONFIG.LOG("default-최신순?");
-        // console.error("filter error");
+        CONFIG.LOG("default-최신순?");
+        console.error("filter error");
       }
     }
 
@@ -230,13 +232,13 @@ const BoardPage = (props) => {
           </p>
         </Modal>
 
-        <Row align="bottom" justify="space-between" className="filter_container">
-          {/* 좋아요순 | 댓글순 | 조회수순 */}
-          <ul className="filter">
+        <Row align="top" justify="space-between" className="filter_container">
+          {/* 최신순 | 좋아요순 | 댓글순 | 조회수순 */}
+          <Tabs onChange={onChangeSort}>
             {sortLists && sortLists.map(list => (
-              <li key={list.id} id={list.id} onClick={onChangeSort}>{list.name}</li>
+              <TabPane tab={list.name} key={list.id} />
             ))}
-          </ul>
+          </Tabs>
 
           {/* 검색바 */}
           <SearchInput onSearch={onSearch} />
