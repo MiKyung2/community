@@ -1,8 +1,10 @@
 import { EditOutlined } from '@ant-design/icons';
-import { Button, Row, Table } from "antd";
+import { Button, Row, Table, Modal } from "antd";
 import { useLocalStore, useObserver } from "mobx-react";
 import { toJS } from 'mobx';
 import { useRouter } from "next/router";
+import { useCookies } from 'react-cookie';
+
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import BoardAPI from "../../api/board";
@@ -86,6 +88,9 @@ const BoardPage = (props) => {
           tablePage: 1,
           total: props.listByDate.totalElements
         },
+        modal: {
+          login: false
+        }
       };
     });
 
@@ -182,9 +187,23 @@ const BoardPage = (props) => {
     }
 
     // 새글쓰기로 이동
+    const [cookies, _, removeCookie] = useCookies(['token', 'id']);
+    
     const onClickNewPostBtn = () => {
-      router.push("/board/articles/create");
+      if(!cookies.token) {
+        state.modal.login = true;
+      } else {
+        router.push("/board/articles/create");
+      }
     };
+
+    const handleCancel_LoginModal = (e) => {
+      state.modal.login = false;
+    }
+
+    const handleOk_LoginModal = () => {
+      router.push('/accounts/signin');
+    }
 
     return (
       <div className={props.className}>
@@ -198,6 +217,18 @@ const BoardPage = (props) => {
             새글쓰기
           </Button>
         </Row>
+
+        {/* 로그인 메세지 */}
+        <Modal
+        visible={state.modal.login}
+        onOk={handleOk_LoginModal}
+        onCancel={handleCancel_LoginModal}
+        >
+          <p>
+            새글을 등록하려면 로그인 해주세요.
+            로그인 페이지로 이동하시겠습니까?
+          </p>
+        </Modal>
 
         <Row align="bottom" justify="space-between" className="filter_container">
           {/* 좋아요순 | 댓글순 | 조회수순 */}

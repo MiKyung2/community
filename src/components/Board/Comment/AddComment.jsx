@@ -102,10 +102,10 @@ const AddComment = (props) => {
       onOk={handleOk_LoginModal}
       onCancel={handleCancel_LoginModal}
       >
-      <p>
-        댓글을 등록하려면 로그인 해주세요.
-        로그인 페이지로 이동하시겠습니까?
-      </p>
+        <p>
+          댓글을 등록하려면 로그인 해주세요.
+          로그인 페이지로 이동하시겠습니까?
+        </p>
      </Modal>
      </>
     )

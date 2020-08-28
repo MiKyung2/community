@@ -37,7 +37,7 @@ const WriteBoardForm = (props) => {
             <div className="container">
                 <header className="header">
 					<h2>{boardType}</h2>
-					<Avatar size="large" icon={<UserOutlined />} />
+					{/* <Avatar size="large" icon={<UserOutlined />} /> */}
                 </header>
     
                 <section>
@@ -83,9 +83,9 @@ export default styled(WriteBoardForm)`
         }
         .header {
             /* border: 1px solid red; */
-            display: flex;
+            /* display: flex;
             justify-content: space-between; 
-            align-items: center;
+            align-items: center; */
             margin-bottom: 40px;
         }
         .select {

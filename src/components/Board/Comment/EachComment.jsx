@@ -9,15 +9,11 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import CommentAPI from '../../../api/comment';
 import UserAPI from '../../../api/user';
-// import {comment_dummy} from '../comment_dummy';
 
 
 const EachComment = (props) => {
 
-  const { data, updateComments } = props;
-
-  // console.log("each comment data:", toJS(data));
-  
+  const { data, updateComments } = props;  
 
   return useObserver(() => {
 
@@ -36,6 +32,7 @@ const EachComment = (props) => {
         modal: {
           visible: false
         },
+        userData: [],
         user: '',
         login: false
       };
@@ -50,9 +47,11 @@ const EachComment = (props) => {
       state.comment.likes = data.rowLike;
       state.comment.dislikes = data.rowDisLike;
 
+      // 유저 정보
       const getUserInfo = async() => {
         if(!cookies.token) return;
-        const userInfo = await UserAPI.get({id: cookies.id});            
+        const userInfo = await UserAPI.get({id: cookies.id});    
+        state.userData = userInfo.body;      
         state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
       };
       getUserInfo();
@@ -121,7 +120,8 @@ const EachComment = (props) => {
           author={<a>{state.comment.writer}</a>}
           avatar={
             <Avatar
-              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+              // src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+              src={state.userData.profileImg}
               alt="Han Solo"
             />
           }
