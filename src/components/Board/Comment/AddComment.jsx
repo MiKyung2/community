@@ -1,10 +1,10 @@
-// import { Form, Button, List, Input, Avatar, Comment } from 'antd';
-import { useObserver } from 'mobx-react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useObserver, useLocalStore } from 'mobx-react';
 import styled from 'styled-components';
+import { useCookies } from 'react-cookie';
 import CommentAPI from '../../../api/comment';
+import UserAPI from "../../../api/user";
 
-// const { TextArea } = Input;
 
 const AddComment = (props) => {
 
@@ -12,14 +12,30 @@ const AddComment = (props) => {
 
   return useObserver(() => {
 
-    const [content, setContent] = useState('');
+    const state = useLocalStore(() => {
+      return {
+          content: '',
+          user: []
+      }
+  });
+
+  // 유저 정보
+  const [cookies, _, removeCookie] = useCookies(['token', 'id']);
+
+  useEffect(() => {
+    const getUserInfo = async() => {
+      const userInfo = await UserAPI.get({id: cookies.id});            
+      state.user = userInfo.body;
+    };
+    getUserInfo();
+  }, []);
 
     const registerComment = async () => {
       const payload = {
         boardId: queryId,
         title: 'title',
-        content: content,
-        writer: 'allly',
+        content: state.content,
+        writer: state.user.nickname,
         id: 0,
         itemGb: "string",
         rowDisLike: 0,
@@ -31,20 +47,19 @@ const AddComment = (props) => {
     }
 
     const onChangeTextArea = (e) => {
-      // state.value = e.target.value;
-      setContent(e.target.value);
+      state.content = e.target.value;
     }
 
     const onSubmitComment = (e) => {
       e.preventDefault();
       registerComment();
-      setContent('');
+      state.content = '';
     }
 
     return (
       <div className={props.className}>
         <form>
-          <textarea className="text-area" value={content} onChange={onChangeTextArea} />
+          <textarea className="text-area" value={state.content} onChange={onChangeTextArea} />
           <button type="submit" className="submit-btn" onClick={onSubmitComment}>등록</button>
         </form>
       </div>

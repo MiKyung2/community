@@ -2,10 +2,13 @@ import { DislikeFilled, DislikeOutlined, EyeOutlined, LikeFilled, LikeOutlined }
 import { Button, Modal, Row } from 'antd';
 import { useLocalStore, useObserver } from 'mobx-react';
 import { useRouter } from 'next/router';
-import React from 'react';
+import { useCookies } from 'react-cookie';
+import React, {useEffect} from 'react';
 import ReactHtmlParser from 'react-html-parser';
 import styled from 'styled-components';
+
 import BoardAPI from "../../../api/board";
+import UserAPI from "../../../api/user";
 import CommentAPI from "../../../api/comment";
 import Comments from "../../../components/Board/Comment/Comments";
 import { formatDate } from '../../../utils/dateFormatter';
@@ -17,7 +20,6 @@ const Board = (props) => {
 
   const router = useRouter();
   const queryId = router.query.id;
-
   const boardProps = props.props;
 
   return useObserver(() => {
@@ -27,9 +29,27 @@ const Board = (props) => {
         data: boardProps.board.body,
         comments: boardProps.comments.body,
         visible: false,
-        action: null
+        action: null,
+        writer: boardProps.board.body.writer,
+        user: ''
       };
     });
+
+    // 유저 정보
+    const [cookies, _, removeCookie] = useCookies(['token', 'id']);
+
+    useEffect(() => {
+      const getUserInfo = async() => {
+        if(!cookies) return null;
+        const userInfo = await UserAPI.get({id: cookies.id});            
+        state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
+      };
+      getUserInfo();
+
+    }, []);
+
+
+
 
     const onClickBackToList = () => {
       router.push('/board');
@@ -81,7 +101,7 @@ const Board = (props) => {
 
         <div className="main_container">
 
-          <Row justify="space-between" className="main_container_top">
+          <Row justify="space-between" className="main_container_top" style={state.writer === state.user ? {paddingBottom: 0} : {paddingBottom: '10px'}}>
             {/* 해당 게시글 조회수 & 댓글수 & 좋아요수 */}
             <Row>
               <span className="main_container_top_left "><EyeOutlined /> {numFormatter(state.data.viewCount)}</span>
@@ -91,10 +111,12 @@ const Board = (props) => {
             </Row>
 
             {/* 수정 & 삭제 */}
-            <Row>
-              <Button type="text" onClick={onClickEdit}>수정</Button>
-              <Button type="text" onClick={onClickDelete}>삭제</Button>
-            </Row>
+            {state.writer === state.user && 
+              <Row>
+                <Button type="text" onClick={onClickEdit}>수정</Button>
+                <Button type="text" onClick={onClickDelete}>삭제</Button>
+              </Row>
+            }
           </Row>
 
           {/* 삭제 확인 메세지 */}

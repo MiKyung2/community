@@ -7,24 +7,24 @@ import CKEditor from 'ckeditor4-react';
 
 const { Option } = Select;
 
-const options = [
-    {
-        value: 'default',
-        text: '게시판을 선택해주세요.'
-    },
-    {
-        value: 'option1',
-        text: 'Option1'
-    },
-    {
-        value: 'option2',
-        text: 'Option2'
-    },
-    {
-        value: 'option3',
-        text: 'Option3'
-    }
-];
+// const options = [
+//     {
+//         value: 'default',
+//         text: '게시판을 선택해주세요.'
+//     },
+//     {
+//         value: 'option1',
+//         text: 'Option1'
+//     },
+//     {
+//         value: 'option2',
+//         text: 'Option2'
+//     },
+//     {
+//         value: 'option3',
+//         text: 'Option3'
+//     }
+// ];
 
 const WriteBoardForm = (props) => {
 
@@ -43,11 +43,11 @@ const WriteBoardForm = (props) => {
                 <section>
                     <form onSubmit={onSubmitForm}>
                         {/* 게시판 선택 */}
-                        <Select defaultValue="default" className="select" onChange={onChangeSelect}>
+                        {/* <Select defaultValue="default" className="select" onChange={onChangeSelect}>
                             {options && options.map((option, index) => (
                                 <Option key={index} value={option.value}>{option.text}</Option>
                             ))}
-                        </Select>
+                        </Select> */}
                         
                         {/* 게시판 제목 */}
                         <Input value={boardTitle} onChange={onChangeTitle} className="input" placeholder="제목을 입력해주세요." />

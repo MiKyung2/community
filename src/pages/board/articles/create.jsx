@@ -1,11 +1,16 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useObserver, useLocalStore } from 'mobx-react';
+import {toJS} from 'mobx';
 import {useRouter} from 'next/router';
 // import {CONFIG} from '../../../utils/CONFIG';
 import BoardAPI from "../../../api/board";
+import UserAPI from "../../../api/user";
 import { Modal } from 'antd';
+import { useCookies } from 'react-cookie';
+
 
 import WriteBoardForm from '../../../components/Board/WriteBoardForm';
+import Axios from 'axios';
 
 const CreateBoard = (props) => {
     return useObserver(() => {
@@ -18,16 +23,36 @@ const CreateBoard = (props) => {
                 contents: '',
                 modal: {
                     visible: false
-                }
+                },
+                user: []
             }
         });
+        
+
+
+
+
+        // 글쓰는 유저 정보 가져오기
+        const [cookies, _, removeCookie] = useCookies(['token', 'id']);
+
+        useEffect(() => {
+          const getUserInfo = async() => {
+            const userInfo = await UserAPI.get({id: cookies.id});            
+            state.user = userInfo.body;
+          };
+          getUserInfo();
+        }, [])
+
+
+
+
 
         const onSubmitForm = (e) => {
             e.preventDefault();
 
             const formData = {
                 // id: 1,
-                writer: "ally",
+                writer: state.user.nickname ? state.user.nickname : "unknown",
                 // select: state.select,
                 title: state.title,
                 contents: state.contents,
