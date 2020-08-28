@@ -15,10 +15,17 @@ const Comments = (props) => {
                 queryId: props.queryId
             };
         });
+
+        const deleteComment = (commentToDelete) => {
+            const currentComments = toJS([...state.comments]);
+            const updatedComments = currentComments.filter(comment => comment.id !== commentToDelete);
+            state.comments.splice(0, currentComments.length, ...updatedComments);
+        }
+
         return (
             <>
                 {/* <CommentList data={state.comments} /> */}
-                <CommentList comments={state.comments} />
+                <CommentList comments={state.comments} deleteComment={deleteComment} />
                 <AddComment queryId={state.queryId} comments={state.comments} />
             </>
         )

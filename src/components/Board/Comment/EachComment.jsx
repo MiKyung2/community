@@ -1,6 +1,7 @@
 import { DislikeFilled, DislikeOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons';
 import { Avatar, Comment, Modal, Tooltip } from 'antd';
 import { useLocalStore, useObserver } from 'mobx-react';
+import {toJS} from 'mobx';
 import { useCookies } from 'react-cookie';
 
 import moment from 'moment';
@@ -13,7 +14,10 @@ import UserAPI from '../../../api/user';
 
 const EachComment = (props) => {
 
-  const { data } = props;
+  const { data, updateComments } = props;
+
+  // console.log("each comment data:", toJS(data));
+  
 
   return useObserver(() => {
 
@@ -79,13 +83,15 @@ const EachComment = (props) => {
       state.modal.visible = true;
     };
 
-    const handleOk = () => {
+    const handleOk_delete = () => {
       const deleteComment = async () => await CommentAPI.delete({ id: data.id });
       deleteComment();
       state.modal.visible = false;
+      const currentCommentId = data.id;
+      updateComments(currentCommentId);
     }
 
-    const handleCancel = () => {
+    const handleCancel_delete = () => {
       state.modal.visible = false;
     }
 
@@ -133,8 +139,8 @@ const EachComment = (props) => {
         {/* 삭제 확인 메세지 */}
         <Modal
           visible={state.modal.visible}
-          onOk={handleOk}
-          onCancel={handleCancel}
+          onOk={handleOk_delete}
+          onCancel={handleCancel_delete}
         >
           <p>정말 이 댓글을 삭제하시겠습니까?</p>
         </Modal>
