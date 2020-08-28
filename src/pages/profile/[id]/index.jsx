@@ -1,4 +1,4 @@
-import { Tabs } from 'antd';
+import { Tabs, Modal } from 'antd';
 import { useLocalStore, useObserver } from 'mobx-react';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -10,6 +10,7 @@ import ProfileCard from '../../../components/profile/ProfileCard';
 import ProfileTabList from '../../../components/profile/ProfileList';
 const { TabPane } = Tabs;
 import { toJS } from "mobx";
+import FollowTab from "../../../components/profile/FollowTab";
 
 const ProfilePage = (props) => {
   return useObserver(() => {
@@ -18,15 +19,19 @@ const ProfilePage = (props) => {
     const state = useLocalStore(() => {
       return {
         loading: false,
-        tabActive: '1',
         send: {
           open: false,
           receiveUser: {
             id: 0,
-            user: '',
+            user: "",
           },
         },
         profile: props.profile,
+        follow: {
+          tabActive: "following",
+          open: false,
+          list: [],
+        }
       };
     });
 
@@ -43,8 +48,44 @@ const ProfilePage = (props) => {
       })();
     };
 
+    React.useEffect(() => {
+      if (state.follow.tabActive === "following") {
+        (async () => {
+          try {
+            const followingListRes = await UserAPI.followingList({ userId: id });
+            state.follow.list = followingListRes.following_users;
+          } catch(error){
+            console.error(error);
+          }
+        })();
+      } else if (state.follow.tabActive === "followers") {
+        (async () => {
+          try {
+            const followerListRes = await UserAPI.followerList({ userId: id });
+            state.follow.list = followerListRes.followed_users;
+          } catch(error){
+            console.error(error);
+          }
+        })();
+      }
+    }, [state.follow.tabActive]);
+
     return (
       <div className={props.className}>
+        <Modal
+          title="Basic Modal"
+          visible={state.follow.open}
+          footer={null}
+        >
+          <FollowTab
+            data={state.follow.list || []}
+            tabActive={state.follow.tabActive}
+            onChange={(value) => {
+              state.follow.tabActive = value;
+            }}
+          />
+        </Modal>
+
         {/* 프로필 상세 */}
         <ProfileCard
           loading={state.loading}
@@ -55,6 +96,7 @@ const ProfilePage = (props) => {
           onUpdate={() => {
             getProfile();
           }}
+          onClickFollow={(category) => { console.log("D" ); state.follow.open = true; }}
         />
 
         {/* 게시물 탭 */}
@@ -69,6 +111,7 @@ const ProfilePage = (props) => {
             <ProfileTabList loading={false} dataSource={props.theLatestDate} />
           </TabPane>
         </Tabs>
+
         <SendNote
           receiveUser={{
             id: state.profile.id,

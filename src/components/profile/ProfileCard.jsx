@@ -21,7 +21,7 @@ import UserAPI from '../../api/user';
 
 const { Meta } = Card;
 
-const ProfileCard = ({ loading, data, onOpenNote, onUpdate }) => {
+const ProfileCard = (props) => {
   return useObserver(() => {
     const router = useRouter();
     const { id } = router.query;
@@ -37,14 +37,16 @@ const ProfileCard = ({ loading, data, onOpenNote, onUpdate }) => {
                 <SettingOutlined style={{ marginRight: '8px' }} key='setting' />
               }
               title='활동 점수'
-              value={data.activityScore || 0}
+              value={props.data.activityScore || 0}
             />,
             <BottomAction
               icon={<EditOutlined style={{ marginRight: '8px' }} key='edit' />}
               title='팔로잉'
-              value={data.followingList.cnt || 0}
+              value={props.data.followingList.cnt || 0}
               onClick={() => {
-                router.push(`/profile/[id]/[cate]`, `/profile/${id}/following`);
+                console.log("D");
+                props.onClickFollow("following");
+                // router.push(`/profile/[id]/[cate]`, `/profile/${id}/following`);
               }}
             />,
             <BottomAction
@@ -55,14 +57,15 @@ const ProfileCard = ({ loading, data, onOpenNote, onUpdate }) => {
                 />
               }
               title='팔로워'
-              value={data.followedList.cnt || 0}
+              value={props.data.followedList.cnt || 0}
               onClick={() => {
-                router.push(`/profile/[id]/[cate]`, `/profile/${id}/followers`);
+                props.onClickFollow("followers");
+                // router.push(`/profile/[id]/[cate]`, `/profile/${id}/followers`);
               }}
             />,
           ]}
         >
-          <Skeleton loading={loading} avatar active>
+          <Skeleton loading={props.loading} avatar active>
             <div
               style={{
                 display: 'flex',
@@ -74,20 +77,20 @@ const ProfileCard = ({ loading, data, onOpenNote, onUpdate }) => {
                 avatar={
                   <Avatar
                     src={
-                      data.profileImg ||
+                      props.data.profileImg ||
                       'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
                     }
                     size='large'
                   />
                 }
-                title={data.nickname || ''}
+                title={props.data.nickname || ''}
                 description={
                   <a
                     style={{ textDecoration: 'underline' }}
-                    href={data.gitAddr}
+                    href={props.data.gitAddr}
                     target='_blank'
                   >
-                    {data.gitAddr || '-'}
+                    {props.data.gitAddr || '-'}
                   </a>
                 }
               />
@@ -129,13 +132,13 @@ const ProfileCard = ({ loading, data, onOpenNote, onUpdate }) => {
                           UserAPI.follow({
                             data: { followed_id: id, following_id: userId },
                           });
-                          onUpdate();
+                          props.onUpdate();
                         }}
                       >
                         팔로우하기
                       </Button>
                     )}
-                    <Button onClick={onOpenNote}>쪽지 보내기</Button>
+                    <Button onClick={props.onOpenNote}>쪽지 보내기</Button>
                   </>
                 )}
               </div>
