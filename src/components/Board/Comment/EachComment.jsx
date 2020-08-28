@@ -120,8 +120,7 @@ const EachComment = (props) => {
           author={<a>{state.comment.writer}</a>}
           avatar={
             <Avatar
-              // src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-              src={state.userData.profileImg}
+              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
               alt="Han Solo"
             />
           }
