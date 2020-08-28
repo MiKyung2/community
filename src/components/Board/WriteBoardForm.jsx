@@ -49,7 +49,13 @@ const WriteBoardForm = (props) => {
                         </Select> */}
                         
                         {/* 게시판 제목 */}
-                        <Input value={boardTitle} onChange={onChangeTitle} className="input" placeholder="제목을 입력해주세요." />
+                        <Input 
+                            value={boardTitle} 
+                            onChange={onChangeTitle} 
+                            className="input" 
+                            placeholder="제목을 입력해주세요." 
+                            maxLength="255"
+                        />
                         
                         {/* 게시판 내용 */}
                         <CKEditor
