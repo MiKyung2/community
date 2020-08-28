@@ -215,10 +215,12 @@ export default styled(Board)`
     }
     .main_content {
       /* border: 1px solid red; */
+      display: block;
       width: 100%;
-      flex: 9;
+      max-height: 1000px;
       margin-top: 50px;
       padding: 0 30px 30px 30px;
+      overflow: auto;
     }
     .comment-section {
       > h3 {
