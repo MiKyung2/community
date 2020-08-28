@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useObserver, useLocalStore } from 'mobx-react';
-import { toJS } from 'mobx';
 import { Modal } from 'antd';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
@@ -20,7 +19,9 @@ const AddComment = (props) => {
       return {
           content: '',
           user: [],
-          visible: false
+          modal: {
+            login: false,
+          }
       }
   });
 
@@ -56,26 +57,35 @@ const AddComment = (props) => {
       state.content = e.target.value;
     }
 
+    const warning = () => {
+      Modal.warning({
+        content: '댓글 내용을 입력해 주세요.'
+      })
+    }
+
     const onSubmitComment = (e) => {
       e.preventDefault();
-      if(cookies.token) {
-        registerComment();
-        state.content = '';
+      
+      if (!cookies.token) {
+        state.modal.login = true;
       } else {
-        state.visible = true;
+        if (state.content.trim() == '') {
+          warning();
+          state.content = '';
+        } else {
+          registerComment();
+          state.content = '';
+        }
       }
     }
 
-    const handleCancel = (e) => {
-      state.visible = false;
-      // state.content = '';
+    const handleCancel_LoginModal = (e) => {
+      state.modal.login = false;
     }
 
-    const handleOk = () => {
+    const handleOk_LoginModal = () => {
       router.push('/accounts/signin');
     }
-
-    
 
     return (
       <>
@@ -88,9 +98,9 @@ const AddComment = (props) => {
 
       {/* 로그인 메세지 */}
       <Modal
-      visible={state.visible}
-      onOk={handleOk}
-      onCancel={handleCancel}
+      visible={state.modal.login}
+      onOk={handleOk_LoginModal}
+      onCancel={handleCancel_LoginModal}
       >
       <p>
         댓글을 등록하려면 로그인 해주세요.
