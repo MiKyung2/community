@@ -1,14 +1,13 @@
+import { EditOutlined } from '@ant-design/icons';
+import { Button, Row, Table } from "antd";
+import { useLocalStore, useObserver } from "mobx-react";
+import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useObserver, useLocalStore } from "mobx-react";
 import BoardAPI from "../../api/board";
-import { Row, Table, Button, Tooltip } from "antd";
-import { EditOutlined } from '@ant-design/icons';
 import SearchInput from "../../components/SearchInput";
-import { useRouter } from "next/router";
-import CONFIG from '../../utils/CONFIG';
-import { numFormatter } from '../../utils/numFormatter';
 import { formatDateWithTooltip } from '../../utils/dateFormatter';
+import { numFormatter } from '../../utils/numFormatter';
 
 const columns = [
   {
@@ -40,15 +39,15 @@ const columns = [
     dataIndex: "createdDate",
     key: "createdDate",
     render: date => (
-        <span>
-          {formatDateWithTooltip(date)}
-        </span>
-      )
+      <span>
+        {formatDateWithTooltip(date)}
+      </span>
+    )
   },
 ];
 
- // 최신순 | 좋아요순 | 댓글순 | 조회수순
- const sortLists = [
+// 최신순 | 좋아요순 | 댓글순 | 조회수순
+const sortLists = [
   {
     id: 'sort_newest',
     name: '최신순'
@@ -67,9 +66,10 @@ const columns = [
   },
 ];
 
-
 const BoardPage = (props) => {
   // CONFIG.LOG("boardpage props", props);
+
+  console.log(props.className)
 
   return useObserver(() => {
     const router = useRouter();
@@ -90,33 +90,33 @@ const BoardPage = (props) => {
     });
 
     useEffect(() => {
-      const updateList = async() => await BoardAPI.list({ 
+      const updateList = async () => await BoardAPI.list({
         currentPage: 1,
         gb: "title",
         keyword: '',
         size: 20,
         sort: "date"
-       });
-       updateList();
+      });
+      updateList();
 
     }, []);
-    
 
-    const fetchListData = async() => {
+
+    const fetchListData = async () => {
       const { currentPage, keyword, gb, size, sort } = state.page;
-      const nextData = await BoardAPI.list({ 
+      const nextData = await BoardAPI.list({
         currentPage,
         keyword,
         gb,
         size,
         sort
-       });
+      });
 
       state.dataSource = nextData.body.content;
     }
 
     const moveToFirstPage = () => {
-      state.page.tablePage = 1;  
+      state.page.tablePage = 1;
       state.page.currentPage = 1;
     }
 
@@ -124,29 +124,29 @@ const BoardPage = (props) => {
       const target = selectedFilter.target.id;
 
       switch (target) {
-        case 'sort_newest' :
+        case 'sort_newest':
           state.page.sort = "date";
           moveToFirstPage();
           fetchListData();
           break;
-        case 'sort_like' :   
+        case 'sort_like':
           state.page.sort = "like";
           moveToFirstPage();
           fetchListData();
           break;
-        case 'sort_comment' :
+        case 'sort_comment':
           state.page.sort = "commentCnt";
           moveToFirstPage();
           fetchListData();
           break;
-        case 'sort_view' :
+        case 'sort_view':
           state.page.sort = "viewCount";
           moveToFirstPage();
           fetchListData();
           break;
-        default :
-          // CONFIG.LOG("default-최신순?");
-          // console.error("filter error");
+        default:
+        // CONFIG.LOG("default-최신순?");
+        // console.error("filter error");
       }
     }
 
@@ -159,37 +159,37 @@ const BoardPage = (props) => {
 
     // 필터&검색
     const onSearch = (searchTerm) => {
-    const {gb, keyword, sort} = searchTerm;
+      const { gb, keyword, sort } = searchTerm;
 
-    state.page.currentPage = 1;
-    state.page.gb = gb;
-    state.page.keyword = keyword;
-    state.page.sort = sort;
+      state.page.currentPage = 1;
+      state.page.gb = gb;
+      state.page.keyword = keyword;
+      state.page.sort = sort;
 
-    // const testFetch = async() => {
-    //   const { currentPage, keyword, gb, size, sort } = state.page;
-    //   const nextData = await BoardAPI.list({ 
-    //     currentPage,
-    //     keyword,
-    //     gb,
-    //     size,
-    //     sort
-    //    });
+      // const testFetch = async() => {
+      //   const { currentPage, keyword, gb, size, sort } = state.page;
+      //   const nextData = await BoardAPI.list({ 
+      //     currentPage,
+      //     keyword,
+      //     gb,
+      //     size,
+      //     sort
+      //    });
 
-    //   state.dataSource = nextData.body.content;
-    //   console.log("search data length", nextData.body.content);
-    //   state.page.total = nextData.body.content.length
-    // }
-    // testFetch();
+      //   state.dataSource = nextData.body.content;
+      //   console.log("search data length", nextData.body.content);
+      //   state.page.total = nextData.body.content.length
+      // }
+      // testFetch();
 
-    fetchListData();
+      fetchListData();
 
     }
 
     // 해당 게시물 이동
     const onClickTableRow = (record, rowIndex) => {
       return {
-        onClick: () => {       
+        onClick: () => {
           router.push('/board/[id]', `/board/${record.id}`);
         }
       }
@@ -202,7 +202,7 @@ const BoardPage = (props) => {
 
     return (
       <div className={props.className}>
-        
+
         <Row justify="space-between">
           <h1>게시판 이름</h1>
 
@@ -230,29 +230,33 @@ const BoardPage = (props) => {
           columns={columns}
           dataSource={state.dataSource}
           onRow={onClickTableRow}
-          pagination={{ 
-            pageSize: state.page.size, 
+          pagination={{
+            pageSize: state.page.size,
             total: state.page.total,
-            onChange: onChangePage, 
+            onChange: onChangePage,
             current: state.page.tablePage,
           }}
           scroll={true}
-        />        
+        />
       </div>
     );
   });
 };
 
+// ++++++++++++++++++++++++++++++++++++++++++++
+// 서버사이드 영역
+// ++++++++++++++++++++++++++++++++++++++++++++
 export const getStaticProps = async () => {
+
   // 최신순
-  const boardListByDate = await BoardAPI.list({ 
+  const boardListByDate = await BoardAPI.list({
     currentPage: 1,
     gb: "title",
     keyword: '',
     size: 20,
     sort: "date"
-   });
-
+  });
+  // console.log(">> [server] : boardListByDate => ", boardListByDate);
   return {
     props: {
       listByDate: boardListByDate.body.content,
