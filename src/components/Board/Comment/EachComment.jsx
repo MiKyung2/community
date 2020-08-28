@@ -1,10 +1,13 @@
 import { DislikeFilled, DislikeOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons';
 import { Avatar, Comment, Modal, Tooltip } from 'antd';
 import { useLocalStore, useObserver } from 'mobx-react';
+import { useCookies } from 'react-cookie';
+
 import moment from 'moment';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import CommentAPI from '../../../api/comment';
+import UserAPI from '../../../api/user';
 // import {comment_dummy} from '../comment_dummy';
 
 
@@ -28,9 +31,13 @@ const EachComment = (props) => {
         },
         modal: {
           visible: false
-        }
+        },
+        user: '',
+        login: false
       };
     });
+
+    const [cookies, _, removeCookie] = useCookies(['token', 'id']);
 
     useEffect(() => {
       state.comment.writer = data.writer;
@@ -38,7 +45,23 @@ const EachComment = (props) => {
       state.comment.createdDate = data.createdDate;
       state.comment.likes = data.rowLike;
       state.comment.dislikes = data.rowDisLike;
+
+      const getUserInfo = async() => {
+        if(!cookies) return null;
+        const userInfo = await UserAPI.get({id: cookies.id});            
+        state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
+      };
+      getUserInfo();
     }, []);
+
+    const setLogin = () => {
+      if(state.comment.writer === state.user) {
+        state.login = true
+      } else {
+        state.login = false
+      }
+    }
+    setLogin();
 
     const onLike = () => {
       state.likes = 1;
@@ -80,7 +103,7 @@ const EachComment = (props) => {
         <span className="comment-action">{state.comment.dislikes}</span>
       </span>,
       // <span key="comment-basic-reply-to">Reply to</span>,
-      <span key="comment-basic-delete-btn" onClick={onDelete}>삭제</span>,
+      state.login ? <span key="comment-basic-delete-btn" onClick={onDelete}>삭제</span> : null
     ];
 
 

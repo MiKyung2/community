@@ -31,7 +31,8 @@ const Board = (props) => {
         visible: false,
         action: null,
         writer: boardProps.board.body.writer,
-        user: ''
+        user: '',
+        login: false
       };
     });
 
@@ -48,8 +49,15 @@ const Board = (props) => {
 
     }, []);
 
-
-
+    
+    const setLogin = () => {
+      if(state.writer === state.user) {
+        state.login = true
+      } else {
+        state.login = false
+      }
+    }
+    setLogin();
 
     const onClickBackToList = () => {
       router.push('/board');
@@ -101,7 +109,7 @@ const Board = (props) => {
 
         <div className="main_container">
 
-          <Row justify="space-between" className="main_container_top" style={state.writer === state.user ? {paddingBottom: 0} : {paddingBottom: '10px'}}>
+          <Row justify="space-between" className="main_container_top" style={state.login ? {paddingBottom: 0} : {paddingBottom: '10px'}}>
             {/* 해당 게시글 조회수 & 댓글수 & 좋아요수 */}
             <Row>
               <span className="main_container_top_left "><EyeOutlined /> {numFormatter(state.data.viewCount)}</span>
@@ -111,7 +119,7 @@ const Board = (props) => {
             </Row>
 
             {/* 수정 & 삭제 */}
-            {state.writer === state.user && 
+            {state.login && 
               <Row>
                 <Button type="text" onClick={onClickEdit}>수정</Button>
                 <Button type="text" onClick={onClickDelete}>삭제</Button>

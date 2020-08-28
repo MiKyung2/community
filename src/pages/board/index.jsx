@@ -114,9 +114,6 @@ const BoardPage = (props) => {
 
       state.dataSource = nextData.body.content;
       state.page.total = nextData.body.totalElements ? nextData.body.totalElements : state.page.total;
-
-      console.log("search nextData:", nextData.body);
-      console.log("total:", toJS(state.page))
     }
 
     const moveToFirstPage = () => {
