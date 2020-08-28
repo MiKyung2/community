@@ -23,6 +23,13 @@ const columns = [
     title: "작성자",
     dataIndex: "writer",
     key: "writer",
+    render: writer => (
+      <span 
+        onClick={()=>console.log("작성자:", writer)}
+        style={{cursor: 'pointer'}}
+      >
+        {writer}
+      </span>)
   }, {
     title: "좋아요",
     dataIndex: "rowLike",
@@ -74,7 +81,6 @@ const sortLists = [
 const BoardPage = (props) => {
   // CONFIG.LOG("boardpage props", props);
 
-
   return useObserver(() => {
     const router = useRouter();
 
@@ -92,7 +98,8 @@ const BoardPage = (props) => {
         },
         modal: {
           login: false
-        }
+        },
+        boardTitle: '자유게시판'
       };
     });
 
@@ -211,7 +218,7 @@ const BoardPage = (props) => {
       <div className={props.className}>
 
         <Row justify="space-between">
-          <h1>게시판 이름</h1>
+          <h1>{state.boardTitle}</h1>
 
           {/* "새글쓰기" 버튼 */}
           <Button className="new_post_btn" type="primary" onClick={onClickNewPostBtn}>
