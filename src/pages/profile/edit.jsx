@@ -141,18 +141,6 @@ const EditProfile = ({ profile }) => {
 };
 
 // EditProfile.getInitialProps = async (ctx) => {
-<<<<<<< HEAD
-
-//   // Authorization: Bearer <token>
-
-//   let id = null;
-//   if (!ctx.req) {
-//     id = cookies.get('id');
-//   }
-//   console.log('cookies', id);
-
-//   const profileRes = await UserAPI.get({ id: 19 });
-=======
 //   const ck = cookie.parse(
 //     (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
 //   );
@@ -163,7 +151,6 @@ const EditProfile = ({ profile }) => {
 //   const userId = decodedToken?.userId ?? '';
 
 //   const profileRes = await UserAPI.get({ id });
->>>>>>> b1b8f0f... edit profile edit, signup
 
 //   return {
 //     profile: profileRes.body,

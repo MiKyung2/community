@@ -4,7 +4,7 @@ import Router, { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useCookies } from 'react-cookie';
 import { Form, Input, Button, Checkbox, Row, Col, message } from 'antd';
-import { OuterWrapper } from './styles';
+import { OuterWrapper } from '../../styles/styles';
 import AuthAPI from '../../api/auth';
 import { AppContext } from '../../components/App/context';
 import { inputRules } from '../../components/accounts/validator';
