@@ -66,7 +66,7 @@ const CreateBoard = (props) => {
             Modal.warning({
               content: '제목과 내용을 입력해 주세요.'
             })
-          }
+        }
 
         const onCancel = (e) => {
             state.modal.cancel = true;

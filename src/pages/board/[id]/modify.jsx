@@ -11,8 +11,6 @@ import WriteBoardForm from '../../../components/Board/WriteBoardForm';
 
 const EditBoard = (props) => {
 
-    // CONFIG.LOG("게시물 수정 props", props.props.board.body);
-
     return useObserver(() => {
 
         const router = useRouter();
@@ -33,17 +31,28 @@ const EditBoard = (props) => {
         const onSubmitForm = (e) => {
             e.preventDefault();
 
-            const formData = {
-                id: state.id,
-                writer: state.writer,
-                title: state.title,
-                contents: state.contents,
+            if (state.title.trim() == '' || state.contents.trim() == '') {
+                warning();
+            } else {
+                const formData = {
+                    id: state.id,
+                    writer: state.writer,
+                    title: state.title,
+                    contents: state.contents,
+                }
+    
+                const boardEditRes = async() => await BoardAPI.edit(formData);
+                boardEditRes();
+    
+                router.replace('/board/[id]', `/board/${state.id}`);
             }
 
-            const boardEditRes = async() => await BoardAPI.edit(formData);
-            boardEditRes();
+        }
 
-            router.replace('/board/[id]', `/board/${state.id}`);
+        const warning = () => {
+            Modal.warning({
+              content: '제목과 내용을 입력해 주세요.'
+            })
         }
 
         const onCancel = () => {
