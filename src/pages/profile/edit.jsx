@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Upload, Input } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import { useObserver } from 'mobx-react';
 import { useRouter } from 'next/router';
 import UserAPI from '../../api/user';
 import { Cookies } from 'react-cookie';
+import ChangePassModal from '../../components/profile/edit/ChanagePassModal';
+const cookies = new Cookies();
 
 const formItemLayout = {
   labelCol: {
@@ -26,23 +28,41 @@ const normFile = (e) => {
 };
 
 const EditProfile = ({ profile }) => {
+  const [profileT, setProfileT] = useState(null);
+  const [visible, setVisible] = useState(false);
+  const [form] = Form.useForm();
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!profileT) {
+        const response = await UserAPI.get({ id: cookies.get('id') });
+        setProfileT(response.body);
+      }
+    };
+
+    fetchData();
+    form.setFieldsValue({
+      nickname: profileT?.nickname,
+      gitAddr: profileT?.gitAddr,
+      profileImg: profileT?.profileImg,
+      userId: profileT?.userId,
+    });
+  }, [profileT]);
   return useObserver(() => {
     const router = useRouter();
-
     const onFinish = (values) => {
       console.log('Received values of form: ', values);
     };
-
     return (
       <Form
+        form={form}
         name='validate_other'
         {...formItemLayout}
         onFinish={onFinish}
         initialValues={{
-          nickname: profile.nickname,
-          gitAddr: profile.gitAddr,
-          profileImg: profile.profileImg,
-          userId: profile.userId,
+          nickname: profileT?.nickname,
+          gitAddr: profileT?.gitAddr,
+          profileImg: profileT?.profileImg,
+          userId: profileT?.userId,
         }}
         onFieldsChange={(changedFields, allFields) => {
           console.log(
@@ -53,16 +73,14 @@ const EditProfile = ({ profile }) => {
         }}
       >
         <Form.Item label='아이디'>
-          <span className='ant-form-text'>{profile.userId}</span>
+          <span className='ant-form-text'>{profileT?.userId}</span>
         </Form.Item>
-        <Form.Item name='nickname' label='활동명'>
+        <Form.Item name='nickname' label='닉네임'>
           <Input />
         </Form.Item>
-
-        <Form.Item name='gitAddr' label='개인 URL'>
+        <Form.Item name='gitAddr' label='Git ID'>
           <Input />
         </Form.Item>
-
         <Form.Item name='profileImg' label='프로필 사진'>
           <Form.Item
             name='dragger'
@@ -93,27 +111,40 @@ const EditProfile = ({ profile }) => {
           <Button style={{ marginRight: '8px' }}>취소</Button>
           <Button
             style={{ marginRight: '8px' }}
-            onClick={() => {
-              router.push('/profile/password/edit');
-            }}
+            onClick={() => setVisible(true)}
           >
             비밀번호 수정
           </Button>
+
           <Button type='primary' htmlType='submit'>
             프로필 수정
           </Button>
+          <ChangePassModal
+            id={cookies.get('id')}
+            visible={visible}
+            setVisible={setVisible}
+          />
         </Form.Item>
       </Form>
     );
   });
 };
 
-EditProfile.getInitialProps = async () => {
-  const profileRes = await UserAPI.get({ id: 1 });
+// EditProfile.getInitialProps = async (ctx) => {
 
-  return {
-    profile: profileRes.body,
-  };
-};
+//   // Authorization: Bearer <token>
+
+//   let id = null;
+//   if (!ctx.req) {
+//     id = cookies.get('id');
+//   }
+//   console.log('cookies', id);
+
+//   const profileRes = await UserAPI.get({ id: 19 });
+
+//   return {
+//     profile: profileRes.body,
+//   };
+// };
 
 export default EditProfile;

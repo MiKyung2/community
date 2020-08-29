@@ -11,6 +11,13 @@ const SignUpSuccess = (props) => {
       <br />
       <br />
       로그인 하시면 홈페이지 내의 모든 서비스를 이용하실 수 있습니다.
+      <br />
+      <br />
+      <br />
+      <h3>
+        <span style={{ color: 'blue' }}>{router.query.email}</span>에서 동의 후
+        로그인 페이지로 이동해주세요 :)
+      </h3>
     </p>
   );
 
