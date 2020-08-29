@@ -1,13 +1,18 @@
 import { EditOutlined } from '@ant-design/icons';
-import { Button, Row, Table } from "antd";
+import { Button, Row, Table, Modal, Tabs } from "antd";
 import { useLocalStore, useObserver } from "mobx-react";
+import { toJS } from 'mobx';
 import { useRouter } from "next/router";
+import { useCookies } from 'react-cookie';
+
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import BoardAPI from "../../api/board";
 import SearchInput from "../../components/SearchInput";
 import { formatDateWithTooltip } from '../../utils/dateFormatter';
 import { numFormatter } from '../../utils/numFormatter';
+
+const { TabPane } = Tabs;
 
 const columns = [
   {
@@ -18,6 +23,13 @@ const columns = [
     title: "작성자",
     dataIndex: "writer",
     key: "writer",
+    render: writer => (
+      <span 
+        onClick={()=>console.log("작성자:", writer)}
+        style={{cursor: 'pointer'}}
+      >
+        {writer}
+      </span>)
   }, {
     title: "좋아요",
     dataIndex: "rowLike",
@@ -50,7 +62,7 @@ const columns = [
 const sortLists = [
   {
     id: 'sort_newest',
-    name: '최신순'
+    name: '최신순',
   },
   {
     id: 'sort_like',
@@ -69,14 +81,12 @@ const sortLists = [
 const BoardPage = (props) => {
   // CONFIG.LOG("boardpage props", props);
 
-  console.log(props.className)
-
   return useObserver(() => {
     const router = useRouter();
 
     const state = useLocalStore(() => {
       return {
-        dataSource: props.listByDate,
+        dataSource: props.listByDate.content,
         page: {
           currentPage: 1,
           gb: 'title',
@@ -84,8 +94,12 @@ const BoardPage = (props) => {
           size: 20,
           sort: "date",
           tablePage: 1,
-          total: 200
+          total: props.listByDate.totalElements
         },
+        modal: {
+          login: false
+        },
+        boardTitle: '자유게시판'
       };
     });
 
@@ -113,6 +127,7 @@ const BoardPage = (props) => {
       });
 
       state.dataSource = nextData.body.content;
+      state.page.total = nextData.body.totalElements ? nextData.body.totalElements : state.page.total;
     }
 
     const moveToFirstPage = () => {
@@ -121,7 +136,7 @@ const BoardPage = (props) => {
     }
 
     const onChangeSort = (selectedFilter) => {
-      const target = selectedFilter.target.id;
+      const target = selectedFilter;
 
       switch (target) {
         case 'sort_newest':
@@ -145,8 +160,8 @@ const BoardPage = (props) => {
           fetchListData();
           break;
         default:
-        // CONFIG.LOG("default-최신순?");
-        // console.error("filter error");
+        CONFIG.LOG("default-최신순?");
+        console.error("filter error");
       }
     }
 
@@ -159,30 +174,15 @@ const BoardPage = (props) => {
 
     // 필터&검색
     const onSearch = (searchTerm) => {
-      const { gb, keyword, sort } = searchTerm;
+    const {gb, keyword, sort} = searchTerm;
 
-      state.page.currentPage = 1;
-      state.page.gb = gb;
-      state.page.keyword = keyword;
-      state.page.sort = sort;
+    state.page.currentPage = 1;
+    state.page.tablePage = 1;
+    state.page.gb = gb ? gb : state.page.gb;
+    state.page.keyword = keyword ? keyword : state.page.keyword;
+    state.page.sort = sort ? sort : state.page.sort;
 
-      // const testFetch = async() => {
-      //   const { currentPage, keyword, gb, size, sort } = state.page;
-      //   const nextData = await BoardAPI.list({ 
-      //     currentPage,
-      //     keyword,
-      //     gb,
-      //     size,
-      //     sort
-      //    });
-
-      //   state.dataSource = nextData.body.content;
-      //   console.log("search data length", nextData.body.content);
-      //   state.page.total = nextData.body.content.length
-      // }
-      // testFetch();
-
-      fetchListData();
+    fetchListData();
 
     }
 
@@ -196,15 +196,29 @@ const BoardPage = (props) => {
     }
 
     // 새글쓰기로 이동
+    const [cookies, _, removeCookie] = useCookies(['token', 'id']);
+    
     const onClickNewPostBtn = () => {
-      router.push("/board/articles/create");
+      if(!cookies.token) {
+        state.modal.login = true;
+      } else {
+        router.push("/board/articles/create");
+      }
     };
+
+    const handleCancel_LoginModal = (e) => {
+      state.modal.login = false;
+    }
+
+    const handleOk_LoginModal = () => {
+      router.push('/accounts/signin');
+    }
 
     return (
       <div className={props.className}>
 
         <Row justify="space-between">
-          <h1>게시판 이름</h1>
+          <h1>{state.boardTitle}</h1>
 
           {/* "새글쓰기" 버튼 */}
           <Button className="new_post_btn" type="primary" onClick={onClickNewPostBtn}>
@@ -213,13 +227,25 @@ const BoardPage = (props) => {
           </Button>
         </Row>
 
-        <Row align="bottom" justify="space-between" className="filter_container">
-          {/* 좋아요순 | 댓글순 | 조회수순 */}
-          <ul className="filter">
+        {/* 로그인 메세지 */}
+        <Modal
+        visible={state.modal.login}
+        onOk={handleOk_LoginModal}
+        onCancel={handleCancel_LoginModal}
+        >
+          <p>
+            새글을 등록하려면 로그인 해주세요.<br/>
+            로그인 페이지로 이동하시겠습니까?
+          </p>
+        </Modal>
+
+        <Row align="top" justify="space-between" className="filter_container">
+          {/* 최신순 | 좋아요순 | 댓글순 | 조회수순 */}
+          <Tabs onChange={onChangeSort}>
             {sortLists && sortLists.map(list => (
-              <li key={list.id} id={list.id} onClick={onChangeSort}>{list.name}</li>
+              <TabPane tab={list.name} key={list.id} />
             ))}
-          </ul>
+          </Tabs>
 
           {/* 검색바 */}
           <SearchInput onSearch={onSearch} />
@@ -259,7 +285,7 @@ export const getStaticProps = async () => {
   // console.log(">> [server] : boardListByDate => ", boardListByDate);
   return {
     props: {
-      listByDate: boardListByDate.body.content,
+      listByDate: boardListByDate.body,
     },
   };
 };

@@ -9,7 +9,9 @@ const { Search } = Input;
 
 
 
-const SearchInput = ({ onSearch }) => {
+const SearchInput = (props) => {
+
+  const { onSearch } = props;
 
   return useObserver(() => {
 
@@ -82,7 +84,7 @@ const SearchInput = ({ onSearch }) => {
     );
 
     return (
-      <div>
+      <div className={props.className}>
         <Dropdown overlay={menu}>
           <a className="ant-dropdown-link">
             {filterName()}
@@ -94,6 +96,8 @@ const SearchInput = ({ onSearch }) => {
           onSearch={onSubmit} 
           onClick={(e) => e.target.value=""}
           enterButton 
+          maxLength="255"
+          className="input"
         />
       </div>
     );
@@ -101,4 +105,12 @@ const SearchInput = ({ onSearch }) => {
 };
 
 export default styled(SearchInput)`
+  display: flex;
+  flex-direction: column;
+  & {
+    .input {
+      /* border: 1px solid blue; */
+      width: 300px;
+    }
+  }
 `;
