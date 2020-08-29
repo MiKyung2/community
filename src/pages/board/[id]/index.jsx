@@ -83,7 +83,8 @@ const Board = (props) => {
         state.events.action = "liked";
         state.events.like = state.events.like + 1;
       } else {
-        state.modal.login = true;
+        // state.modal.login = true;
+        return;
       }
     };
 
@@ -93,7 +94,8 @@ const Board = (props) => {
         state.events.action = "disliked";
         state.events.dislike = state.events.dislike + 1;
       } else {
-        state.modal.login = true;
+        // state.modal.login = true;
+        return;
       }
     };
 
@@ -172,7 +174,7 @@ const Board = (props) => {
 
 
         {/* 로그인 메세지 */}
-        <Modal
+        {/* <Modal
           visible={state.modal.login}
           onOk={handleOk_LoginModal}
           onCancel={handleCancel_LoginModal}
@@ -181,7 +183,7 @@ const Board = (props) => {
               로그인이 필요한 기능입니다.
               로그인 페이지로 이동하시겠습니까?
             </p>
-        </Modal>
+        </Modal> */}
 
         {/* 삭제 확인 메세지 */}
         <Modal
