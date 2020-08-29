@@ -23,7 +23,7 @@ const dispatch = ($) => {
 
   const logout = () => {
     $.state.user.token = null;
-    $.state.user.userId = "";
+    $.state.user.userId = '';
     $.state.user.id = 0;
   };
 

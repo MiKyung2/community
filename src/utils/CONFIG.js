@@ -1,11 +1,11 @@
-import getConfig from "next/config";
+import getConfig from 'next/config';
 
 const { publicRuntimeConfig } = getConfig();
 
 const CONFIG = (() => {
-  let API_BASE_URL = "https://toyproject.okky.kro.kr:8443";
-  const API_VERSION = "v1";
-  const IMAGE_BASE_URL = "";
+  let API_BASE_URL = 'https://toyproject.okky.kro.kr:8443';
+  const API_VERSION = 'v1';
+  const IMAGE_BASE_URL = '';
 
   let NODE_ENV;
   let LOG = (value) => {
@@ -13,25 +13,25 @@ const CONFIG = (() => {
   };
 
   switch (publicRuntimeConfig.env) {
-    case "development":
-      NODE_ENV = "development";
+    case 'development':
+      NODE_ENV = 'development';
       break;
 
-    case "test":
-      NODE_ENV = "test";
+    case 'test':
+      NODE_ENV = 'test';
       break;
 
-    case "debug":
-      NODE_ENV = "debug";
+    case 'debug':
+      NODE_ENV = 'debug';
       break;
 
-    case "production":
+    case 'production':
     default:
       LOG = (value) => {};
-      NODE_ENV = "production";
+      NODE_ENV = 'production';
   }
 
-  API_BASE_URL = API_BASE_URL + "/" + API_VERSION + "/api";
+  API_BASE_URL = API_BASE_URL + '/' + API_VERSION + '/api';
 
   return {
     API_BASE_URL,

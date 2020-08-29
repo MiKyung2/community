@@ -1,17 +1,20 @@
 import axios from 'axios';
 import AxiosWrapper from './axiosWrapper';
-import CONFIG from "../utils/CONFIG";
+import CONFIG from '../utils/CONFIG';
 
 const AuthAPI = {
   signup: async (payload) => {
     try {
-      const res = await AxiosWrapper.post('/user', {
-        nickname: payload.value.nickname,
-        password: payload.value.password1,
-        userId: payload.value.email,
-        email: payload.value.email,
-      });
-
+      const res = await axios.post(
+        'https://toyproject.okky.kro.kr:8443/v1/api/user',
+        {
+          nickname: payload.value.nickname,
+          password: payload.value.password1,
+          userId: payload.value.email,
+          email: payload.value.email,
+        },
+      );
+      console.log(res);
       return res;
     } catch (error) {
       throw error;
@@ -19,13 +22,24 @@ const AuthAPI = {
   },
 
   login: async (payload) => {
-    return await axios.post(
-      `${CONFIG.API_BASE_URL}/user/login`,
-      {
-        id: payload.value.email,
-        password: payload.value.password,
-      },
-    );
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+      const res = await axios.post(
+        'https://toyproject.okky.kro.kr:8443/v1/api/user/login',
+        {
+          id: payload.value.email,
+          password: payload.value.password,
+        },
+        config,
+      );
+      return res;
+    } catch (error) {
+      return '500';
+    }
   },
   logout: async (payload) => {
     try {
@@ -35,6 +49,16 @@ const AuthAPI = {
       return res;
     } catch (error) {
       throw error;
+    }
+  },
+  check_email: async (email) => {
+    try {
+      const res = await axios.get(
+        `https://toyproject.okky.kro.kr:8443/v1/api/user/check/${email}`,
+      );
+      return res;
+    } catch (error) {
+      return '500';
     }
   },
   find_email: async () => {},
@@ -49,6 +73,57 @@ const AuthAPI = {
       return res;
     } catch (error) {
       console.log(error);
+      return '500';
+    }
+  },
+  change_pass: async (id, newPassword) => {
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+      const data = {
+        id,
+        newPassword,
+      };
+      const res = await axios.put(
+        `https://toyproject.okky.kro.kr:8443/v1/api/user/password`,
+        data,
+        config,
+      );
+      return res;
+    } catch (error) {
+      console.log(error);
+      return '500';
+    }
+  },
+  edit_user_info: async () => {
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+
+      const body = new FormData();
+      body.append(
+        'file',
+        'https://portal-file.ewr1.vultrobjects.com/sbinha123%40gmail.com-profile.jpg',
+      );
+      body.append('gitAddr', 'sbin0819');
+      body.append('id', '30');
+      body.append('nickname', '하철수');
+      body.append('userId', 'sbinha123@gmail.com');
+
+      const res = await axios.put(
+        `https://toyproject.okky.kro.kr:8443/v1/api/user`,
+        body,
+        config,
+      );
+      console.log('유저 인포 수정 어스', res);
+      return res;
+    } catch (error) {
       return '500';
     }
   },

@@ -1,5 +1,25 @@
 import React from 'react';
 import { Modal, Card, Input, message, Button } from 'antd';
+import ReactMarkdown from 'react-markdown';
+import { policy } from './policy';
+
+function TableCellBlock(props) {
+  const style = {
+    border: '1px solid #ccc',
+    textAlign: props.align ? props.align : 'center',
+    padding: 5,
+  };
+
+  if (props.isHeader) {
+    style.height = '50px';
+  } else {
+    style.textAlign = 'left';
+    style.height = '150px';
+    style.width = '33%';
+  }
+
+  return <td style={style}>{props.children}</td>;
+}
 
 const PolicyModal = ({ visible, setVisible }) => {
   const handleOk = () => {
@@ -8,7 +28,7 @@ const PolicyModal = ({ visible, setVisible }) => {
   return (
     <Modal
       visible={visible}
-      style={{ top: '100px' }}
+      style={{ top: 80, width: 700, height: 'auto', overflow: 'scroll' }}
       onOk={handleOk}
       closable={false}
       footer={[
@@ -17,7 +37,17 @@ const PolicyModal = ({ visible, setVisible }) => {
         </Button>,
       ]}
     >
-      <Card>정책입니다.</Card>
+      <Card
+        title='개인정보취급방침'
+        style={{ height: 550, overflow: 'scroll' }}
+      >
+        <ReactMarkdown
+          source={policy}
+          skipHtml={false}
+          escapeHtml={false}
+          renderers={{ tableCell: TableCellBlock }}
+        />
+      </Card>
     </Modal>
   );
 };
