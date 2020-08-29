@@ -22,7 +22,7 @@ const CreateBoard = (props) => {
                 title: '',
                 contents: '',
                 modal: {
-                    visible: false
+                    cancel: false
                 },
                 user: []
             }
@@ -38,28 +38,38 @@ const CreateBoard = (props) => {
             state.user = userInfo.body;
           };
           getUserInfo();
+          
         }, [])
 
 
 
-        const onSubmitForm = (e) => {
+        const onSubmitForm = async(e) => {
             e.preventDefault();
-
-            const formData = {
-                // id: 1,
-                writer: state.user.nickname ? state.user.nickname : "unknown",
-                // select: state.select,
-                title: state.title,
-                contents: state.contents,
+        
+            if (state.title.trim() == '' || state.contents.trim() == '') {
+                warning();
+            } else {
+                const formData = {
+                    writer: state.user.nickname ? state.user.nickname : "unknown",
+                    // select: state.select,
+                    title: state.title,
+                    contents: state.contents,
+                }
+                await BoardAPI.write(formData);
+                router.push('/board', `/board`);
             }
 
-            BoardAPI.write(formData);
 
-            router.push('/board', `/board`);
         }
 
+        const warning = () => {
+            Modal.warning({
+              content: '제목과 내용을 입력해 주세요.'
+            })
+          }
+
         const onCancel = (e) => {
-            state.modal.visible = true;
+            state.modal.cancel = true;
         }	
 
         const handleOk = () => {
@@ -67,7 +77,7 @@ const CreateBoard = (props) => {
         }
 
         const handleCancel = () => {
-            state.modal.visible = false;
+            state.modal.cancel = false;
         }
 
     
@@ -105,7 +115,7 @@ const CreateBoard = (props) => {
 
         {/* 취소 확인 메세지 */}
         <Modal 
-        visible={state.modal.visible}
+        visible={state.modal.cancel}
         onOk={handleOk}
         onCancel={handleCancel}
         >
