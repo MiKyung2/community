@@ -1,10 +1,14 @@
 import { useLocalStore, useObserver } from 'mobx-react';
+import {toJS} from 'mobx';
 import React from 'react';
 // import {comment_dummy} from '../comment_dummy';
 import EachComment from './EachComment';
 
 
 const CommentList = (props) => {
+
+  const { comments, deleteComment } = props;
+
 
   return useObserver(() => {
 
@@ -13,14 +17,18 @@ const CommentList = (props) => {
         likes: 0,
         dislikes: 0,
         action: null,
-        comments: props.comments
+        comments
       };
     });
+
+    const updateComments = (commentToDelete) => {
+      deleteComment(commentToDelete);
+    }
 
     return (
       <>
         {state.comments && state.comments.map(comment => (
-          <EachComment key={comment.id} data={comment} />
+          <EachComment key={comment.id} data={comment} updateComments={updateComments} />
         ))}
       </>
     )
