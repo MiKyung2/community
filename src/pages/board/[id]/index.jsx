@@ -27,9 +27,13 @@ const Board = (props) => {
     const state = useLocalStore(() => {
       return {
         data: boardProps.board.body,
+        events: {
+          like: boardProps.board.body.rowLike,
+          dislike: boardProps.board.body.rowDisLike,
+          action: '',
+        },
         comments: boardProps.comments.body,
         visible: false,
-        action: null,
         writer: boardProps.board.body.writer,
         user: '',
         login: false
@@ -65,12 +69,14 @@ const Board = (props) => {
 
     const onClickLike = async () => {
       await BoardAPI.event({ id: queryId, itemGb: "L" });
-      state.action = "liked";
+      state.events.action = "liked";
+      state.events.like = state.events.like + 1;
     };
 
     const onClickDislike = async () => {
       await BoardAPI.event({ id: queryId, itemGb: "D" });
-      state.action = "disliked";
+      state.events.action = "disliked";
+      state.events.dislike = state.events.dislike + 1;
     };
 
     const onClickEdit = () => {
@@ -113,8 +119,8 @@ const Board = (props) => {
             {/* 해당 게시글 조회수 & 댓글수 & 좋아요수 */}
             <Row>
               <span className="main_container_top_left "><EyeOutlined /> {numFormatter(state.data.viewCount)}</span>
-              <span className="main_container_top_left event" onClick={onClickLike}>{state.action === 'liked' ? <LikeFilled /> : <LikeOutlined />} {numFormatter(state.data.rowLike)}</span>
-              <span className="main_container_top_left event" onClick={onClickDislike}>{state.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />} {numFormatter(state.data.rowDisLike)}</span>
+              <span className="main_container_top_left event" onClick={onClickLike}>{state.events.action === 'liked' ? <LikeFilled /> : <LikeOutlined />} {numFormatter(state.events.like)}</span>
+              <span className="main_container_top_left event" onClick={onClickDislike}>{state.events.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />} {numFormatter(state.events.dislike)}</span>
               {/* <span className="main_container_top_left "><CommentOutlined /> {state.data.commentCnt}</span> */}
             </Row>
 
