@@ -1,5 +1,5 @@
 import { EditOutlined } from '@ant-design/icons';
-import { Button, Row, Table, Modal, Tabs } from "antd";
+import { Button, Row, Table, Modal, Tabs, Tooltip } from "antd";
 import { useLocalStore, useObserver } from "mobx-react";
 import { toJS } from 'mobx';
 import { useRouter } from "next/router";
@@ -13,50 +13,6 @@ import { formatDateWithTooltip } from '../../utils/dateFormatter';
 import { numFormatter } from '../../utils/numFormatter';
 
 const { TabPane } = Tabs;
-
-const columns = [
-  {
-    title: "제목",
-    dataIndex: "title",
-    key: "title",
-  }, {
-    title: "작성자",
-    dataIndex: "writer",
-    key: "writer",
-    render: writer => (
-      <span 
-        onClick={()=>console.log("작성자:", writer)}
-        style={{cursor: 'pointer'}}
-      >
-        {writer}
-      </span>)
-  }, {
-    title: "좋아요",
-    dataIndex: "rowLike",
-    key: "rowLike",
-    render: like => <span>{numFormatter(like)}</span>
-  }, {
-    title: "조회수",
-    dataIndex: "viewCount",
-    key: "viewCount",
-    render: view => <span>{numFormatter(view)}</span>
-  }, {
-    title: "댓글수",
-    dataIndex: "commentCnt",
-    key: "commentCnt",
-    render: comment => <span>{numFormatter(comment)}</span>
-  },
-  {
-    title: "날짜",
-    dataIndex: "createdDate",
-    key: "createdDate",
-    render: date => (
-      <span>
-        {formatDateWithTooltip(date)}
-      </span>
-    )
-  },
-];
 
 // 최신순 | 좋아요순 | 댓글순 | 조회수순
 const sortLists = [
@@ -79,7 +35,7 @@ const sortLists = [
 ];
 
 const BoardPage = (props) => {
-  // CONFIG.LOG("boardpage props", props);
+  // console.log("boardpage props", props);
 
   return useObserver(() => {
     const router = useRouter();
@@ -165,6 +121,73 @@ const BoardPage = (props) => {
       }
     }
 
+    // 제목 클릭 - 게시글로 이동 || 작성자 클릭 - 작성자 프로필로 이동
+    const onRowClick = (record, rowIndex) => {
+      return {
+        onClick: (e) => {
+          const target = e.target.id;
+          if(target === 'title') {
+            moveToBoardPost(record.id);
+          } else if (target === 'writer') {
+            moveToWriterProfile();
+          } else {
+            return;
+          }
+        }
+      }
+    }
+
+    const moveToBoardPost = (boardId) => {
+      router.push('/board/[id]', `/board/${boardId}`);
+    }
+
+    const moveToWriterProfile = () => {
+      // 작성자 아이디로 변수처리 필요!!
+      router.push(`/profile/20`);
+    }
+
+    const boardColumns = [
+      {
+        title: "제목",
+        dataIndex: "title",
+        key: "title",
+        render: title => <span id="title" className="hover">{title}</span>
+      }, {
+        title: "작성자",
+        dataIndex: "writer",
+        key: "writer",
+        render: writer => (
+          <Tooltip title="프로필 이동">
+          <span id="writer" className="hover">{writer}</span>
+          </Tooltip>)
+      }, {
+        title: "좋아요",
+        dataIndex: "rowLike",
+        key: "rowLike",
+        render: like => <span>{numFormatter(like)}</span>
+      }, {
+        title: "조회수",
+        dataIndex: "viewCount",
+        key: "viewCount",
+        render: view => <span>{numFormatter(view)}</span>
+      }, {
+        title: "댓글수",
+        dataIndex: "commentCnt",
+        key: "commentCnt",
+        render: comment => <span>{numFormatter(comment)}</span>
+      },
+      {
+        title: "날짜",
+        dataIndex: "createdDate",
+        key: "createdDate",
+        render: date => (
+          <span>
+            {formatDateWithTooltip(date)}
+          </span>
+        )
+      },
+    ];
+
     // 페이지 변경
     const onChangePage = (page, pageSize) => {
       state.page.tablePage = page;
@@ -186,16 +209,7 @@ const BoardPage = (props) => {
 
     }
 
-    // 해당 게시물 이동
-    const onClickTableRow = (record, rowIndex) => {
-      return {
-        onClick: () => {
-          router.push('/board/[id]', `/board/${record.id}`);
-        }
-      }
-    }
-
-    // 새글쓰기로 이동
+    // 유저 확인 & 새글쓰기로 이동
     const [cookies, _, removeCookie] = useCookies(['token', 'id']);
     
     const onClickNewPostBtn = () => {
@@ -253,9 +267,9 @@ const BoardPage = (props) => {
 
         {/* 테이블 & 리스트 */}
         <Table
-          columns={columns}
+          columns={boardColumns}
           dataSource={state.dataSource}
-          onRow={onClickTableRow}
+          onRow={onRowClick}
           pagination={{
             pageSize: state.page.size,
             total: state.page.total,
@@ -298,15 +312,10 @@ export default styled(BoardPage)`
     .filter_container {
       margin-bottom: 20px;
     }
-    .filter {
-      display: flex;
-      > li {
-        margin-right: 10px;
-        font-size: 14px;
-        &:hover {
-          text-decoration: underline;
-          cursor: pointer;
-        }
+    .hover {
+      &:hover {
+        cursor: pointer;
+        color: #1890ff;
       }
     }
   }
