@@ -19,14 +19,14 @@ const ProfileList = (props) => {
               <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
             }
             title={item.title}
-            description={item.description}
+            description={item.contents}
           />
           <div 
             onClick={(e) => { 
               e.preventDefault() ;
               router.push(`/profile/${item.user.id}`); 
             }}
-          >{item.user.nickname}</div>
+          >{item.writer}</div>
         </List.Item>
       )}
     >
