@@ -107,21 +107,21 @@ const AuthAPI = {
       };
 
       const body = new FormData();
-      body.set('file', file);
-      body.set('gitAddr', gitAddr);
-      body.set('id', id);
-      body.set('nickname', nickname);
-      body.set('userId', userId);
+      body.append(
+        'file',
+        'https://portal-file.ewr1.vultrobjects.com/sbinha123%40gmail.com-profile.jpg',
+      );
+      body.append('gitAddr', 'sbin0819');
+      body.append('id', '30');
+      body.append('nickname', '하철수');
+      body.append('userId', 'sbinha123@gmail.com');
 
-      const data = {
-        id: id,
-        newPassword: password,
-      };
       const res = await axios.put(
         `https://toyproject.okky.kro.kr:8443/v1/api/user`,
-        data,
+        body,
         config,
       );
+      console.log('유저 인포 수정 어스', res);
       return res;
     } catch (error) {
       return '500';
