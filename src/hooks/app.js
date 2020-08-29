@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useLocalStore } from 'mobx-react-lite';
 import App from 'next/app';
 
-
 const initializer = (props) => {
   const state = {
     status: { loading: false },
@@ -12,7 +11,6 @@ const initializer = (props) => {
       userId: props.init?.user?.userId,
     },
   };
-
   return state;
 };
 

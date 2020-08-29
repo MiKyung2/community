@@ -27,7 +27,7 @@ const receiveColumns = [
 const Notes = (props) => {
   return useObserver(() => {
     const state = useLocalStore(() => {
-      // console.log("content : ", props.receiveList.content);
+      console.log("content : ", props.receiveList.content);
       return {
         loading: false,
         error: false,
@@ -52,6 +52,7 @@ const Notes = (props) => {
         },
       };
     });
+    console.log("list : ", toJS(state));
     // console.log("list props :", toJS(props));
     // console.log("list state :", toJS(state));
     const onDelete = () => {
@@ -251,7 +252,6 @@ Notes.getInitialProps = async (ctx) => {
   const token = ck.token ?? "";
   const decodedToken = jwt.decode(token.replace("Bearer ", ""));
   const user = decodedToken?.userId ?? "";
-  
 
   try {
     const receiveList = await NoteAPI.receiveList({ userId: user, page: 1 });
