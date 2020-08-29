@@ -15,8 +15,8 @@ import jwt from "jsonwebtoken";
 observerBatching();
 
 function App(props) {
-  const app = useApp(props);
   return useObserver(() => {
+    const app = useApp(props);
     return (
       <>
         <GlobalStyle />
@@ -68,6 +68,7 @@ App.getInitialProps = async (appContext) => {
 
   const token = ck.token ?? "";
   const decodedToken = jwt.decode(token.replace("Bearer ", ""));
+  const userId = decodedToken?.userId ?? "";
 
   return {
     ...nextAppProps,
@@ -76,7 +77,7 @@ App.getInitialProps = async (appContext) => {
     init: {
       user: {
         token,
-        userId: decodedToken.userId,
+        userId,
         id: 20,
       },
     },

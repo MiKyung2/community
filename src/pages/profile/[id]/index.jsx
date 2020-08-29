@@ -49,10 +49,12 @@ const ProfilePage = (props) => {
     };
 
     React.useEffect(() => {
+      if (!state.follow.open) return;
+
       if (state.follow.tabActive === "following") {
         (async () => {
           try {
-            const followingListRes = await UserAPI.followingList({ userId: id });
+            const followingListRes = await UserAPI.followingList({ userId: router.query.id });
             state.follow.list = followingListRes.following_users;
           } catch(error){
             console.error(error);
@@ -61,20 +63,20 @@ const ProfilePage = (props) => {
       } else if (state.follow.tabActive === "followers") {
         (async () => {
           try {
-            const followerListRes = await UserAPI.followerList({ userId: id });
+            const followerListRes = await UserAPI.followerList({ userId: router.query.id });
             state.follow.list = followerListRes.followed_users;
           } catch(error){
             console.error(error);
           }
         })();
       }
-    }, [state.follow.tabActive]);
+    }, [state.follow.open, state.follow.tabActive]);
 
     return (
       <div className={props.className}>
         <Modal
-          title="Basic Modal"
           visible={state.follow.open}
+          onCancel={() => { state.follow.open = false; }}
           footer={null}
         >
           <FollowTab
@@ -96,7 +98,10 @@ const ProfilePage = (props) => {
           onUpdate={() => {
             getProfile();
           }}
-          onClickFollow={(category) => { console.log("D" ); state.follow.open = true; }}
+          onClickFollow={(category) => { 
+            state.follow.open = true;
+            state.follow.tabActive = category;
+          }}
         />
 
         {/* 게시물 탭 */}

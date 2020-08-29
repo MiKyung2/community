@@ -1,6 +1,7 @@
 import { Tabs } from "antd";
 import FollowList from "./FollowList";
 import { useObserver } from "mobx-react";
+import { toJS } from "mobx";
 
 const { TabPane } = Tabs;
 
@@ -8,7 +9,7 @@ const FollowTab = ({ data, tabActive, onChange }) => {
   return useObserver(() => {
     return (
       <div>
-        <Tabs defaultActiveKey={tabActive} onChange={onChange}>
+        <Tabs defaultActiveKey={tabActive} activeKey={tabActive} onChange={onChange}>
           <TabPane tab="팔로잉" key="following">
             <FollowList data={data} />
           </TabPane>

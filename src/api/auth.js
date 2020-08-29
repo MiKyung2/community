@@ -19,18 +19,13 @@ const AuthAPI = {
   },
 
   login: async (payload) => {
-    try {
-      const res = await axios.post(
-        `${CONFIG.API_BASE_URL}/user/login`,
-        {
-          id: payload.value.email,
-          password: payload.value.password,
-        },
-      );
-      return res;
-    } catch (error) {
-      return '500';
-    }
+    return await axios.post(
+      `${CONFIG.API_BASE_URL}/user/login`,
+      {
+        id: payload.value.email,
+        password: payload.value.password,
+      },
+    );
   },
   logout: async (payload) => {
     try {
