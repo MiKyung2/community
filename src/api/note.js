@@ -3,8 +3,7 @@ import AxiosWrapper from "./axiosWrapper";
 const NoteAPI = {
   sendList: async (payload) => {
     try {
-      const res = await AxiosWrapper.get(`note/send?currentPage=${payload.page}&userId=${payload.userId}&size=20&gb=title`);
-      console.log("res : ", JSON.stringify(res, null, 3));
+      const res = await AxiosWrapper.get(`note/send?currentPage=${payload.page}&userId=${payload.userId}&size=${payload.pageSize}&gb=title`);
       res.body.content.map((v) => (v.key = v.id));
       return res.body;
     } catch (error) {
@@ -14,9 +13,8 @@ const NoteAPI = {
   receiveList: async (payload) => {
     try {
       const res = await AxiosWrapper.get(
-        `note/receive?currentPage=${payload.page}&userId=${payload.userId}&size=20&gb=title`
+        `note/receive?currentPage=${payload.page}&userId=${payload.userId}&size=${payload.pageSize}&gb=title`
       );
-      console.log("res : ", JSON.stringify(res, null, 3));
       res.body.content.map((v) => (v.key = v.id));
       return res.body;
     } catch (error) {

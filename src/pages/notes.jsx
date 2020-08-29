@@ -6,6 +6,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import cookie from 'cookie';
 import jwt from "jsonwebtoken";
 import { toJS } from "mobx";
+import { AppContext } from "../components/App/context";
 
 const { Option } = Select;
 const { Search } = Input;
@@ -26,18 +27,19 @@ const receiveColumns = [
 
 const Notes = (props) => {
   return useObserver(() => {
+    const global = React.useContext(AppContext);
     const state = useLocalStore(() => {
-      console.log("content : ", props.receiveList.content);
       return {
         loading: false,
         error: false,
         tabActive: "R",
+        pageSize: 10,
         receive: {
           page: 1,
-          totalPage: props.receiveList.totalPages,
-          list: props.receiveList.content || [],
+          totalPage: props.receive?.totalPages || 1,
+          list: props.receive?.content || [],
         },
-        send: {
+        sendnote: {
           page: 1,
           totalPage: 1,
           list: [],
@@ -52,9 +54,7 @@ const Notes = (props) => {
         },
       };
     });
-    console.log("list : ", toJS(state));
-    // console.log("list props :", toJS(props));
-    // console.log("list state :", toJS(state));
+
     const onDelete = () => {
       state.delete.loading = true;
 
@@ -88,26 +88,25 @@ const Notes = (props) => {
 
     const hasSelected = state.delete.selectedRowKeys.length > 0;
 
-    const getSendList = () => {
-      state.send.list = [];
-      (async () => {
-        try {
-          const res = await NoteAPI.sendList({ userId: global.state.user.userId, page: state.send.page });
-          // console.log("res : ", toJS(res));
-          // state.sendList = res;
-        } catch (error) {
-          state.error = true;
-        }
-      })();
+    const getSendList = async () => {
+      state.sendnote.list = [];
+      
+      try {
+        const res = await NoteAPI.sendList({ pageSize: state.pageSize, userId: global.state.user.userId, page: state.sendnote.page });
+        state.sendnote.list = res.content;
+        state.sendnote.totalPage = res.totalPages;
+      } catch (error) {
+        state.error = true;
+      }
     };
 
     const getReceiveList = () => {
       state.receive.list = [];
       (async () => {
         try {
-          const res = await NoteAPI.receiveList({ userId: global.state.user.userId, page: state.receive.page });
-          // console.log("res : ", toJS(res));
-          // state.receive = res;
+          const res = await NoteAPI.receiveList({ pageSize: state.pageSize, userId: global.state.user.userId, page: 2 });
+          state.receive.list = res.content;
+          state.receive.totalPage = res.totalPages;
         } catch (error) {
           state.error = true;
         }
@@ -115,8 +114,6 @@ const Notes = (props) => {
     };
 
     const getCurrentList = () => {
-      state.delete.selectedRowKeys = [];
-
       switch (state.tabActive) {
         case "R":
           getReceiveList();
@@ -129,12 +126,15 @@ const Notes = (props) => {
 
     React.useEffect(() => {
       state.delete.selectedRowKeys = [];
-      // if (props.ssr) return;
       getCurrentList();
     }, [state.tabActive]);
 
     const onChangePage = (page, pageSize) => {
-      state.send.page = page;
+      if (state.tabActive === "S") {
+        state.send.page = page;
+      } else if (state.tabActive === "R") {
+        state.receive.page = page;
+      }
       getCurrentList();
     }
 
@@ -182,6 +182,7 @@ const Notes = (props) => {
         </div>
         <Tabs
           defaultActiveKey={state.tabActive}
+          activeKey={state.tabActive}
           onChange={(active) => {
             state.tabActive = active;
           }}
@@ -190,26 +191,7 @@ const Notes = (props) => {
             <Table
               rowSelection={rowSelection}
               columns={receiveColumns}
-              dataSource={state.receive.content}
-              expandable={{
-                expandedRowRender: record => <p style={{ marginLeft: "110px" }}>{record.contents}</p>,
-                expandRowByClick: true,
-              }}
-              onRow={(record, rowIndex) => {
-                return {
-                  onClick: event => { 
-                    console.log(`${rowIndex} : ${record.id}`)
-                  },
-                }
-              }}
-            />
-          </TabPane>
-          {/* {console.log("list : ", toJS(state.send))} */}
-          <TabPane tab="보낸 쪽지함" key="S">
-            <Table
-              rowSelection={rowSelection}
-              columns={sendColumns}
-              dataSource={state.send.list}
+              dataSource={state.receive.list}
               expandable={{
                 expandedRowRender: record => <p style={{ marginLeft: "110px" }}>{record.contents}</p>,
                 expandRowByClick: true,
@@ -222,10 +204,35 @@ const Notes = (props) => {
                 }
               }}
               pagination={{
-                pageSize: 20,
-                total: state.send.totalPage,
+                pageSize: state.pageSize,
+                total: state.receive.totalPage,
                 onChange: onChangePage,
-                current: state.send.page,
+                current: state.receive.page,
+              }}
+            />
+          </TabPane>
+          {console.log("list : ", toJS(state.sendnote))}
+          <TabPane tab="보낸 쪽지함" key="S">
+            <Table
+              rowSelection={rowSelection}
+              columns={sendColumns}
+              dataSource={state.sendnote.list}
+              expandable={{
+                expandedRowRender: record => <p style={{ marginLeft: "110px", whiteSpace: "pre" }}>{record.contents}</p>,
+                expandRowByClick: true,
+              }}
+              onRow={(record, rowIndex) => {
+                return {
+                  onClick: event => { 
+                    console.log(`${rowIndex} : ${record.id}`)
+                  },
+                }
+              }}
+              pagination={{
+                pageSize: state.pageSize,
+                total: state.sendnote.total,
+                onChange: onChangePage,
+                current: state.sendnote.page,
               }}
             />
           </TabPane>
@@ -254,9 +261,9 @@ Notes.getInitialProps = async (ctx) => {
   const user = decodedToken?.userId ?? "";
 
   try {
-    const receiveList = await NoteAPI.receiveList({ userId: user, page: 1 });
+    const receive = await NoteAPI.receiveList({ userId: user, page: 1, pageSize: 5});
     return {
-      receiveList,
+      receive,
     };
   } catch (error) {
     console.error("error : ", error);

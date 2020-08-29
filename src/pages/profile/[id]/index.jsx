@@ -134,7 +134,7 @@ const ProfilePage = (props) => {
 
 ProfilePage.getInitialProps = async (ctx) => {
   const profileRes = await UserAPI.get({ id: ctx.query.id });
-
+  
   return {
     profile: profileRes.body,
     theLatestDate: [
