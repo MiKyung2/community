@@ -26,8 +26,8 @@ const Board = (props) => {
     const queryId = router.query.id;
     const boardProps = props.props;
 
-    const global = React.useContext(AppContext);
-    console.log("global", toJS(global.state));
+    // const global = React.useContext(AppContext);
+    // console.log("global", toJS(global.state));
 
     const state = useLocalStore(() => {
       return {
