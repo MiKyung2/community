@@ -1,5 +1,5 @@
 import { DislikeFilled, DislikeOutlined, EyeOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons';
-import { Button, Modal, Row } from 'antd';
+import { Button, Modal, Row, Tooltip } from 'antd';
 import { useLocalStore, useObserver } from 'mobx-react';
 import {toJS} from 'mobx';
 import { useRouter } from 'next/router';
@@ -83,7 +83,6 @@ const Board = (props) => {
         state.events.action = "liked";
         state.events.like = state.events.like + 1;
       } else {
-        // state.modal.login = true;
         return;
       }
     };
@@ -94,7 +93,6 @@ const Board = (props) => {
         state.events.action = "disliked";
         state.events.dislike = state.events.dislike + 1;
       } else {
-        // state.modal.login = true;
         return;
       }
     };
@@ -120,13 +118,6 @@ const Board = (props) => {
       state.modal.delete = false;
     }
     
-    const handleCancel_LoginModal = () => {
-      state.modal.login = false;
-    }
-    const handleOk_LoginModal = () => {
-      router.push('/accounts/signin');
-    }
-
     return (
       <div className={props.className}>
         <Row justify="space-between" className="header_top">
@@ -146,8 +137,12 @@ const Board = (props) => {
             {/* 해당 게시글 조회수 & 댓글수 & 좋아요수 */}
             <Row>
               <span className="main_container_top_left "><EyeOutlined /> {numFormatter(state.data.viewCount)}</span>
-              <span className="main_container_top_left event" onClick={onClickLike}>{state.events.action === 'liked' ? <LikeFilled /> : <LikeOutlined />} {numFormatter(state.events.like)}</span>
-              <span className="main_container_top_left event" onClick={onClickDislike}>{state.events.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />} {numFormatter(state.events.dislike)}</span>
+              <Tooltip title={state.login ? "좋아요" : "로그인 해주세요"}>
+                <span className="main_container_top_left event" onClick={onClickLike}>{state.events.action === 'liked' ? <LikeFilled /> : <LikeOutlined />} {numFormatter(state.events.like)}</span>
+              </Tooltip>
+              <Tooltip title={state.login ? "싫어요" : "로그인 해주세요"}>
+                <span className="main_container_top_left event" onClick={onClickDislike}>{state.events.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />} {numFormatter(state.events.dislike)}</span>
+              </Tooltip>
               {/* <span className="main_container_top_left "><CommentOutlined /> {state.data.commentCnt}</span> */}
             </Row>
 
@@ -171,19 +166,6 @@ const Board = (props) => {
           {/* <Comments queryId={queryId} data={state.comments} /> */}
           <Comments queryId={queryId} data={boardProps.comments.body} />
         </div>
-
-
-        {/* 로그인 메세지 */}
-        {/* <Modal
-          visible={state.modal.login}
-          onOk={handleOk_LoginModal}
-          onCancel={handleCancel_LoginModal}
-          >
-            <p>
-              로그인이 필요한 기능입니다.
-              로그인 페이지로 이동하시겠습니까?
-            </p>
-        </Modal> */}
 
         {/* 삭제 확인 메세지 */}
         <Modal

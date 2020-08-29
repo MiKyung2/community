@@ -30,10 +30,12 @@ const EachComment = (props) => {
           dislikes: 0
         },
         modal: {
-          visible: false
+          delete: false,
+          login: false
         },
         userData: [],
         user: '',
+        isWriter: false,
         login: false
       };
     });
@@ -53,62 +55,74 @@ const EachComment = (props) => {
         const userInfo = await UserAPI.get({id: cookies.id});    
         state.userData = userInfo.body;      
         state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
+        state.login = true;
       };
       getUserInfo();
     }, []);
 
     const setLogin = () => {
       if(state.comment.writer === state.user) {
-        state.login = true
+        state.isWriter = true
       } else {
-        state.login = false
+        state.isWriter = false
       }
     }
     setLogin();
 
-    const onLike = () => {
-      state.likes = 1;
-      state.dislikes = 0;
-      state.action = 'liked'
+    const onLike = async() => {
+      if (state.login) {
+        await CommentAPI.event({ id: data.id, itemGb: "L" });
+        state.action = 'liked'
+        state.comment.likes = state.comment.likes + 1;
+        // state.comment.dislikes = state.comment.dislikes - 1;
+      } else {
+        return;
+      }
     };
 
-    const onDislike = () => {
-      state.likes = 0;
-      state.dislikes = 1;
-      state.action = 'disliked'
+    const onDislike = async() => {
+      if (state.login) {
+        await CommentAPI.event({ id: data.id, itemGb: "D" });
+        state.action = 'disliked'
+        state.comment.dislikes = state.comment.dislikes + 1;
+        // state.comment.likes = state.comment.likes - 1;
+      } else {
+        return;
+      }
     };
 
     const onDelete = () => {
-      state.modal.visible = true;
+      state.modal.delete = true;
     };
 
     const handleOk_delete = () => {
       const deleteComment = async () => await CommentAPI.delete({ id: data.id });
       deleteComment();
-      state.modal.visible = false;
+      state.modal.delete = false;
       const currentCommentId = data.id;
       updateComments(currentCommentId);
     }
 
     const handleCancel_delete = () => {
-      state.modal.visible = false;
+      state.modal.delete = false;
     }
+
 
     const actions = [
       <span key="comment-basic-like">
-        <Tooltip title="Like">
+        <Tooltip title={state.login ? "좋아요" : "로그인 해주세요"}>
           <span onClick={onLike}>{state.action === 'liked' ? <LikeFilled /> : <LikeOutlined />}</span>
         </Tooltip>
         <span className="comment-action">{state.comment.likes}</span>
       </span>,
       <span key="comment-basic-dislike">
-        <Tooltip title="Dislike">
+        <Tooltip title={state.login ? "싫어요" : "로그인 해주세요"}>
           <span onClick={onDislike}>{state.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />}</span>
         </Tooltip>
         <span className="comment-action">{state.comment.dislikes}</span>
       </span>,
       // <span key="comment-basic-reply-to">Reply to</span>,
-      state.login ? <span key="comment-basic-delete-btn" onClick={onDelete}>삭제</span> : null
+      state.isWriter ? <span key="comment-basic-delete-btn" onClick={onDelete}>삭제</span> : null
     ];
 
 
@@ -135,9 +149,10 @@ const EachComment = (props) => {
             </Tooltip>
           }
         />
+
         {/* 삭제 확인 메세지 */}
         <Modal
-          visible={state.modal.visible}
+          visible={state.modal.delete}
           onOk={handleOk_delete}
           onCancel={handleCancel_delete}
         >
