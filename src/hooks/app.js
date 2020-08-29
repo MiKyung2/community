@@ -7,11 +7,9 @@ const initializer = (props) => {
   const state = {
     status: { loading: false },
     user: {
-      id: '8',
-      email: '',
-      name: '',
-      token: '',
-      level: '',
+      id: props.init?.user?.id,
+      token: props.init?.user?.token,
+      userId: props.init?.user?.userId,
     },
   };
 
@@ -22,10 +20,13 @@ const dispatch = ($) => {
   const login = (data) => {
     $.state.user.id = data?.userPkId;
     $.state.user.token = data?.token;
+    $.state.user.usreId = data?.userId;
   };
 
   const logout = () => {
     $.state.user.token = null;
+    $.state.user.userId = "";
+    $.state.user.id = 0;
   };
 
   return {

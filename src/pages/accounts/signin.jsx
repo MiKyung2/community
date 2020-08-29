@@ -8,7 +8,7 @@ import { OuterWrapper } from './styles';
 import AuthAPI from '../../api/auth';
 import { AppContext } from '../../components/App/context';
 import { inputRules } from '../../components/accounts/validator';
-
+import { toJS } from "mobx";
 import FindPassModal from '../../components/accounts/FindPassModal';
 
 const SignIn = (props) => {
@@ -31,12 +31,17 @@ const SignIn = (props) => {
     const [_, setCookie] = useCookies(['token', 'id']);
 
     const onLogin = async () => {
-      const resAuth = await AuthAPI.login(state);
-      if (resAuth === '500') {
-        message.error('회원정보를 다시 한 번 확인해 주세요');
-        return;
+      try {
+        const resAuth = await AuthAPI.login(state);
+        if (resAuth.data.code == 200) {
+          global.action.login(resAuth.data.body);
+        }
+        
+      } catch (e) {
+        if(e?.response?.status === 500) {
+          return message.error('회원정보를 다시 한 번 확인해 주세요');
+        }
       }
-      global.action.login(resAuth.data.body);
     };
 
     useEffect(() => {
@@ -83,6 +88,7 @@ const SignIn = (props) => {
           }}
           onFinishFailed={() => {
             console.log('onFinishFailed');
+            onLogin()
           }}
         >
           <div className='wrapper'>

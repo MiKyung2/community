@@ -1,8 +1,10 @@
 import { DislikeFilled, DislikeOutlined, EyeOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons';
 import { Button, Modal, Row } from 'antd';
 import { useLocalStore, useObserver } from 'mobx-react';
+import {toJS} from 'mobx';
 import { useRouter } from 'next/router';
 import { useCookies } from 'react-cookie';
+import { AppContext } from '../../../components/App/context';
 import React, {useEffect} from 'react';
 import ReactHtmlParser from 'react-html-parser';
 import styled from 'styled-components';
@@ -18,11 +20,14 @@ import { numFormatter } from '../../../utils/numFormatter';
 
 const Board = (props) => {
 
-  const router = useRouter();
-  const queryId = router.query.id;
-  const boardProps = props.props;
-
+  
   return useObserver(() => {
+    const router = useRouter();
+    const queryId = router.query.id;
+    const boardProps = props.props;
+
+    const global = React.useContext(AppContext);
+    console.log("global", toJS(global.state));
 
     const state = useLocalStore(() => {
       return {

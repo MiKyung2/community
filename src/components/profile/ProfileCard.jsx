@@ -18,14 +18,16 @@ import BottomAction from './BottomAction';
 import { useRouter } from 'next/router';
 import { useObserver } from 'mobx-react';
 import UserAPI from '../../api/user';
+import { AppContext } from '../App/context';
+import { toJS } from "mobx";
 
 const { Meta } = Card;
 
-const ProfileCard = ({ loading, data, onOpenNote, onUpdate }) => {
+const ProfileCard = (props) => {
   return useObserver(() => {
     const router = useRouter();
+    const global = React.useContext(AppContext);
     const { id } = router.query;
-    const userId = 8;
 
     return (
       <Row>
@@ -37,14 +39,15 @@ const ProfileCard = ({ loading, data, onOpenNote, onUpdate }) => {
                 <SettingOutlined style={{ marginRight: '8px' }} key='setting' />
               }
               title='활동 점수'
-              value={data.activityScore || 0}
+              value={props.data.activityScore || 0}
             />,
             <BottomAction
               icon={<EditOutlined style={{ marginRight: '8px' }} key='edit' />}
               title='팔로잉'
-              value={data.followingList.cnt || 0}
+              value={props.data.followingList.cnt || 0}
               onClick={() => {
-                router.push(`/profile/[id]/[cate]`, `/profile/${id}/following`);
+                console.log("D");
+                props.onClickFollow("following");
               }}
             />,
             <BottomAction
@@ -55,14 +58,14 @@ const ProfileCard = ({ loading, data, onOpenNote, onUpdate }) => {
                 />
               }
               title='팔로워'
-              value={data.followedList.cnt || 0}
+              value={props.data.followedList.cnt || 0}
               onClick={() => {
-                router.push(`/profile/[id]/[cate]`, `/profile/${id}/followers`);
+                props.onClickFollow("followers");
               }}
             />,
           ]}
         >
-          <Skeleton loading={loading} avatar active>
+          <Skeleton loading={props.loading} avatar active>
             <div
               style={{
                 display: 'flex',
@@ -74,25 +77,25 @@ const ProfileCard = ({ loading, data, onOpenNote, onUpdate }) => {
                 avatar={
                   <Avatar
                     src={
-                      data.profileImg ||
+                      props.data.profileImg ||
                       'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
                     }
                     size='large'
                   />
                 }
-                title={data.nickname || ''}
+                title={props.data.nickname || ''}
                 description={
                   <a
                     style={{ textDecoration: 'underline' }}
-                    href={data.gitAddr}
+                    href={props.data.gitAddr}
                     target='_blank'
                   >
-                    {data.gitAddr || '-'}
+                    {props.data.gitAddr || '-'}
                   </a>
                 }
               />
               <div>
-                {id == userId ? (
+                {id == global.state.user.id ? (
                   <Button
                     onClick={() => {
                       router.push('/profile/edit');
@@ -102,15 +105,15 @@ const ProfileCard = ({ loading, data, onOpenNote, onUpdate }) => {
                   </Button>
                 ) : (
                   <>
-                    {data?.followedList?.followed_users.find(
-                      (d) => d.id === userId,
+                    {props.data?.followedList?.followed_users.find(
+                      (d) => d.id === global.state.user.id,
                     ) ? (
                       <Popconfirm
                         placement='bottomRight'
                         title='팔로우를 취소하시겠습니까?'
                         onConfirm={() => {
                           UserAPI.unfollow({
-                            data: { followed_id: id, following_id: userId },
+                            data: { followed_id: id, following_id: global.state.user.id },
                           });
                           // message.info("팔로우가 취소됬습니다.");
                         }}
@@ -127,15 +130,15 @@ const ProfileCard = ({ loading, data, onOpenNote, onUpdate }) => {
                         style={{ marginRight: '8px' }}
                         onClick={() => {
                           UserAPI.follow({
-                            data: { followed_id: id, following_id: userId },
+                            data: { followed_id: id, following_id: global.state.user.id },
                           });
-                          onUpdate();
+                          props.onUpdate();
                         }}
                       >
                         팔로우하기
                       </Button>
                     )}
-                    <Button onClick={onOpenNote}>쪽지 보내기</Button>
+                    <Button onClick={props.onOpenNote}>쪽지 보내기</Button>
                   </>
                 )}
               </div>

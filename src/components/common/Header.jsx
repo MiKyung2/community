@@ -10,6 +10,7 @@ import useApp from '../../hooks/app';
 import routes from '../../routes';
 import styled from 'styled-components';
 import { AppContext } from '../App/context';
+import { toJS } from "mobx";
 
 const theLatestDate = [
   {
@@ -48,13 +49,8 @@ const theLatestDate = [
 ];
 
 const LayoutHeader = (props) => {
-  const global = React.useContext(AppContext);
   return useObserver(() => {
-    const state = useLocalStore(() => {
-      return {
-        login: false,
-      };
-    });
+    const global = React.useContext(AppContext);
     const [cookies, _, removeCookie] = useCookies(['token', 'id']);
     const router = useRouter();
 
@@ -63,15 +59,6 @@ const LayoutHeader = (props) => {
       boardNotReadCnt: 2,
       followNotReadCnt: 3,
     };
-
-    useEffect(() => {
-      if (cookies.token) {
-        state.login = true;
-      }
-      if (!cookies.token) {
-        state.login = false;
-      }
-    }, [cookies.token]);
 
     const removeCookies = () => {
       removeCookie('token');
@@ -98,7 +85,8 @@ const LayoutHeader = (props) => {
               {i.name}
             </Menu.Item>
           ))}
-          {state.login ? (
+          
+          {global?.state?.user?.token ? (
             <Menu.Item onClick={removeCookies}>로그아웃</Menu.Item>
           ) : (
             <Menu.Item
@@ -110,7 +98,8 @@ const LayoutHeader = (props) => {
             </Menu.Item>
           )}
         </Menu>
-        {state.login ? (
+
+        {global?.state?.user?.token ? (
           <div className='alert-menu'>
             <Button
               onClick={() => {
@@ -141,7 +130,6 @@ const LayoutHeader = (props) => {
             </Button>
           </div>
         ) : null}
-        
       </Header>
     );
   });

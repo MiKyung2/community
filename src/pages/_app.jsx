@@ -10,12 +10,13 @@ import { observerBatching } from "mobx-react-lite";
 import { CookiesProvider, Cookies } from "react-cookie";
 import NextApp, { AppContext as NextAppContext } from 'next/app';
 import cookie from 'cookie';
+import jwt from "jsonwebtoken";
 
 observerBatching();
 
 function App(props) {
-  const app = useApp(props);
   return useObserver(() => {
+    const app = useApp(props);
     return (
       <>
         <GlobalStyle />
@@ -65,7 +66,9 @@ App.getInitialProps = async (appContext) => {
     (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
   );
 
-  const token = ck.auth ?? '';
+  const token = ck.token ?? "";
+  const decodedToken = jwt.decode(token.replace("Bearer ", ""));
+  const userId = decodedToken?.userId ?? "";
 
   return {
     ...nextAppProps,
@@ -74,6 +77,8 @@ App.getInitialProps = async (appContext) => {
     init: {
       user: {
         token,
+        userId,
+        id: 20,
       },
     },
   };
