@@ -85,8 +85,8 @@ const SearchInput = (props) => {
 
     return (
       <div className={props.className}>
-        <Dropdown overlay={menu}>
-          <a className="ant-dropdown-link">
+        <Dropdown overlay={menu} className="dropdown">
+          <a>
             {filterName()}
             <DownOutlined />
           </a>
@@ -105,9 +105,14 @@ const SearchInput = (props) => {
 };
 
 export default styled(SearchInput)`
+  /* border: 1px solid red; */
   display: flex;
-  flex-direction: column;
+  align-items: center;
   & {
+    .dropdown {
+      margin-right: 10px;
+      color: gray;
+    }
     .input {
       /* border: 1px solid blue; */
       width: 300px;

@@ -174,15 +174,15 @@ const BoardPage = (props) => {
 
     // 필터&검색
     const onSearch = (searchTerm) => {
-    const {gb, keyword, sort} = searchTerm;
+      const {gb, keyword, sort} = searchTerm;
 
-    state.page.currentPage = 1;
-    state.page.tablePage = 1;
-    state.page.gb = gb ? gb : state.page.gb;
-    state.page.keyword = keyword ? keyword : state.page.keyword;
-    state.page.sort = sort ? sort : state.page.sort;
+      state.page.currentPage = 1;
+      state.page.tablePage = 1;
+      state.page.gb = gb ? gb : state.page.gb;
+      state.page.keyword = keyword ? keyword : state.page.keyword;
+      state.page.sort = sort ? sort : state.page.sort;
 
-    fetchListData();
+      fetchListData();
 
     }
 
