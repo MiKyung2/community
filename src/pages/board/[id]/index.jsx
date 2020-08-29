@@ -38,9 +38,13 @@ const Board = (props) => {
           action: '',
         },
         comments: boardProps.comments.body,
-        visible: false,
+        modal: {
+          delete: false,
+          login: false
+        },
         writer: boardProps.board.body.writer,
         user: '',
+        isWriter: false,
         login: false
       };
     });
@@ -53,35 +57,44 @@ const Board = (props) => {
         if(!cookies.token) return;
           const userInfo = await UserAPI.get({id: cookies.id});            
           state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
+          state.login = true;
       };
       getUserInfo();
 
     }, []);
 
     
-    const setLogin = () => {
+    const setIsWriter = () => {
       if(state.writer === state.user) {
-        state.login = true
+        state.isWriter = true
       } else {
-        state.login = false
+        state.isWriter = false
       }
     }
-    setLogin();
+    setIsWriter();
 
     const onClickBackToList = () => {
       router.push('/board');
     }
 
     const onClickLike = async () => {
-      await BoardAPI.event({ id: queryId, itemGb: "L" });
-      state.events.action = "liked";
-      state.events.like = state.events.like + 1;
+      if (state.login) {
+        await BoardAPI.event({ id: queryId, itemGb: "L" });
+        state.events.action = "liked";
+        state.events.like = state.events.like + 1;
+      } else {
+        state.modal.login = true;
+      }
     };
 
     const onClickDislike = async () => {
-      await BoardAPI.event({ id: queryId, itemGb: "D" });
-      state.events.action = "disliked";
-      state.events.dislike = state.events.dislike + 1;
+      if (state.login) {
+        await BoardAPI.event({ id: queryId, itemGb: "D" });
+        state.events.action = "disliked";
+        state.events.dislike = state.events.dislike + 1;
+      } else {
+        state.modal.login = true;
+      }
     };
 
     const onClickEdit = () => {
@@ -89,20 +102,27 @@ const Board = (props) => {
     }
 
     const onClickDelete = () => {
-      state.visible = true;
+      state.modal.delete = true;
     }
 
-    const handleCancelDelete = (e) => {
-      state.visible = false;
+    const handleCancel_DeleteModal = (e) => {
+      state.modal.delete = false;
     }
 
-    const handleOkDelete = () => {
+    const handleOk_DeleteModal = () => {
       const boardDeleteRes = async () => await BoardAPI.delete({
         id: queryId
       });
       boardDeleteRes();
       router.push('/board');
-      state.visible = false;
+      state.modal.delete = false;
+    }
+    
+    const handleCancel_LoginModal = () => {
+      state.modal.login = false;
+    }
+    const handleOk_LoginModal = () => {
+      router.push('/accounts/signin');
     }
 
     return (
@@ -120,7 +140,7 @@ const Board = (props) => {
 
         <div className="main_container">
 
-          <Row justify="space-between" className="main_container_top" style={state.login ? {paddingBottom: 0} : {paddingBottom: '10px'}}>
+          <Row justify="space-between" className="main_container_top" style={state.isWriter ? {paddingBottom: 0} : {paddingBottom: '10px'}}>
             {/* 해당 게시글 조회수 & 댓글수 & 좋아요수 */}
             <Row>
               <span className="main_container_top_left "><EyeOutlined /> {numFormatter(state.data.viewCount)}</span>
@@ -130,23 +150,13 @@ const Board = (props) => {
             </Row>
 
             {/* 수정 & 삭제 */}
-            {state.login && 
+            {state.isWriter && 
               <Row>
                 <Button type="text" onClick={onClickEdit}>수정</Button>
                 <Button type="text" onClick={onClickDelete}>삭제</Button>
               </Row>
             }
           </Row>
-
-          {/* 삭제 확인 메세지 */}
-          <Modal
-            visible={state.visible}
-            onOk={handleOkDelete}
-            onCancel={handleCancelDelete}
-          >
-            <p>정말 삭제하시겠습니까?</p>
-          </Modal>
-
 
           {/* 게시글 내용 */}
           <div className="main_content">{ReactHtmlParser(`${state.data.contents}`)}</div>
@@ -159,6 +169,28 @@ const Board = (props) => {
           {/* <Comments queryId={queryId} data={state.comments} /> */}
           <Comments queryId={queryId} data={boardProps.comments.body} />
         </div>
+
+
+        {/* 로그인 메세지 */}
+        <Modal
+          visible={state.modal.login}
+          onOk={handleOk_LoginModal}
+          onCancel={handleCancel_LoginModal}
+          >
+            <p>
+              로그인이 필요한 기능입니다.
+              로그인 페이지로 이동하시겠습니까?
+            </p>
+        </Modal>
+
+        {/* 삭제 확인 메세지 */}
+        <Modal
+          visible={state.modal.delete}
+          onOk={handleOk_DeleteModal}
+          onCancel={handleCancel_DeleteModal}
+        >
+          <p>정말 삭제하시겠습니까?</p>
+        </Modal>
       </div>
     );
   });
