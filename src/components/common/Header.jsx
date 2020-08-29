@@ -64,8 +64,8 @@ const LayoutHeader = (props) => {
       removeCookie('token');
       removeCookie('id');
       // state.login = false;
-      router.push('/');
-      // router.reload();
+      // router.push('/');
+      router.reload();
     };
 
     return (
