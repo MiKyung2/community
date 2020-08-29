@@ -4,6 +4,7 @@ import { InboxOutlined } from '@ant-design/icons';
 import { useObserver } from 'mobx-react';
 import { useRouter } from 'next/router';
 import UserAPI from '../../api/user';
+import AuthAPI from '../../api/auth';
 import { Cookies } from 'react-cookie';
 import ChangePassModal from '../../components/profile/edit/ChanagePassModal';
 const cookies = new Cookies();
@@ -47,11 +48,19 @@ const EditProfile = ({ profile }) => {
       userId: profileT?.userId,
     });
   }, [profileT]);
+
+  console.log('프로파일 이미지: ', profileT?.profileImg);
+
   return useObserver(() => {
     const router = useRouter();
     const onFinish = (values) => {
       console.log('Received values of form: ', values);
     };
+    const onEditInfo = async () => {
+      const resAuth = await AuthAPI.edit_user_info();
+      console.log('수정', resAuth);
+    };
+
     return (
       <Form
         form={form}
@@ -65,11 +74,12 @@ const EditProfile = ({ profile }) => {
           userId: profileT?.userId,
         }}
         onFieldsChange={(changedFields, allFields) => {
-          console.log(
-            'changedFields : ',
-            JSON.stringify(changedFields, null, 3),
-          );
-          console.log('allFields : ', JSON.stringify(allFields, null, 3));
+          onEditInfo();
+          // console.log(
+          //   'changedFields : ',
+          //   JSON.stringify(changedFields, null, 3),
+          // );
+          // console.log('allFields : ', JSON.stringify(allFields, null, 3));
         }}
       >
         <Form.Item label='아이디'>
@@ -131,6 +141,7 @@ const EditProfile = ({ profile }) => {
 };
 
 // EditProfile.getInitialProps = async (ctx) => {
+<<<<<<< HEAD
 
 //   // Authorization: Bearer <token>
 
@@ -141,6 +152,18 @@ const EditProfile = ({ profile }) => {
 //   console.log('cookies', id);
 
 //   const profileRes = await UserAPI.get({ id: 19 });
+=======
+//   const ck = cookie.parse(
+//     (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
+//   );
+//   //Authorization
+//   const token = ck.token ?? '';
+//   const id = ck.id ?? '';
+//   const decodedToken = jwt.decode(token.replace('Bearer ', ''));
+//   const userId = decodedToken?.userId ?? '';
+
+//   const profileRes = await UserAPI.get({ id });
+>>>>>>> b1b8f0f... edit profile edit, signup
 
 //   return {
 //     profile: profileRes.body,

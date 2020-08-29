@@ -9,8 +9,8 @@ import SendNote from '../../../components/note/SendNote';
 import ProfileCard from '../../../components/profile/ProfileCard';
 import ProfileTabList from '../../../components/profile/ProfileList';
 const { TabPane } = Tabs;
-import { toJS } from "mobx";
-import FollowTab from "../../../components/profile/FollowTab";
+import { toJS } from 'mobx';
+import FollowTab from '../../../components/profile/FollowTab';
 
 const ProfilePage = (props) => {
   return useObserver(() => {
@@ -23,15 +23,15 @@ const ProfilePage = (props) => {
           open: false,
           receiveUser: {
             id: 0,
-            user: "",
+            user: '',
           },
         },
         profile: props.profile,
         follow: {
-          tabActive: "following",
+          tabActive: 'following',
           open: false,
           list: [],
-        }
+        },
       };
     });
 
@@ -51,21 +51,25 @@ const ProfilePage = (props) => {
     React.useEffect(() => {
       if (!state.follow.open) return;
 
-      if (state.follow.tabActive === "following") {
+      if (state.follow.tabActive === 'following') {
         (async () => {
           try {
-            const followingListRes = await UserAPI.followingList({ userId: router.query.id });
+            const followingListRes = await UserAPI.followingList({
+              userId: router.query.id,
+            });
             state.follow.list = followingListRes.following_users;
-          } catch(error){
+          } catch (error) {
             console.error(error);
           }
         })();
-      } else if (state.follow.tabActive === "followers") {
+      } else if (state.follow.tabActive === 'followers') {
         (async () => {
           try {
-            const followerListRes = await UserAPI.followerList({ userId: router.query.id });
+            const followerListRes = await UserAPI.followerList({
+              userId: router.query.id,
+            });
             state.follow.list = followerListRes.followed_users;
-          } catch(error){
+          } catch (error) {
             console.error(error);
           }
         })();
@@ -76,7 +80,9 @@ const ProfilePage = (props) => {
       <div className={props.className}>
         <Modal
           visible={state.follow.open}
-          onCancel={() => { state.follow.open = false; }}
+          onCancel={() => {
+            state.follow.open = false;
+          }}
           footer={null}
         >
           <FollowTab
@@ -98,7 +104,7 @@ const ProfilePage = (props) => {
           onUpdate={() => {
             getProfile();
           }}
-          onClickFollow={(category) => { 
+          onClickFollow={(category) => {
             state.follow.open = true;
             state.follow.tabActive = category;
           }}
