@@ -115,50 +115,35 @@ const Signup = (props) => {
                 autoComplete='off'
               />
             </Form.Item>
-            {/* <Form.Item
-              className='center form-item'
-              name={['user', 'id']}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input
-                className='input input-id'
-                placeholder='아이디를 입력해주세요'
-                value={state.value.id}
-                onChange={(e) => {
-                  state.value.id = e.target.value;
-                }}
-              />
-              <Button className='button-id' type='primary'>
-                중복 확인
-              </Button>
-            </Form.Item> */}
+
             <Form.Item
               className='center form-item'
-              name='email'
+              name={['user', 'email']}
               rules={inputRules.email}
             >
-              <Input
-                className='input'
-                placeholder='이메일을 입력해주세요'
-                style={{ width: 200 }}
-                value={state.value.email}
-                onChange={(e) => {
-                  state.value.email = e.target.value;
-                }}
-                autoComplete='off'
-              />
-              <Button
-                className='button-id'
-                type='primary'
-                onClick={() => checkEmailDuplication()}
-              >
-                중복 확인
-              </Button>
+              <div style={{ display: 'flex' }}>
+                <Input
+                  className='input'
+                  type='text'
+                  name='email'
+                  placeholder='이메일을 입력해주세요'
+                  style={{ width: 200 }}
+                  value={state.value.email}
+                  onChange={(e) => {
+                    state.value.email = e.target.value;
+                  }}
+                  autoComplete='off'
+                />
+                <Button
+                  className='button-id'
+                  type='primary'
+                  onClick={() => checkEmailDuplication()}
+                >
+                  중복 확인
+                </Button>
+              </div>
             </Form.Item>
+
             <Form.Item
               className='center form-item'
               name={['password']}

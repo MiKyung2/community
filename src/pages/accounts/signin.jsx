@@ -8,7 +8,7 @@ import { OuterWrapper } from './styles';
 import AuthAPI from '../../api/auth';
 import { AppContext } from '../../components/App/context';
 import { inputRules } from '../../components/accounts/validator';
-import { toJS } from "mobx";
+import { toJS } from 'mobx';
 import FindPassModal from '../../components/accounts/FindPassModal';
 
 const SignIn = (props) => {
@@ -36,9 +36,8 @@ const SignIn = (props) => {
         if (resAuth.data.code == 200) {
           global.action.login(resAuth.data.body);
         }
-        
       } catch (e) {
-        if(e?.response?.status === 500) {
+        if (e?.response?.status === 500) {
           return message.error('회원정보를 다시 한 번 확인해 주세요');
         }
       }
@@ -88,7 +87,7 @@ const SignIn = (props) => {
           }}
           onFinishFailed={() => {
             console.log('onFinishFailed');
-            onLogin()
+            onLogin();
           }}
         >
           <div className='wrapper'>
