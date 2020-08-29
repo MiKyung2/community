@@ -42,6 +42,10 @@ const SearchInput = (props) => {
 
     }
 
+    const onClickSearchHistory = () => {
+      console.log("search historyyy")
+    }
+
     const filterName = () => {
 
       let filter;
@@ -83,6 +87,26 @@ const SearchInput = (props) => {
       </Menu>
     );
 
+    const searchHistory = (
+      <Menu>
+        <Menu.Item>
+          <a target="_blank" onClick={onClickSearchHistory}>
+            Search 1
+          </a>
+        </Menu.Item>
+        <Menu.Item>
+          <a target="_blank" onClick={onClickSearchHistory}>
+            Search 2
+          </a>
+        </Menu.Item>
+        <Menu.Item>
+          <a target="_blank" onClick={onClickSearchHistory}>
+            Search 3
+          </a>
+        </Menu.Item>
+      </Menu>
+    )
+
     return (
       <div className={props.className}>
         <Dropdown overlay={menu} className="dropdown">
@@ -91,6 +115,7 @@ const SearchInput = (props) => {
             <DownOutlined />
           </a>
         </Dropdown>
+        <Dropdown overlay={searchHistory} trigger={['click']} className="dropdown">
         <Search 
           placeholder="검색어를 입력하세요." 
           onSearch={onSubmit} 
@@ -99,6 +124,8 @@ const SearchInput = (props) => {
           maxLength="255"
           className="input"
         />
+       </Dropdown>
+
       </div>
     );
   });
