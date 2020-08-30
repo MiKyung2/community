@@ -28,37 +28,34 @@ const normFile = (e) => {
   return e && e.fileList;
 };
 
-const EditProfile = ({ profile }) => {
-  const [profileT, setProfileT] = useState(null);
+const EditProfile = ({ props }) => {
+  const [profile, setProfile] = useState(null);
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
   useEffect(() => {
     const fetchData = async () => {
-      if (!profileT) {
+      if (!profile) {
         const response = await UserAPI.get({ id: cookies.get('id') });
-        setProfileT(response.body);
+        setProfile(response.body);
       }
     };
 
     fetchData();
     form.setFieldsValue({
-      nickname: profileT?.nickname,
-      gitAddr: profileT?.gitAddr,
-      profileImg: profileT?.profileImg,
-      userId: profileT?.userId,
+      nickname: profile?.nickname,
+      gitAddr: profile?.gitAddr,
+      profileImg: profile?.profileImg,
+      userId: profile?.userId,
     });
-  }, [profileT]);
+  }, [profile]);
 
-  console.log('프로파일 이미지: ', profileT?.profileImg);
-  //url to file 객체로 만들기
   return useObserver(() => {
     const router = useRouter();
-    const onFinish = (values) => {
-      console.log('Received values of form: ', values);
-    };
-    const onEditInfo = async () => {
-      const resAuth = await AuthAPI.edit_user_info();
-      console.log('수정', resAuth);
+
+    const onFinish = async (values) => {
+      console.log('온 피니시');
+      const resAuth = await AuthAPI.edit_user_info(values);
+      console.log('api 호출 결과', resAuth);
     };
 
     return (
@@ -68,22 +65,22 @@ const EditProfile = ({ profile }) => {
         {...formItemLayout}
         onFinish={onFinish}
         initialValues={{
-          nickname: profileT?.nickname,
-          gitAddr: profileT?.gitAddr,
-          profileImg: profileT?.profileImg,
-          userId: profileT?.userId,
+          nickname: profile?.nickname,
+          gitAddr: profile?.gitAddr,
+          profileImg: profile?.profileImg,
+          userId: profile?.userId,
         }}
         onFieldsChange={(changedFields, allFields) => {
-          onEditInfo();
           // console.log(
           //   'changedFields : ',
           //   JSON.stringify(changedFields, null, 3),
           // );
           // console.log('allFields : ', JSON.stringify(allFields, null, 3));
+          // const json = JSON.stringify(allFields, null, 3);
         }}
       >
         <Form.Item label='아이디'>
-          <span className='ant-form-text'>{profileT?.userId}</span>
+          <span className='ant-form-text'>{profile?.userId}</span>
         </Form.Item>
         <Form.Item name='nickname' label='닉네임'>
           <Input />
@@ -98,16 +95,14 @@ const EditProfile = ({ profile }) => {
             getValueFromEvent={normFile}
             noStyle
           >
-            <Upload.Dragger name='files' action='/upload.do'>
+            <Upload.Dragger name='files' action='/upload.do' disabled>
               <p className='ant-upload-drag-icon'>
                 <InboxOutlined />
               </p>
               <p className='ant-upload-text'>
                 Click or drag file to this area to upload
               </p>
-              <p className='ant-upload-hint'>
-                Support for a single or bulk upload.
-              </p>
+              <p className='ant-upload-hint'>변경예정</p>
             </Upload.Dragger>
           </Form.Item>
         </Form.Item>

@@ -30,6 +30,9 @@ const SignIn = (props) => {
 
     const [_, setCookie] = useCookies(['token', 'id']);
 
+    // 사인 버튼 누르고 skeleton 추가
+    // 1.5 초 안에 반응 없을 때 잘 못 된 방식이라는 메시지 추가
+
     const onLogin = async () => {
       try {
         const resAuth = await AuthAPI.login(state);
@@ -65,7 +68,7 @@ const SignIn = (props) => {
           }
           placeholder={
             name.includes('userId')
-              ? '이메일을 입력해주세요'
+              ? '아이디를 입력해주세요'
               : '패스워드를 입력해주세요'
           }
           onChange={(e) => {
@@ -82,7 +85,6 @@ const SignIn = (props) => {
       <OuterWrapper className={props.className}>
         <Form
           name='basic'
-          // accept-charset='utf-8'
           initialValues={{
             remember: true,
           }}
@@ -94,9 +96,6 @@ const SignIn = (props) => {
           <div className='wrapper'>
             {formItemMaker('userId')}
             {formItemMaker('password')}
-            <Form.Item valuePropName='checked'>
-              <Checkbox>로그인 유지</Checkbox>
-            </Form.Item>
             <Form.Item>
               <Button
                 className='button'
