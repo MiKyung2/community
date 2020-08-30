@@ -54,7 +54,7 @@ const AuthAPI = {
   check_userId: async (userId) => {
     try {
       const res = await axios.get(
-        `https://toyproject.okky.kro.kr:8443/v1/api/user/check/${userId}`,
+        `https://toyproject.okky.kro.kr:8443/v1/api/user/check/id/${userId}`,
       );
       return res;
     } catch (error) {
@@ -64,7 +64,7 @@ const AuthAPI = {
   check_email: async (email) => {
     try {
       const res = await axios.get(
-        `https://toyproject.okky.kro.kr:8443/v1/api/user/check/${email}`,
+        `https://toyproject.okky.kro.kr:8443/v1/api/user/check/email/${email}`,
       );
       return res;
     } catch (error) {
@@ -108,7 +108,7 @@ const AuthAPI = {
       return '500';
     }
   },
-  edit_user_info: async () => {
+  edit_user_info: async (data, id) => {
     try {
       const config = {
         headers: {
@@ -121,16 +121,15 @@ const AuthAPI = {
 
       // api 나뉨
 
+      // const imageData = data[3].value.file[0];
+      // console.log('이미지 데이터: ', imageData);
+
       const formdata = new FormData();
-      formdata.append(
-        'file',
-        fileInput.files[0],
-        'Screen Shot 2020-08-16 at 12.15.07 PM.png',
-      );
-      formdata.append('gitAddr', 'https://github.com/sbin0819');
-      formdata.append('id', '35');
-      formdata.append('nickname', '호소보');
-      formdata.append('userId', 'sbinha123@gmail.com');
+      formdata.append('userId', data.nickname);
+      formdata.append('nickname', data.nickname);
+      formdata.append('gitAddr', data.gitAddr);
+      // formdata.append('file', data.dragger[0].originFileObj);
+      formdata.append('id', '49');
 
       const res = await axios.put(
         `https://toyproject.okky.kro.kr:8443/v1/api/user`,
