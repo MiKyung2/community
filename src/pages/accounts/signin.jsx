@@ -20,7 +20,7 @@ const SignIn = (props) => {
         loading: false,
         list: [],
         value: {
-          email: '',
+          userId: '',
           password: '',
         },
       };
@@ -55,23 +55,23 @@ const SignIn = (props) => {
       <Form.Item
         className='center'
         name={name}
-        rules={name === 'email' ? inputRules.email : null}
+        rules={name === 'userId' ? inputRules.userId : null}
       >
         <Input
           className='input'
-          type={name.includes('email') ? 'text' : 'password'}
+          type={name.includes('userId') ? 'text' : 'password'}
           value={
-            name.includes('email') ? state.value.email : state.value.password
+            name.includes('userId') ? state.value.userId : state.value.password
           }
           placeholder={
-            name.includes('email')
+            name.includes('userId')
               ? '이메일을 입력해주세요'
               : '패스워드를 입력해주세요'
           }
           onChange={(e) => {
             name === 'password'
               ? (state.value.password = e.target.value)
-              : (state.value.email = e.target.value);
+              : (state.value.userId = e.target.value);
           }}
           autoComplete='off'
         />
@@ -82,6 +82,7 @@ const SignIn = (props) => {
       <OuterWrapper className={props.className}>
         <Form
           name='basic'
+          // accept-charset='utf-8'
           initialValues={{
             remember: true,
           }}
@@ -91,7 +92,7 @@ const SignIn = (props) => {
           }}
         >
           <div className='wrapper'>
-            {formItemMaker('email')}
+            {formItemMaker('userId')}
             {formItemMaker('password')}
             <Form.Item valuePropName='checked'>
               <Checkbox>로그인 유지</Checkbox>

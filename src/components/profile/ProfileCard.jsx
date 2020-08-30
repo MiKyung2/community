@@ -29,6 +29,8 @@ const ProfileCard = (props) => {
     const global = React.useContext(AppContext);
     const { id } = router.query;
 
+    console.log(toJS('profile card', global.state));
+
     return (
       <Row>
         <Card

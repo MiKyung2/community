@@ -50,7 +50,7 @@ const EditProfile = ({ profile }) => {
   }, [profileT]);
 
   console.log('프로파일 이미지: ', profileT?.profileImg);
-
+  //url to file 객체로 만들기
   return useObserver(() => {
     const router = useRouter();
     const onFinish = (values) => {
@@ -144,11 +144,12 @@ const EditProfile = ({ profile }) => {
 //   const ck = cookie.parse(
 //     (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
 //   );
-//   //Authorization
+//   // Authorization
 //   const token = ck.token ?? '';
 //   const id = ck.id ?? '';
 //   const decodedToken = jwt.decode(token.replace('Bearer ', ''));
 //   const userId = decodedToken?.userId ?? '';
+//   console.log(decodedToken);
 
 //   const profileRes = await UserAPI.get({ id });
 
