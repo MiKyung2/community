@@ -34,11 +34,11 @@ const ProfilePage = (props) => {
           list: [],
         },
         tab: {
-          tabActive: "recent",
+          tabActive: 'recent',
           recent: props.theLatestDate,
           board: [],
           scrap: [],
-        }
+        },
       };
     });
 
@@ -85,13 +85,13 @@ const ProfilePage = (props) => {
 
     React.useEffect(() => {
       switch (state.tab.tabActive) {
-        case "recent":
-          return;
-        
-        case "board":
+        case 'recent':
           return;
 
-        case "scrap":
+        case 'board':
+          return;
+
+        case 'scrap':
           return;
       }
     }, [state.tab.tabActive]);
@@ -130,14 +130,22 @@ const ProfilePage = (props) => {
         />
 
         {/* 게시물 탭 */}
-        <Tabs large='true' type='card' defaultActiveKey={state.tab.tabActive} activeKey={state.tab.tabActive} onChange={(active) => { state.tab.tabActive = active}}>
+        <Tabs
+          large='true'
+          type='card'
+          defaultActiveKey={state.tab.tabActive}
+          activeKey={state.tab.tabActive}
+          onChange={(active) => {
+            state.tab.tabActive = active;
+          }}
+        >
           <TabPane tab='최근 활동' key='recent'>
             <ProfileTabList loading={false} dataSource={state.tab.recent} />
           </TabPane>
-          <TabPane tab='게시물' key="board">
+          <TabPane tab='게시물' key='board'>
             <ProfileTabList loading={false} dataSource={state.tab.board} />
           </TabPane>
-          <TabPane tab='스크랩' key="scrap">
+          <TabPane tab='스크랩' key='scrap'>
             <ProfileTabList loading={false} dataSource={state.tab.scrap} />
           </TabPane>
         </Tabs>

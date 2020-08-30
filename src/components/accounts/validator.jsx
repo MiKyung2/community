@@ -7,10 +7,11 @@ export const regExp = {
   checkKor: /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/,
   checkEmail: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   checkPass: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{1,10}$/,
+  checkUserId: /^[가-힣|a-z|A-Z|0-9|$@$!%*#?&|]{1,10}$/,
 };
 
 export const inputRules = {
-  nickname: [
+  userId: [
     () => ({
       validator(rule, value) {
         if (
@@ -41,7 +42,10 @@ export const inputRules = {
     () => ({
       validator(rule, value) {
         if (
-          value.match(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/)
+          value.match(
+            /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/,
+          ) ||
+          value.length === 0
         ) {
           return Promise.resolve();
         }
