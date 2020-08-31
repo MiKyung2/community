@@ -11,9 +11,8 @@ import Comments from "../../../components/Board/Comment/Comments";
 import { formatDate } from '../../../utils/dateFormatter';
 import { numFormatter } from '../../../utils/numFormatter';
 
-
-
 const Board = (props) => {
+<<<<<<< Updated upstream
 
   const router = useRouter();
   const queryId = router.query.id;
@@ -28,6 +27,29 @@ const Board = (props) => {
         comments: boardProps.comments.body,
         visible: false,
         action: null
+=======
+  return useObserver(() => {
+    const router = useRouter();
+    const queryId = router.query.id;
+
+    const state = useLocalStore(() => {
+      return {
+        data: props.board.body,
+        events: {
+          like: props.board.body.rowLike,
+          dislike: props.board.body.rowDisLike,
+          action: '',
+        },
+        comments: props.comments.body,
+        modal: {
+          delete: false,
+          login: false
+        },
+        writer: props.board.body.writer,
+        user: '',
+        isWriter: false,
+        login: false
+>>>>>>> Stashed changes
       };
     });
 
@@ -116,7 +138,7 @@ const Board = (props) => {
         <div className="comment-section">
           <h3>댓글</h3>
           {/* <Comments queryId={queryId} data={state.comments} /> */}
-          <Comments queryId={queryId} data={boardProps.comments.body} />
+          <Comments queryId={queryId} data={props.comments.body} />
         </div>
       </div>
     );
@@ -126,20 +148,16 @@ const Board = (props) => {
 
 
 Board.getInitialProps = async ({ query }) => {
-
   const boardDetailRes = await BoardAPI.detail({
     id: query.id
   });
-
   const comments = await CommentAPI.get({
     id: query.id
   });
 
   return {
-    props: {
-      board: boardDetailRes,
-      comments
-    }
+    board: boardDetailRes,
+    comments
   };
 
 }

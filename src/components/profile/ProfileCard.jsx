@@ -46,8 +46,12 @@ const ProfileCard = (props) => {
               title='팔로잉'
               value={props.data.followingList.cnt || 0}
               onClick={() => {
+<<<<<<< Updated upstream
                 console.log("D");
                 props.onClickFollow("following");
+=======
+                props.onClickFollow('following');
+>>>>>>> Stashed changes
               }}
             />,
             <BottomAction

@@ -27,7 +27,7 @@ const AddComment = (props) => {
         viewCount: 0
       }
       const resp = await CommentAPI.post(payload);
-      comments.push(resp.body);
+      comments.push(resp.data.body);
     }
 
     const onChangeTextArea = (e) => {

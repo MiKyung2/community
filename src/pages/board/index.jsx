@@ -49,19 +49,24 @@ const columns = [
 // 최신순 | 좋아요순 | 댓글순 | 조회수순
 const sortLists = [
   {
+<<<<<<< Updated upstream
     id: 'sort_newest',
     name: '최신순'
+=======
+    id: 'newest',
+    name: '최신순',
+>>>>>>> Stashed changes
   },
   {
-    id: 'sort_like',
+    id: 'like',
     name: '좋아요순'
   },
   {
-    id: 'sort_comment',
+    id: 'commentCnt',
     name: '댓글순'
   },
   {
-    id: 'sort_view',
+    id: 'viewCount',
     name: '조회수순'
   },
 ];
@@ -73,7 +78,6 @@ const BoardPage = (props) => {
 
   return useObserver(() => {
     const router = useRouter();
-
     const state = useLocalStore(() => {
       return {
         dataSource: props.listByDate,
@@ -121,6 +125,7 @@ const BoardPage = (props) => {
     }
 
     const onChangeSort = (selectedFilter) => {
+<<<<<<< Updated upstream
       const target = selectedFilter.target.id;
 
       switch (target) {
@@ -148,6 +153,14 @@ const BoardPage = (props) => {
         // CONFIG.LOG("default-최신순?");
         // console.error("filter error");
       }
+=======
+      if (selectedFilter !== "newest" || selectedFilter !== "like" || selectedFilter !== "commentCnt" || selectedFilter !== "viewCount") return;
+
+      // 정미경의 코멘트 : sortLists id를 서버에 주는 값과 똑같이 쓰면 코드가 간단해집니다.
+      state.page.sort = selectedFilter;
+      moveToFirstPage();
+      fetchListData();
+>>>>>>> Stashed changes
     }
 
     // 페이지 변경
@@ -159,6 +172,7 @@ const BoardPage = (props) => {
 
     // 필터&검색
     const onSearch = (searchTerm) => {
+<<<<<<< Updated upstream
       const { gb, keyword, sort } = searchTerm;
 
       state.page.currentPage = 1;
@@ -183,7 +197,17 @@ const BoardPage = (props) => {
       // testFetch();
 
       fetchListData();
+=======
+      const {gb, keyword, sort} = searchTerm;
 
+      state.page.currentPage = 1;
+      state.page.tablePage = 1;
+      state.page.gb = gb ? gb : state.page.gb;
+      state.page.keyword = keyword ? keyword : state.page.keyword;
+      state.page.sort = sort ? sort : state.page.sort;
+>>>>>>> Stashed changes
+
+      fetchListData();
     }
 
     // 해당 게시물 이동
@@ -256,7 +280,7 @@ export const getStaticProps = async () => {
     size: 20,
     sort: "date"
   });
-  // console.log(">> [server] : boardListByDate => ", boardListByDate);
+
   return {
     props: {
       listByDate: boardListByDate.body.content,

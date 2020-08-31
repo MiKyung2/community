@@ -8,9 +8,13 @@ const CONFIG = (() => {
   const IMAGE_BASE_URL = "";
 
   let NODE_ENV;
-  let LOG = (value) => {
+  const ConsoleFunction = (value) => {
     console.log(value);
   };
+  let LOG = ConsoleFunction;
+  let INFO = ConsoleFunction;
+  let WARN = ConsoleFunction;
+  let ERROR = ConsoleFunction;
 
   switch (publicRuntimeConfig.env) {
     case "development":
@@ -28,7 +32,10 @@ const CONFIG = (() => {
     case "production":
     default:
       LOG = (value) => {};
-      NODE_ENV = "production";
+      INFO = (value) => {};
+      WARN = (value) => {};
+      ERROR = (value) => {};
+      NODE_ENV = 'production';
   }
 
   API_BASE_URL = API_BASE_URL + "/" + API_VERSION + "/api";
@@ -39,6 +46,9 @@ const CONFIG = (() => {
     NODE_ENV,
     API_VERSION,
     LOG,
+    INFO,
+    WARN,
+    ERROR,
   };
 })();
 

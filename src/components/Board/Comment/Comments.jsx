@@ -5,11 +5,13 @@ import CommentList from './CommentList';
 
 
 const Comments = (props) => {
+<<<<<<< Updated upstream
 
     console.log("Comments props", props);
 
+=======
+>>>>>>> Stashed changes
     return useObserver(() => {
-
         const state = useLocalStore(() => {
             return {
                 comments: props.data,

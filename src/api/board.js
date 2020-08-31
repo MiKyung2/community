@@ -1,4 +1,4 @@
-import AxiosWrapper from "./axiosWrapper";
+import instance from "./axiosWrapper";
 import CONFIG from '../utils/CONFIG';
 import {dummy} from '../data/dummy';
 
@@ -12,10 +12,10 @@ const BoardAPI = {
         return dummy;
       } else {
       const {currentPage, gb, keyword, size, sort} = payload;
-      const res = await AxiosWrapper.get(
+      const res = await instance.get(
         `board/page?currentPage=${currentPage}&gb=${gb}&keyword=${keyword}&size=${size}&sort=${sort}`
         );
-      return res;
+      return res.data;
       }
     } catch (error) {
       // throw error;
@@ -25,10 +25,10 @@ const BoardAPI = {
   detail: async (payload) => {
     try {
       const {id} = payload;
-      const res = await AxiosWrapper.get(
+      const res = await instance.get(
         `board/detail/${id}`
       );
-      return res;
+      return res.data;
     } catch (error) {
       // throw error;
       console.error(error);
@@ -36,7 +36,7 @@ const BoardAPI = {
   },
   write: async (payload) => {
     try {
-      const res = await AxiosWrapper.post('board/write', payload);
+      const res = await instance.post('board/write', payload);
       return res;
     } catch (error) {
       // throw error;
@@ -45,7 +45,7 @@ const BoardAPI = {
   },
   edit: async (payload) => {
     try {
-      const res = await AxiosWrapper.post('board/edit', payload);
+      const res = await instance.post('board/edit', payload);
       return res;
     } catch (error) {
       // throw error;
@@ -54,8 +54,8 @@ const BoardAPI = {
   },
   event: async (payload) => {
     try {
-      const res = await AxiosWrapper.post('board/event/like', payload);
-      return res;
+      const res = await instance.post('board/event/like', payload);
+      return res.data;
     } catch (error) {
       // throw error;
       console.error(error);
@@ -63,7 +63,7 @@ const BoardAPI = {
   },
   delete: async (payload) => {
     try {
-      const res = await AxiosWrapper.post('board/delete', payload);
+      const res = await instance.post('board/delete', payload);
       return res;
     } catch (error) {
       // throw error;

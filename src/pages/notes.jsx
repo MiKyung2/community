@@ -203,7 +203,6 @@ const Notes = (props) => {
               }}
             />
           </TabPane>
-          {/* {console.log("list : ", toJS(state.send))} */}
           <TabPane tab="보낸 쪽지함" key="S">
             <Table
               rowSelection={rowSelection}

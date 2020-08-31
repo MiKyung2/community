@@ -38,9 +38,7 @@ const SignIn = (props) => {
         }
         
       } catch (e) {
-        if(e?.response?.status === 500) {
-          return message.error('회원정보를 다시 한 번 확인해 주세요');
-        }
+        return message.error(e.response.data.msg);
       }
     };
 
@@ -102,7 +100,7 @@ const SignIn = (props) => {
                 className='button'
                 type='primary'
                 htmlType='submit'
-                onClick={() => onLogin()}
+                onClick={onLogin}
               >
                 로그인
               </Button>

@@ -67,18 +67,11 @@ App.getInitialProps = async (appContext) => {
     (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
   );
 
-<<<<<<< Updated upstream
-  const token = ck.token ?? "";
-  const decodedToken = jwt.decode(token.replace("Bearer ", ""));
-  const userId = decodedToken?.userId ?? "";
-
-=======
   const token = ck.token ?? '';
   const id = ck.id ?? '';
   const decodedToken = jwt.decode(token.replace('Bearer ', ''));
   const userId = decodedToken?.userId ?? '';
-  console.log("user: ", toJS(decodedToken));
->>>>>>> Stashed changes
+
   return {
     ...nextAppProps,
     ssr,
@@ -87,7 +80,7 @@ App.getInitialProps = async (appContext) => {
       user: {
         token,
         userId,
-        id: 20,
+        id,
       },
     },
   };

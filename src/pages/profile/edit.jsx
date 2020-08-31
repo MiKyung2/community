@@ -25,7 +25,28 @@ const normFile = (e) => {
   return e && e.fileList;
 };
 
-const EditProfile = ({ profile }) => {
+const EditProfile = ({ props }) => {
+  const [profile, setProfile] = useState(null);
+  const [visible, setVisible] = useState(false);
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!profile) {
+        const response = await UserAPI.get({ id: cookies.get('id') });
+        setProfile(response.body);
+      }
+    };
+
+    fetchData();
+    form.setFieldsValue({
+      nickname: profile?.nickname,
+      gitAddr: profile?.gitAddr,
+      profileImg: profile?.profileImg,
+      userId: profile?.userId,
+    });
+  }, [profile]);
+
   return useObserver(() => {
     const router = useRouter();
 

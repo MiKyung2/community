@@ -1,39 +1,37 @@
-import AxiosWrapper from "./axiosWrapper";
+import instance from "./axiosWrapper";
 
 const NoteAPI = {
   sendList: async (payload) => {
     try {
-      const res = await AxiosWrapper.get(`note/send?currentPage=${payload.page}&userId=${payload.userId}&size=20&gb=title`);
-      console.log("res : ", JSON.stringify(res, null, 3));
-      res.body.content.map((v) => (v.key = v.id));
-      return res.body;
+      const res = await instance.get(`note/send?currentPage=${payload.page}&userId=${payload.userId}&size=${payload.pageSize}&gb=title`);
+      res.data.body.content.map((v) => (v.key = v.id));
+      return res.data.body;
     } catch (error) {
       console.error(error);
     }
   },
   receiveList: async (payload) => {
     try {
-      const res = await AxiosWrapper.get(
-        `note/receive?currentPage=${payload.page}&userId=${payload.userId}&size=20&gb=title`
+      const res = await instance.get(
+        `note/receive?currentPage=${payload.page}&userId=${payload.userId}&size=${payload.pageSize}&gb=title`
       );
-      console.log("res : ", JSON.stringify(res, null, 3));
-      res.body.content.map((v) => (v.key = v.id));
-      return res.body;
+      res.data.body.content.map((v) => (v.key = v.id));
+      return res.data.body;
     } catch (error) {
       console.error(error);
     }
   },
   get: async (payload) => {
     try {
-      const res = await AxiosWrapper.get(`note/detail/${payload.gb}/${payload.id}`);
-      return res;
+      const res = await instance.get(`note/detail/${payload.gb}/${payload.id}`);
+      return res.data;
     } catch (error) {
       console.error(error);
     }
   },
   post: async (payload) => {
     try {
-      const res = await AxiosWrapper.post("note/write", payload.data);
+      const res = await instance.post("note/write", payload.data);
       return res;
     } catch (error) {
       console.error(error);
@@ -41,7 +39,7 @@ const NoteAPI = {
   },
   remove: async (payload) => {
     try {
-      const res = await AxiosWrapper.post("note/remove/bulk", payload.data);
+      const res = await instance.post("note/remove/bulk", payload.data);
       return res;
     } catch (error) {
       console.error(error);

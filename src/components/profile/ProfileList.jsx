@@ -1,10 +1,12 @@
-import { List, Avatar } from "antd";
+import { List, Avatar, Spin } from "antd";
 import { useRouter } from "next/router";
 
 const ProfileList = (props) => {
   const router = useRouter();
+
   return (
     <List
+      loading={props.loading}
       dataSource={props.dataSource}
       renderItem={(item) => (
         <List.Item 
@@ -31,11 +33,6 @@ const ProfileList = (props) => {
         </List.Item>
       )}
     >
-      {props.loading && (
-        <div className="demo-loading-container">
-          <Spin />
-        </div>
-      )}
     </List>
   );
 };
