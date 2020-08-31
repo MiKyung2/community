@@ -2,6 +2,7 @@ import { Modal, Form, Input, Button } from "antd";
 import { useObserver, useLocalStore } from "mobx-react";
 import NoteAPI from "../../api/note";
 import { AppContext } from "../App/context";
+import { toJS } from "mobx";
 
 const SendNote = (props) => {
   return useObserver(() => {

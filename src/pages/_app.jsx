@@ -10,7 +10,8 @@ import { observerBatching } from "mobx-react-lite";
 import { CookiesProvider, Cookies } from "react-cookie";
 import NextApp, { AppContext as NextAppContext } from 'next/app';
 import cookie from 'cookie';
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
+import { toJS } from "mobx";
 
 observerBatching();
 
@@ -66,10 +67,18 @@ App.getInitialProps = async (appContext) => {
     (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
   );
 
+<<<<<<< Updated upstream
   const token = ck.token ?? "";
   const decodedToken = jwt.decode(token.replace("Bearer ", ""));
   const userId = decodedToken?.userId ?? "";
 
+=======
+  const token = ck.token ?? '';
+  const id = ck.id ?? '';
+  const decodedToken = jwt.decode(token.replace('Bearer ', ''));
+  const userId = decodedToken?.userId ?? '';
+  console.log("user: ", toJS(decodedToken));
+>>>>>>> Stashed changes
   return {
     ...nextAppProps,
     ssr,

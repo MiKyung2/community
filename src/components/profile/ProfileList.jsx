@@ -11,7 +11,8 @@ const ProfileList = (props) => {
           key={item.title} 
           onClick={(e) => {
             e.preventDefault();
-            router.push(`/board/${item.boardId}`);
+            console.log("item : ", JSON.stringify(item, null, 3));
+            // router.push(`/board/${item.boardId}`);
           }}
         >
           <List.Item.Meta
