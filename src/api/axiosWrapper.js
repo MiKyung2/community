@@ -1,5 +1,6 @@
 import axios from 'axios';
 import CONFIG from '../utils/CONFIG';
+import { Alert } from 'antd';
 
 export const instance = axios.create({
   baseURL: CONFIG.API_BASE_URL,
@@ -14,6 +15,13 @@ const handleError = (error) => {
     case 401:
       // 로그인이 필요합니다.
       console.log('error 401, 로그인이 필요합니다.');
+          
+      <Alert
+        message="Error"
+        description="This is an error message about copywriting."
+        type="error"
+        showIcon
+      />
       break;
     case 403:
       // 권한 없음
@@ -29,6 +37,12 @@ const handleError = (error) => {
       break;
     default:
       // 예상치 못한 에러
+      <Alert
+        message="예상치 못한 에러가 발생했습니다."
+        description="새로고침하여 다시 시도해주세요."
+        type="error"
+        showIcon
+      />
       console.log('error, 예상치 못한 에러가 발생했습니다.');
       break;
   }
@@ -36,7 +50,6 @@ const handleError = (error) => {
 };
 
 instance.interceptors.response.use(handleSuccess, handleError);
-// instance.interceptors.response.use(handleSuccess);
 
 const AxiosWrapper = {
   async get(url, config) {
