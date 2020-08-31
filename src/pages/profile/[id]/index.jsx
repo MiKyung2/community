@@ -9,8 +9,9 @@ import SendNote from '../../../components/note/SendNote';
 import ProfileCard from '../../../components/profile/ProfileCard';
 import ProfileTabList from '../../../components/profile/ProfileList';
 const { TabPane } = Tabs;
-import { toJS } from "mobx";
-import FollowTab from "../../../components/profile/FollowTab";
+import { toJS } from 'mobx';
+import FollowTab from '../../../components/profile/FollowTab';
+import BoardRecentAPI from '../../../api/board_recent';
 
 const ProfilePage = (props) => {
   return useObserver(() => {
@@ -23,15 +24,21 @@ const ProfilePage = (props) => {
           open: false,
           receiveUser: {
             id: 0,
-            user: "",
+            user: '',
           },
         },
         profile: props.profile,
         follow: {
-          tabActive: "following",
+          tabActive: 'following',
           open: false,
           list: [],
-        }
+        },
+        tab: {
+          tabActive: 'recent',
+          recent: props.theLatestDate,
+          board: [],
+          scrap: [],
+        },
       };
     });
 
@@ -51,32 +58,50 @@ const ProfilePage = (props) => {
     React.useEffect(() => {
       if (!state.follow.open) return;
 
-      if (state.follow.tabActive === "following") {
+      if (state.follow.tabActive === 'following') {
         (async () => {
           try {
-            const followingListRes = await UserAPI.followingList({ userId: router.query.id });
+            const followingListRes = await UserAPI.followingList({
+              userId: router.query.id,
+            });
             state.follow.list = followingListRes.following_users;
-          } catch(error){
+          } catch (error) {
             console.error(error);
           }
         })();
-      } else if (state.follow.tabActive === "followers") {
+      } else if (state.follow.tabActive === 'followers') {
         (async () => {
           try {
-            const followerListRes = await UserAPI.followerList({ userId: router.query.id });
+            const followerListRes = await UserAPI.followerList({
+              userId: router.query.id,
+            });
             state.follow.list = followerListRes.followed_users;
-          } catch(error){
+          } catch (error) {
             console.error(error);
           }
         })();
       }
     }, [state.follow.open, state.follow.tabActive]);
 
+    React.useEffect(() => {
+      switch (state.tab.tabActive) {
+        case 'recent':
+          return;
+
+        case 'board':
+          return;
+
+        case 'scrap':
+          return;
+      }
+    }, [state.tab.tabActive]);
     return (
       <div className={props.className}>
         <Modal
           visible={state.follow.open}
-          onCancel={() => { state.follow.open = false; }}
+          onCancel={() => {
+            state.follow.open = false;
+          }}
           footer={null}
         >
           <FollowTab
@@ -98,22 +123,30 @@ const ProfilePage = (props) => {
           onUpdate={() => {
             getProfile();
           }}
-          onClickFollow={(category) => { 
+          onClickFollow={(category) => {
             state.follow.open = true;
             state.follow.tabActive = category;
           }}
         />
 
         {/* 게시물 탭 */}
-        <Tabs large='true' type='card' defaultActiveKey='1'>
-          <TabPane tab='최근 활동' key='1'>
-            <ProfileTabList loading={false} dataSource={props.theLatestDate} />
+        <Tabs
+          large='true'
+          type='card'
+          defaultActiveKey={state.tab.tabActive}
+          activeKey={state.tab.tabActive}
+          onChange={(active) => {
+            state.tab.tabActive = active;
+          }}
+        >
+          <TabPane tab='최근 활동' key='recent'>
+            <ProfileTabList loading={false} dataSource={state.tab.recent} />
           </TabPane>
-          <TabPane tab='게시물' key='2'>
-            <ProfileTabList loading={false} dataSource={props.theLatestDate} />
+          <TabPane tab='게시물' key='board'>
+            <ProfileTabList loading={false} dataSource={state.tab.board} />
           </TabPane>
-          <TabPane tab='스크랩' key='3'>
-            <ProfileTabList loading={false} dataSource={props.theLatestDate} />
+          <TabPane tab='스크랩' key='scrap'>
+            <ProfileTabList loading={false} dataSource={state.tab.scrap} />
           </TabPane>
         </Tabs>
 
@@ -134,44 +167,11 @@ const ProfilePage = (props) => {
 
 ProfilePage.getInitialProps = async (ctx) => {
   const profileRes = await UserAPI.get({ id: ctx.query.id });
+  const boardRecentRes = await BoardRecentAPI.get({ id: ctx.query.id });
 
   return {
     profile: profileRes.body,
-    theLatestDate: [
-      {
-        key: 1,
-        boardId: 1,
-        title: '게시물에 댓글을 남겼습니다.',
-        description: '[모집중] 토이프로젝트 모집합니다.',
-        time: '2분 전',
-        user: {
-          id: 1,
-          nickname: '김코딩',
-        },
-      },
-      {
-        key: 2,
-        boardId: 2,
-        title: '게시물에 댓글을 남겼습니다.',
-        description: '[모집중] 토이프로젝트 모집합니다.',
-        time: '2분 전',
-        user: {
-          id: 1,
-          nickname: '김코딩',
-        },
-      },
-      {
-        key: 3,
-        boardId: 3,
-        title: '게시물에 댓글을 남겼습니다.',
-        description: '[모집중] 토이프로젝트 모집합니다.',
-        time: '2분 전',
-        user: {
-          id: 1,
-          nickname: '김코딩',
-        },
-      },
-    ],
+    theLatestDate: boardRecentRes.body,
   };
 };
 

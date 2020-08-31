@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 import { useObserver } from 'mobx-react';
 import UserAPI from '../../api/user';
 import { AppContext } from '../App/context';
-import { toJS } from "mobx";
+import { toJS } from 'mobx';
 
 const { Meta } = Card;
 
@@ -46,12 +46,7 @@ const ProfileCard = (props) => {
               title='팔로잉'
               value={props.data.followingList.cnt || 0}
               onClick={() => {
-<<<<<<< Updated upstream
-                console.log("D");
-                props.onClickFollow("following");
-=======
                 props.onClickFollow('following');
->>>>>>> Stashed changes
               }}
             />,
             <BottomAction
@@ -64,7 +59,7 @@ const ProfileCard = (props) => {
               title='팔로워'
               value={props.data.followedList.cnt || 0}
               onClick={() => {
-                props.onClickFollow("followers");
+                props.onClickFollow('followers');
               }}
             />,
           ]}
@@ -117,7 +112,10 @@ const ProfileCard = (props) => {
                         title='팔로우를 취소하시겠습니까?'
                         onConfirm={() => {
                           UserAPI.unfollow({
-                            data: { followed_id: id, following_id: global.state.user.id },
+                            data: {
+                              followed_id: id,
+                              following_id: global.state.user.id,
+                            },
                           });
                           // message.info("팔로우가 취소됬습니다.");
                         }}
@@ -134,7 +132,10 @@ const ProfileCard = (props) => {
                         style={{ marginRight: '8px' }}
                         onClick={() => {
                           UserAPI.follow({
-                            data: { followed_id: id, following_id: global.state.user.id },
+                            data: {
+                              followed_id: id,
+                              following_id: global.state.user.id,
+                            },
                           });
                           props.onUpdate();
                         }}

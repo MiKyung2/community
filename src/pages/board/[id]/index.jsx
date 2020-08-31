@@ -1,33 +1,22 @@
 import { DislikeFilled, DislikeOutlined, EyeOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons';
-import { Button, Modal, Row } from 'antd';
+import { Button, Modal, Row, Tooltip } from 'antd';
 import { useLocalStore, useObserver } from 'mobx-react';
+import {toJS} from 'mobx';
 import { useRouter } from 'next/router';
-import React from 'react';
+import { useCookies } from 'react-cookie';
+import { AppContext } from '../../../components/App/context';
+import React, {useEffect} from 'react';
 import ReactHtmlParser from 'react-html-parser';
 import styled from 'styled-components';
+
 import BoardAPI from "../../../api/board";
+import UserAPI from "../../../api/user";
 import CommentAPI from "../../../api/comment";
 import Comments from "../../../components/Board/Comment/Comments";
 import { formatDate } from '../../../utils/dateFormatter';
 import { numFormatter } from '../../../utils/numFormatter';
 
 const Board = (props) => {
-<<<<<<< Updated upstream
-
-  const router = useRouter();
-  const queryId = router.query.id;
-
-  const boardProps = props.props;
-
-  return useObserver(() => {
-
-    const state = useLocalStore(() => {
-      return {
-        data: boardProps.board.body,
-        comments: boardProps.comments.body,
-        visible: false,
-        action: null
-=======
   return useObserver(() => {
     const router = useRouter();
     const queryId = router.query.id;
@@ -49,22 +38,55 @@ const Board = (props) => {
         user: '',
         isWriter: false,
         login: false
->>>>>>> Stashed changes
       };
     });
+
+    // 유저 정보
+    const [cookies, _, removeCookie] = useCookies(['token', 'id']);
+
+    useEffect(() => {
+      const getUserInfo = async() => {
+        if(!cookies.token) return;
+          const userInfo = await UserAPI.get({id: cookies.id});            
+          state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
+          state.login = true;
+      };
+      getUserInfo();
+
+    }, []);
+
+    
+    const setIsWriter = () => {
+      if(state.writer === state.user) {
+        state.isWriter = true
+      } else {
+        state.isWriter = false
+      }
+    }
+    setIsWriter();
 
     const onClickBackToList = () => {
       router.push('/board');
     }
 
     const onClickLike = async () => {
-      await BoardAPI.event({ id: queryId, itemGb: "L" });
-      state.action = "liked";
+      if (state.login) {
+        await BoardAPI.event({ id: queryId, itemGb: "L" });
+        state.events.action = "liked";
+        state.events.like = state.events.like + 1;
+      } else {
+        return;
+      }
     };
 
     const onClickDislike = async () => {
-      await BoardAPI.event({ id: queryId, itemGb: "D" });
-      state.action = "disliked";
+      if (state.login) {
+        await BoardAPI.event({ id: queryId, itemGb: "D" });
+        state.events.action = "disliked";
+        state.events.dislike = state.events.dislike + 1;
+      } else {
+        return;
+      }
     };
 
     const onClickEdit = () => {
@@ -72,22 +94,22 @@ const Board = (props) => {
     }
 
     const onClickDelete = () => {
-      state.visible = true;
+      state.modal.delete = true;
     }
 
-    const handleCancelDelete = (e) => {
-      state.visible = false;
+    const handleCancel_DeleteModal = (e) => {
+      state.modal.delete = false;
     }
 
-    const handleOkDelete = () => {
+    const handleOk_DeleteModal = () => {
       const boardDeleteRes = async () => await BoardAPI.delete({
         id: queryId
       });
       boardDeleteRes();
       router.push('/board');
-      state.visible = false;
+      state.modal.delete = false;
     }
-
+    
     return (
       <div className={props.className}>
         <Row justify="space-between" className="header_top">
@@ -103,31 +125,27 @@ const Board = (props) => {
 
         <div className="main_container">
 
-          <Row justify="space-between" className="main_container_top">
+          <Row justify="space-between" className="main_container_top" style={state.isWriter ? {paddingBottom: 0} : {paddingBottom: '10px'}}>
             {/* 해당 게시글 조회수 & 댓글수 & 좋아요수 */}
             <Row>
               <span className="main_container_top_left "><EyeOutlined /> {numFormatter(state.data.viewCount)}</span>
-              <span className="main_container_top_left event" onClick={onClickLike}>{state.action === 'liked' ? <LikeFilled /> : <LikeOutlined />} {numFormatter(state.data.rowLike)}</span>
-              <span className="main_container_top_left event" onClick={onClickDislike}>{state.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />} {numFormatter(state.data.rowDisLike)}</span>
+              <Tooltip title={state.login ? "좋아요" : "로그인 해주세요"}>
+                <span className="main_container_top_left event" onClick={onClickLike}>{state.events.action === 'liked' ? <LikeFilled /> : <LikeOutlined />} {numFormatter(state.events.like)}</span>
+              </Tooltip>
+              <Tooltip title={state.login ? "싫어요" : "로그인 해주세요"}>
+                <span className="main_container_top_left event" onClick={onClickDislike}>{state.events.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />} {numFormatter(state.events.dislike)}</span>
+              </Tooltip>
               {/* <span className="main_container_top_left "><CommentOutlined /> {state.data.commentCnt}</span> */}
             </Row>
 
             {/* 수정 & 삭제 */}
-            <Row>
-              <Button type="text" onClick={onClickEdit}>수정</Button>
-              <Button type="text" onClick={onClickDelete}>삭제</Button>
-            </Row>
+            {state.isWriter && 
+              <Row>
+                <Button type="text" onClick={onClickEdit}>수정</Button>
+                <Button type="text" onClick={onClickDelete}>삭제</Button>
+              </Row>
+            }
           </Row>
-
-          {/* 삭제 확인 메세지 */}
-          <Modal
-            visible={state.visible}
-            onOk={handleOkDelete}
-            onCancel={handleCancelDelete}
-          >
-            <p>정말 삭제하시겠습니까?</p>
-          </Modal>
-
 
           {/* 게시글 내용 */}
           <div className="main_content">{ReactHtmlParser(`${state.data.contents}`)}</div>
@@ -140,6 +158,15 @@ const Board = (props) => {
           {/* <Comments queryId={queryId} data={state.comments} /> */}
           <Comments queryId={queryId} data={props.comments.body} />
         </div>
+
+        {/* 삭제 확인 메세지 */}
+        <Modal
+          visible={state.modal.delete}
+          onOk={handleOk_DeleteModal}
+          onCancel={handleCancel_DeleteModal}
+        >
+          <p>정말 삭제하시겠습니까?</p>
+        </Modal>
       </div>
     );
   });
@@ -203,10 +230,12 @@ export default styled(Board)`
     }
     .main_content {
       /* border: 1px solid red; */
+      display: block;
       width: 100%;
-      flex: 9;
+      max-height: 1000px;
       margin-top: 50px;
       padding: 0 30px 30px 30px;
+      overflow: auto;
     }
     .comment-section {
       > h3 {

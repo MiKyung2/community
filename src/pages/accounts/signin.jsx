@@ -4,11 +4,11 @@ import Router, { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useCookies } from 'react-cookie';
 import { Form, Input, Button, Checkbox, Row, Col, message } from 'antd';
-import { OuterWrapper } from './styles';
+import { OuterWrapper } from '../../styles/styles';
 import AuthAPI from '../../api/auth';
 import { AppContext } from '../../components/App/context';
 import { inputRules } from '../../components/accounts/validator';
-import { toJS } from "mobx";
+import { toJS } from 'mobx';
 import FindPassModal from '../../components/accounts/FindPassModal';
 
 const SignIn = (props) => {
@@ -20,7 +20,7 @@ const SignIn = (props) => {
         loading: false,
         list: [],
         value: {
-          email: '',
+          userId: '',
           password: '',
         },
       };
@@ -30,13 +30,15 @@ const SignIn = (props) => {
 
     const [_, setCookie] = useCookies(['token', 'id']);
 
+    // 사인 버튼 누르고 skeleton 추가
+    // 1.5 초 안에 반응 없을 때 잘 못 된 방식이라는 메시지 추가
+
     const onLogin = async () => {
       try {
         const resAuth = await AuthAPI.login(state);
         if (resAuth.data.code == 200) {
           global.action.login(resAuth.data.body);
         }
-        
       } catch (e) {
         return message.error(e.response.data.msg);
       }
@@ -54,23 +56,23 @@ const SignIn = (props) => {
       <Form.Item
         className='center'
         name={name}
-        rules={name === 'email' ? inputRules.email : null}
+        rules={name === 'userId' ? inputRules.userId : null}
       >
         <Input
           className='input'
-          type={name.includes('email') ? 'text' : 'password'}
+          type={name.includes('userId') ? 'text' : 'password'}
           value={
-            name.includes('email') ? state.value.email : state.value.password
+            name.includes('userId') ? state.value.userId : state.value.password
           }
           placeholder={
-            name.includes('email')
-              ? '이메일을 입력해주세요'
+            name.includes('userId')
+              ? '아이디를 입력해주세요'
               : '패스워드를 입력해주세요'
           }
           onChange={(e) => {
             name === 'password'
               ? (state.value.password = e.target.value)
-              : (state.value.email = e.target.value);
+              : (state.value.userId = e.target.value);
           }}
           autoComplete='off'
         />
@@ -86,15 +88,12 @@ const SignIn = (props) => {
           }}
           onFinishFailed={() => {
             console.log('onFinishFailed');
-            onLogin()
+            onLogin();
           }}
         >
           <div className='wrapper'>
-            {formItemMaker('email')}
+            {formItemMaker('userId')}
             {formItemMaker('password')}
-            <Form.Item valuePropName='checked'>
-              <Checkbox>로그인 유지</Checkbox>
-            </Form.Item>
             <Form.Item>
               <Button
                 className='button'

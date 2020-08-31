@@ -1,50 +1,50 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
-import { useCookies } from 'react-cookie';
+import { useCookies, cookies } from 'react-cookie';
 import { Layout, Menu, Badge, List, Avatar, Popover, Button } from 'antd';
 const { Header } = Layout;
-import ProfileTabList from "../profile/ProfileList";
+import ProfileTabList from '../profile/ProfileList';
 import { MessageOutlined, BellOutlined, UserOutlined } from '@ant-design/icons';
 import useApp from '../../hooks/app';
 import routes from '../../routes';
 import styled from 'styled-components';
 import { AppContext } from '../App/context';
-import { toJS } from "mobx";
+import { toJS } from 'mobx';
 
 const theLatestDate = [
   {
     key: 1,
     boardId: 1,
-    title: "게시물에 댓글을 남겼습니다.",
-    description: "[모집중] 토이프로젝트 모집합니다.",
-    time: "2분 전",
+    title: '게시물에 댓글을 남겼습니다.',
+    description: '[모집중] 토이프로젝트 모집합니다.',
+    time: '2분 전',
     user: {
       id: 1,
-      nickname: "김코딩",
-    }
+      nickname: '김코딩',
+    },
   },
   {
     key: 2,
     boardId: 2,
-    title: "게시물에 댓글을 남겼습니다.",
-    description: "[모집중] 토이프로젝트 모집합니다.",
-    time: "2분 전",
+    title: '게시물에 댓글을 남겼습니다.',
+    description: '[모집중] 토이프로젝트 모집합니다.',
+    time: '2분 전',
     user: {
       id: 1,
-      nickname: "김코딩",
-    }
+      nickname: '김코딩',
+    },
   },
   {
     key: 3,
     boardId: 3,
-    title: "게시물에 댓글을 남겼습니다.",
-    description: "[모집중] 토이프로젝트 모집합니다.",
-    time: "2분 전",
+    title: '게시물에 댓글을 남겼습니다.',
+    description: '[모집중] 토이프로젝트 모집합니다.',
+    time: '2분 전',
     user: {
       id: 1,
-      nickname: "김코딩",
-    }
+      nickname: '김코딩',
+    },
   },
 ];
 
@@ -63,7 +63,15 @@ const LayoutHeader = (props) => {
     const removeCookies = () => {
       removeCookie('token');
       removeCookie('id');
-      router.reload();
+    };
+
+    const handleClickLogin = () => {
+      router.push("/accounts/signin");
+    };
+
+    const handleClickLogout = () => {
+      removeCookies();
+      global.action.logout();
     };
 
     return (
@@ -85,14 +93,12 @@ const LayoutHeader = (props) => {
               {i.name}
             </Menu.Item>
           ))}
-          
+
           {global?.state?.user?.token ? (
-            <Menu.Item onClick={removeCookies}>로그아웃</Menu.Item>
+            <Menu.Item onClick={handleClickLogout}>로그아웃</Menu.Item>
           ) : (
             <Menu.Item
-              onClick={() => {
-                router.push('/accounts/signin');
-              }}
+              onClick={handleClickLogin}
             >
               로그인
             </Menu.Item>
@@ -112,7 +118,9 @@ const LayoutHeader = (props) => {
             </Button>
             <Popover
               placement='bottomRight'
-              content={<ProfileTabList loading={false} dataSource={theLatestDate} />}
+              content={
+                <ProfileTabList loading={false} dataSource={theLatestDate} />
+              }
               trigger='click'
             >
               <Button>

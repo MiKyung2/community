@@ -6,7 +6,6 @@ import jwt from "jsonwebtoken";
 import CONFIG from '../utils/CONFIG';
 import instance from "../api/axiosWrapper";
 
-
 const initializer = (props) => {
   const state = {
     status: { loading: false },
@@ -16,7 +15,6 @@ const initializer = (props) => {
       userId: props.init?.user?.userId,
     },
   };
-
   return state;
 };
 
@@ -29,7 +27,7 @@ const dispatch = ($) => {
 
   const logout = () => {
     $.state.user.token = null;
-    $.state.user.userId = "";
+    $.state.user.userId = '';
     $.state.user.id = 0;
   };
 

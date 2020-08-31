@@ -7,17 +7,13 @@ export const regExp = {
   checkKor: /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/,
   checkEmail: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   checkPass: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{1,10}$/,
-  checkUserId: /^[가-힣|a-z|A-Z|0-9|$@$!%*#?&|]{1,10}$/,
 };
 
 export const inputRules = {
-  userId: [
+  nickname: [
     () => ({
       validator(rule, value) {
-        if (
-          value.match(/^[가-힣|a-z|A-Z|0-9|$@$!%*#?&|]{1,10}$/) ||
-          value.length === 0
-        ) {
+        if (value.match(/^[가-힣|a-z|A-Z|0-9|$@$!%*#?&|]{1,10}$/)) {
           return Promise.resolve();
         }
         return Promise.reject('1글자 이상, 10글자 미만');
@@ -25,14 +21,14 @@ export const inputRules = {
     }),
   ],
   email: [
-    () => ({
-      validator(rule, value) {
-        if (value.match(regExp.checkEmail) || value.length === 0) {
-          return Promise.resolve();
-        }
-        return Promise.reject('이메일을 정확히 입렵해주세요');
-      },
-    }),
+    {
+      type: 'email',
+      message: 'The input is not valid E-mail!',
+    },
+    {
+      required: true,
+      message: 'Please input your E-mail!',
+    },
   ],
   password: [
     {
@@ -42,10 +38,7 @@ export const inputRules = {
     () => ({
       validator(rule, value) {
         if (
-          value.match(
-            /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/,
-          ) ||
-          value.length === 0
+          value.match(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/)
         ) {
           return Promise.resolve();
         }
