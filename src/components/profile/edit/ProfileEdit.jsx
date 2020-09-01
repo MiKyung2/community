@@ -11,20 +11,9 @@ import {
 } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import { useObserver } from 'mobx-react';
-import UserAPI from '../../../api/user';
 import AuthAPI from '../../../api/auth';
-import { Cookies } from 'react-cookie';
+import ChangeImage from './ChangeImage';
 import { StyledCard } from './styles/EditProfile.styles';
-const cookies = new Cookies();
-
-const formItemLayout = {
-  labelCol: {
-    span: 6,
-  },
-  wrapperCol: {
-    span: 10,
-  },
-};
 
 const normFile = (e) => {
   if (Array.isArray(e)) {
@@ -57,22 +46,6 @@ const EditProfile = ({ profile, id }) => {
     };
     return (
       <Card>
-        {/* <Card.Meta
-          avatar={
-            <Badge count='+' style={{ height: 20, width: 20 }}>
-              <Avatar
-                src={
-                  profile.profileImg ||
-                  'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-                }
-                style={{ height: 100, width: 100 }}
-              />
-            </Badge>
-          }
-          title={profile.nickname}
-          description='안녕하세요 :)'
-        /> */}
-
         <Form
           form={form}
           name='validate_other'
@@ -118,9 +91,15 @@ const EditProfile = ({ profile, id }) => {
                     textDecoration: 'underline',
                     cursor: 'pointer',
                   }}
+                  onClick={() => setVisible(true)}
                 >
                   이미지 변경
                 </p>
+                <ChangeImage
+                  userId={profile?.userId}
+                  visible={visible}
+                  setVisible={setVisible}
+                />
               </div>
             </div>
           </Form.Item>
@@ -140,7 +119,7 @@ const EditProfile = ({ profile, id }) => {
               getValueFromEvent={normFile}
               noStyle
             >
-              <Upload.Dragger name='files' action='/upload.do' disabled>
+              <Upload.Dragger name='files' action='/upload.do'>
                 <p className='ant-upload-drag-icon'>
                   <InboxOutlined />
                 </p>

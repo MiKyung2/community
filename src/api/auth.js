@@ -102,9 +102,25 @@ const AuthAPI = {
       formdata.append('nickname', data.nickname);
       formdata.append('gitAddr', data.gitAddr);
       formdata.append('id', id);
-      // formdata.append('file', data.dragger[0].originFileObj);
       const res = await instance.put(`user`, formdata, config);
 
+      return res;
+    } catch (error) {
+      return '500';
+    }
+  },
+  edit_user_image: async (image, userId) => {
+    try {
+      const config = {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+      const formdata = new FormData();
+      formdata.append('file', image[0].originFileObj);
+      formdata.append('userId', userId);
+      const res = await instance.put(`profile`, formdata, config);
       return res;
     } catch (error) {
       return '500';
