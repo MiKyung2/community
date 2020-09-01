@@ -6,7 +6,7 @@ import AuthAPI from '../../../api/auth';
 import { regExp, inputRules } from './validator';
 
 const FindPassModal = ({ id, visible, setVisible }) => {
-  const [pass, setPass] = React.useState({
+  const [pass, setPass] = useState({
     password1: '',
     password2: '',
   });
@@ -19,7 +19,7 @@ const FindPassModal = ({ id, visible, setVisible }) => {
     setVisible(false);
   };
 
-  //   나중에 고치자 예전에 antd 썼던 방법 참고하면 될 듯
+  //   변경후 깔끔하게 사라지지 않음 예전 코드 참고
   const onClear = () => {
     setPass({
       password1: '',
@@ -88,7 +88,6 @@ const FindPassModal = ({ id, visible, setVisible }) => {
           name={['password']}
           rules={inputRules.password}
           hasFeedback
-          autoComplete='off'
         >
           <Input
             style={{ width: '280px', marginBottom: 10 }}
