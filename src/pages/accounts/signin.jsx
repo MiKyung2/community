@@ -70,6 +70,7 @@ const SignIn = (props) => {
               : '패스워드를 입력해주세요'
           }
           onChange={(e) => {
+            e.preventDefault();
             name === 'password'
               ? (state.value.password = e.target.value)
               : (state.value.userId = e.target.value);
@@ -86,8 +87,7 @@ const SignIn = (props) => {
           initialValues={{
             remember: true,
           }}
-          onFinishFailed={() => {
-            console.log('onFinishFailed');
+          onFinish={() => {
             onLogin();
           }}
         >
