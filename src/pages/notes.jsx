@@ -129,6 +129,10 @@ const Notes = (props) => {
       getCurrentList();
     }, [state.tabActive]);
 
+    React.useEffect(() => {
+      if (global.state.alarm.note) global.state.alarm.note = false
+    }, [global.state.alarm.note]);
+
     const onChangePage = (page, pageSize) => {
       if (state.tabActive === "S") {
         state.send.page = page;

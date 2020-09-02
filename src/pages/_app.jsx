@@ -11,18 +11,40 @@ import { CookiesProvider, Cookies } from 'react-cookie';
 import NextApp, { AppContext as NextAppContext } from 'next/app';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
-import { toJS } from "mobx";
-import SockJsClient from "react-stomp";
 import CONFIG from "../utils/config";
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 
 observerBatching();
 
+let sockJS = new SockJS(`https://toyproject.okky.kro.kr:8443/ws-stomp`);
+let stompClient = Stomp.over(sockJS);
+
 function App(props) {
   return useObserver(() => {
     const app = useApp(props);
     
+    React.useEffect(() => {
+      if (app.state.user.userId) {
+        stompClient.connect({},()=>{
+          stompClient.subscribe('/socket/sub/note/' + app.state.user.userId, (data) => {
+            console.log("note>>>", data);
+          });
+
+          stompClient.subscribe('/socket/sub/board/' + app.state.user.userId, (event) => {
+            console.log("board>>>", event);
+          });
+
+          stompClient.subscribe('/socket/sub/profile/' + app.state.user.userId, (event) => {
+            console.log("profile>>>", event);
+          });
+        });
+      } else {
+        
+      }
+      
+    }, [app.state.user.userId]);
+
     return (
       <>
         <GlobalStyle />
@@ -58,14 +80,6 @@ function App(props) {
             </Layout>
           </CookiesProvider>
         </AppContext.Provider>
-        {/* {app.state.init?.userId ? (
-          <SockJsClient 
-            url={'https://toyproject.okky.kro.kr:8443/ws-stomp'} 
-            topics={['/socket/sub/note/' + app.state.init?.userId, '/socket/sub/board/' + app.state.init?.userId, '/socket/sub/profile/' + app.state.init?.userId]}
-            onMessage={(msg) => { console.log(msg); }}
-            ref={ (client) => { this.clientRef = client }} 
-          />
-        ) : null} */}
       </>
     );
   });

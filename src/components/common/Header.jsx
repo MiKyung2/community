@@ -112,7 +112,7 @@ const LayoutHeader = (props) => {
                 router.push('/notes');
               }}
             >
-              <Badge count={cnt.commentNotReadCnt ? "N" : ""}>
+              <Badge count={global.state.alarm.note ? "N" : ""}>
                 <MessageOutlined />
               </Badge>
             </Button>
@@ -124,7 +124,7 @@ const LayoutHeader = (props) => {
               trigger='click'
             >
               <Button>
-                <Badge count={cnt.boardNotReadCnt ? "N" : ""}>
+                <Badge count={global.state.alarm.board || global.state.alarm.profile ? "N" : ""}>
                   <BellOutlined />
                 </Badge>
               </Button>

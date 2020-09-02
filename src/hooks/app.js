@@ -14,6 +14,11 @@ const initializer = (props) => {
       token: props.init?.user?.token,
       userId: props.init?.user?.userId,
     },
+    alarm: {
+      note: false,
+      board: false,
+      profile: false,
+    }
   };
   return state;
 };
@@ -22,7 +27,7 @@ const dispatch = ($) => {
   const login = (data) => {
     $.state.user.id = data?.userPkId;
     $.state.user.token = data?.token;
-    $.state.user.usreId = data?.userId;
+    $.state.user.userId = data?.userId;
   };
 
   const logout = () => {
