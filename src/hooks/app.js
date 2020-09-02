@@ -3,7 +3,7 @@ import { useLocalStore } from 'mobx-react-lite';
 import App from 'next/app';
 import Axios from "axios";
 import jwt from "jsonwebtoken";
-import CONFIG from '../utils/CONFIG';
+import CONFIG from '../utils/config';
 import instance from "../api/axiosWrapper";
 
 const initializer = (props) => {

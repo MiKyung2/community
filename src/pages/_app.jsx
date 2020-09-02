@@ -12,12 +12,17 @@ import NextApp, { AppContext as NextAppContext } from 'next/app';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import { toJS } from "mobx";
+import SockJsClient from "react-stomp";
+import CONFIG from "../utils/config";
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 
 observerBatching();
 
 function App(props) {
   return useObserver(() => {
     const app = useApp(props);
+    
     return (
       <>
         <GlobalStyle />
@@ -53,6 +58,14 @@ function App(props) {
             </Layout>
           </CookiesProvider>
         </AppContext.Provider>
+        {/* {app.state.init?.userId ? (
+          <SockJsClient 
+            url={'https://toyproject.okky.kro.kr:8443/ws-stomp'} 
+            topics={['/socket/sub/note/' + app.state.init?.userId, '/socket/sub/board/' + app.state.init?.userId, '/socket/sub/profile/' + app.state.init?.userId]}
+            onMessage={(msg) => { console.log(msg); }}
+            ref={ (client) => { this.clientRef = client }} 
+          />
+        ) : null} */}
       </>
     );
   });

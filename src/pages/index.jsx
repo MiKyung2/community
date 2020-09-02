@@ -1,10 +1,31 @@
 import styled from 'styled-components';
 import { useObserver } from 'mobx-react';
 import { useRouter } from 'next/router';
+import { AppContext } from "./../components/App/context";
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
+
+let sockJS = new SockJS("https://toyproject.okky.kro.kr:8443/ws-stomp");
+let stompClient = Stomp.over(sockJS);
 
 const Home = (props) => {
   return useObserver(() => {
+    const global = React.useContext(AppContext);
     const router = useRouter();
+
+    React.useEffect(() => {
+      console.log("global.state.user.userId : ", global.state.user);
+    });
+
+    React.useEffect(() => {
+      stompClient.connect({},()=>{
+        console.log("connect");
+        console.log("userId : ",global.state.init?.userId);
+        stompClient.subscribe('/socket/sub/note/' + "123jmk", (data) => {
+          console.log("data : ", data);
+        });
+      });
+    }, [global.state.user.userId]);
 
     return <div className={props.className}>home</div>;
   });

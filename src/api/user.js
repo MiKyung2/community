@@ -1,5 +1,5 @@
 import instance from "./axiosWrapper";
-import CONFIG from "../utils/CONFIG";
+import CONFIG from "../utils/config";
 import testUserData from "../data/user";
 
 const UserAPI = {

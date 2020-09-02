@@ -41,6 +41,7 @@ const CONFIG = (() => {
   API_BASE_URL = API_BASE_URL + '/' + API_VERSION + '/api';
 
   return {
+    URL,
     API_BASE_URL,
     IMAGE_BASE_URL,
     NODE_ENV,
