@@ -4,6 +4,7 @@ import UserAPI from '../../api/user';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import ProfileEdit from '../../components/profile/edit/ProfileEdit';
+import SnsCard from '../../components/profile/edit/SNSConectCard';
 import PassAndDeleteUser from '../../components/profile/edit/PassAndDeleteUser';
 
 const EditProfile = ({ profile, id }) => {
@@ -14,7 +15,7 @@ const EditProfile = ({ profile, id }) => {
           <ProfileEdit id={id} profile={profile} />
         </Col>
         <Col flex='1 1 400px'>
-          <Card style={{ height: 250 }}>sns 관련 카드</Card>
+          <SnsCard />
           <PassAndDeleteUser id={id} />
           {/* <ChangePassword&Delete/>*/}
           {/* <ConnectSNS/> */}
