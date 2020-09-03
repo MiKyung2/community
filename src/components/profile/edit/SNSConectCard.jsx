@@ -1,16 +1,14 @@
 import React from 'react';
+import { Card } from 'antd';
 import {
   FacebookOutlined,
   GoogleOutlined,
   GithubOutlined,
 } from '@ant-design/icons';
-import { StyledSocialCard } from './account.styles';
+import { StyledSocialCard } from './edit.styles';
 
-const SocialLogin = () => {
-  const socialLogin = (type) => {
-    window.location.href =
-      'https://toyproject.okky.kro.kr:8443/oauth2/authorization/' + type;
-  };
+const SnsCard = () => {
+  const socialLogin = (type) => {};
   return (
     <StyledSocialCard>
       <div className='social-wrapper'>
@@ -26,7 +24,11 @@ const SocialLogin = () => {
           className='btn_social github'
           onClick={() => socialLogin('github')}
         />
-        <span className='btn_social naver' onClick={() => socialLogin('naver')}>
+        <span
+          href='javascript:;'
+          className='btn_social naver'
+          data-social='naver'
+        >
           N
         </span>
       </div>
@@ -34,4 +36,4 @@ const SocialLogin = () => {
   );
 };
 
-export default SocialLogin;
+export default SnsCard;
