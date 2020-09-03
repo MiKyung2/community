@@ -17,8 +17,6 @@ const EditProfile = ({ profile, id }) => {
         <Col flex='1 1 400px'>
           <SnsCard />
           <PassAndDeleteUser id={id} />
-          {/* <ChangePassword&Delete/>*/}
-          {/* <ConnectSNS/> */}
         </Col>
       </Row>
     </div>

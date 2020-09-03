@@ -13,7 +13,10 @@ export const inputRules = {
   nickname: [
     () => ({
       validator(rule, value) {
-        if (value.match(/^[가-힣|a-z|A-Z|0-9|$@$!%*#?&|]{1,10}$/)) {
+        if (
+          value.match(/^[가-힣|a-z|A-Z|0-9|$@$!%*#?&|]{1,10}$/) ||
+          value.length === 0
+        ) {
           return Promise.resolve();
         }
         return Promise.reject('1글자 이상, 10글자 미만');
