@@ -3,7 +3,8 @@ import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
 
 const CONFIG = (() => {
-  let URL = 'https://toyproject.okky.kro.kr:8443';
+  let API_BASE_URL = ""
+  const URL = 'https://toyproject.okky.kro.kr:8443';
   const API_VERSION = 'v1';
   const IMAGE_BASE_URL = '';
 

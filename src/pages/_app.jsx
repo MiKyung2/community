@@ -22,28 +22,31 @@ let stompClient = Stomp.over(sockJS);
 
 function App(props) {
   return useObserver(() => {
-    const app = useApp(props);
+    const global = useApp(props);
     
     React.useEffect(() => {
-      if (app.state.user.userId) {
+      if (global.state.user.userId) {
         stompClient.connect({},()=>{
-          stompClient.subscribe('/socket/sub/note/' + app.state.user.userId, (data) => {
+          stompClient.subscribe('/socket/sub/note/' + global.state.user.userId, (data) => {
             console.log("note>>>", data);
+            global.state.alarm.note = true;
           });
 
-          stompClient.subscribe('/socket/sub/board/' + app.state.user.userId, (event) => {
+          stompClient.subscribe('/socket/sub/board/' + global.state.user.userId, (event) => {
             console.log("board>>>", event);
+            global.state.alarm.board = true;
           });
 
-          stompClient.subscribe('/socket/sub/profile/' + app.state.user.userId, (event) => {
+          stompClient.subscribe('/socket/sub/profile/' + global.state.user.userId, (event) => {
             console.log("profile>>>", event);
+            global.state.alarm.profile = true;
           });
         });
       } else {
         
       }
       
-    }, [app.state.user.userId]);
+    }, [global.state.user.userId]);
 
     return (
       <>
@@ -73,7 +76,7 @@ function App(props) {
             content='https://www.daum.net///i1.daumcdn.net/svc/image/U03/common_icon/5587C4E4012FCD0001'
           />
         </Head>
-        <AppContext.Provider value={app}>
+        <AppContext.Provider value={global}>
           <CookiesProvider>
             <Layout>
               <props.Component {...props.pageProps} />

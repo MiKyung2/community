@@ -16,13 +16,13 @@ const { TabPane } = Tabs;
 const sendColumns = [
   { title: "제목", dataIndex: "title" },
   { title: "받는 사람", dataIndex: "revId" },
-  { title: "보낸 시간", dataIndex: "createdDate" },
+  { title: "보낸 시간", dataIndex: "strCreateDate" },
 ];
 
 const receiveColumns = [
   { title: "제목", dataIndex: "title" },
   { title: "보낸 사람", dataIndex: "sendId" },
-  { title: "받은 시간", dataIndex: "createdDate" },
+  { title: "받은 시간", dataIndex: "strCreateDate" },
 ];
 
 const Notes = (props) => {
