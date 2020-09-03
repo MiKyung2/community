@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Upload, Button, message } from 'antd';
 import AuthAPI from '../../../api/auth';
 
@@ -16,6 +16,7 @@ const ChangeImage = ({ visible, setVisible, userId }) => {
     const res = await AuthAPI.edit_user_image(image, userId);
     if (res.status === 200) {
       message.success('프로필 이미지가 수정 되었습니다.');
+      handleOk();
     } else {
       message.error('잘못된 정보입니다.');
     }
@@ -24,6 +25,10 @@ const ChangeImage = ({ visible, setVisible, userId }) => {
   const handleChange = ({ fileList }) => {
     setImage(fileList);
   };
+
+  useEffect(() => {
+    console.log(image);
+  }, [visible]);
 
   return (
     <Modal
