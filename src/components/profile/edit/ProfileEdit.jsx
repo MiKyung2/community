@@ -38,6 +38,7 @@ const EditProfile = ({ profile, id }) => {
   return useObserver(() => {
     const onFinish = async (values) => {
       const res = await AuthAPI.edit_user_info(values, id);
+      console.log(res);
       if (res.status === 200) {
         message.success('프로필 정보가 수정 되었습니다.');
       } else {
