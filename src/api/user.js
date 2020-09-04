@@ -1,4 +1,4 @@
-import AxiosWrapper from "./axiosWrapper";
+import instance from "./axiosWrapper";
 import CONFIG from "../utils/CONFIG";
 import testUserData from "../data/user";
 
@@ -8,27 +8,27 @@ const UserAPI = {
       if (CONFIG.NODE_ENV == "test") {
         return testUserData.profile;
       } else {
-        const res = await AxiosWrapper.get(`user/${payload.id}`);
-        return res;
+        const res = await instance.get(`user/${payload.id}`);
+        return res.data;
       }
     } catch (error) {
-      console.error(error);
+      CONFIG.ERROR(error);
     }
   },
   put: async (payload) => {
     try {
-      const res = await AxiosWrapper.put("user");
+      const res = await instance.put("user");
       return res;
     } catch (error) {
-      console.error(error);
+      CONFIG.ERROR(error);
     }
   },
-  putPassword: async (payload) => {
+  putPassword: async (data) => {
     try {
-      const res = await AxiosWrapper.put("user/password", payload.data);
+      const res = await instance.put("user/password", data);
       return res;
     } catch (error) {
-      console.error(error);
+      CONFIG.ERROR(error);
     }
   },
   followingList: async (payload) => {
@@ -36,13 +36,13 @@ const UserAPI = {
       if (CONFIG.NODE_ENV == "test") {
         return testUserData.followingList;
       } else {
-        const res = await AxiosWrapper.get(
+        const res = await instance.get(
           `user/following?following_id=${payload.userId}`
         );
-        return res.body.followingList;
+        return res.data.body.followingList;
       }
     } catch (error) {
-      console.error(error);
+      CONFIG.ERROR(error);
     }
   },
   followerList: async (payload) => {
@@ -50,29 +50,29 @@ const UserAPI = {
       if (CONFIG.NODE_ENV == "test") {
         return testUserData.followedList;
       } else {
-        const res = await AxiosWrapper.get(
+        const res = await instance.get(
           `user/follower?followed_id=${payload.userId}`
         );
-        return res.body.followedList;
+        return res.data.body.followedList;
       }
     } catch (error) {
-      console.error(error);
+      CONFIG.ERROR(error);
     }
   },
-  follow: async (payload) => {
+  follow: async (data) => {
     try {
-      const res = await AxiosWrapper.post("user/follow", payload.data);
+      const res = await instance.post("user/follow", data);
       return res;
     } catch (error) {
-      console.log(error);
+      CONFIG.ERROR(error);
     }
   },
-  unfollow: async (payload) => {
+  unfollow: async (data) => {
     try {
-      const res = await AxiosWrapper.delete("user/unfollow", payload.data);
+      const res = await instance.delete("user/unfollow", data);
       return res;
     } catch (error) {
-      console.log(error);
+      CONFIG.ERROR(error);
     }
   }
 };

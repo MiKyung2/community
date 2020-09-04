@@ -11,6 +11,7 @@ import { CookiesProvider, Cookies } from 'react-cookie';
 import NextApp, { AppContext as NextAppContext } from 'next/app';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
+import { toJS } from "mobx";
 
 observerBatching();
 

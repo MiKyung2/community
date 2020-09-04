@@ -2,10 +2,11 @@ import { List, Avatar, Button } from "antd";
 import { useObserver } from "mobx-react";
 const strType = { following: "팔로잉", followers: "팔로워" };
 
-const FollowList = ({ data }) => {
+const FollowList = ({ loading, data }) => {
   return useObserver(() => {
     return (
       <List
+        loading={loading}
         itemLayout="horizontal"
         dataSource={data}
         renderItem={(item) => (

@@ -6,9 +6,7 @@ import CommentList from './CommentList';
 
 
 const Comments = (props) => {
-
     return useObserver(() => {
-
         const state = useLocalStore(() => {
             return {
                 comments: props.data,

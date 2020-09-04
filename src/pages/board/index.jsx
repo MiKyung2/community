@@ -17,19 +17,19 @@ const { TabPane } = Tabs;
 // 최신순 | 좋아요순 | 댓글순 | 조회수순
 const sortLists = [
   {
-    id: 'sort_newest',
+    id: 'newest',
     name: '최신순',
   },
   {
-    id: 'sort_like',
+    id: 'like',
     name: '좋아요순'
   },
   {
-    id: 'sort_comment',
+    id: 'commentCnt',
     name: '댓글순'
   },
   {
-    id: 'sort_view',
+    id: 'viewCount',
     name: '조회수순'
   },
 ];
@@ -39,7 +39,6 @@ const BoardPage = (props) => {
 
   return useObserver(() => {
     const router = useRouter();
-
     const state = useLocalStore(() => {
       return {
         dataSource: props.listByDate.content,
@@ -92,33 +91,12 @@ const BoardPage = (props) => {
     }
 
     const onChangeSort = (selectedFilter) => {
-      const target = selectedFilter;
+      if (selectedFilter !== "newest" || selectedFilter !== "like" || selectedFilter !== "commentCnt" || selectedFilter !== "viewCount") return;
 
-      switch (target) {
-        case 'sort_newest':
-          state.page.sort = "date";
-          moveToFirstPage();
-          fetchListData();
-          break;
-        case 'sort_like':
-          state.page.sort = "like";
-          moveToFirstPage();
-          fetchListData();
-          break;
-        case 'sort_comment':
-          state.page.sort = "commentCnt";
-          moveToFirstPage();
-          fetchListData();
-          break;
-        case 'sort_view':
-          state.page.sort = "viewCount";
-          moveToFirstPage();
-          fetchListData();
-          break;
-        default:
-        CONFIG.LOG("default-최신순?");
-        console.error("filter error");
-      }
+      // 정미경의 코멘트 : sortLists id를 서버에 주는 값과 똑같이 쓰면 코드가 간단해집니다.
+      state.page.sort = selectedFilter;
+      moveToFirstPage();
+      fetchListData();
     }
 
     // 제목 클릭 - 게시글로 이동 || 작성자 클릭 - 작성자 프로필로 이동
@@ -296,7 +274,7 @@ export const getStaticProps = async () => {
     size: 20,
     sort: "date"
   });
-  // console.log(">> [server] : boardListByDate => ", boardListByDate);
+
   return {
     props: {
       listByDate: boardListByDate.body,

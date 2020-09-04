@@ -55,16 +55,23 @@ const LayoutHeader = (props) => {
     const router = useRouter();
 
     const cnt = {
-      commentNotReadCnt: 1,
-      boardNotReadCnt: 2,
-      followNotReadCnt: 3,
+      commentNotReadCnt: true,
+      boardNotReadCnt: true,
+      followNotReadCnt: false,
     };
 
     const removeCookies = () => {
       removeCookie('token');
       removeCookie('id');
-      // state.login = false;
-      router.reload();
+    };
+
+    const handleClickLogin = () => {
+      router.push("/accounts/signin");
+    };
+
+    const handleClickLogout = () => {
+      removeCookies();
+      global.action.logout();
     };
 
     return (
@@ -88,12 +95,10 @@ const LayoutHeader = (props) => {
           ))}
 
           {global?.state?.user?.token ? (
-            <Menu.Item onClick={removeCookies}>로그아웃</Menu.Item>
+            <Menu.Item onClick={handleClickLogout}>로그아웃</Menu.Item>
           ) : (
             <Menu.Item
-              onClick={() => {
-                router.push('/accounts/signin');
-              }}
+              onClick={handleClickLogin}
             >
               로그인
             </Menu.Item>
@@ -107,7 +112,7 @@ const LayoutHeader = (props) => {
                 router.push('/notes');
               }}
             >
-              <Badge count={cnt.commentNotReadCnt}>
+              <Badge count={cnt.commentNotReadCnt ? "N" : ""}>
                 <MessageOutlined />
               </Badge>
             </Button>
@@ -119,7 +124,7 @@ const LayoutHeader = (props) => {
               trigger='click'
             >
               <Button>
-                <Badge count={cnt.boardNotReadCnt}>
+                <Badge count={cnt.boardNotReadCnt ? "N" : ""}>
                   <BellOutlined />
                 </Badge>
               </Button>

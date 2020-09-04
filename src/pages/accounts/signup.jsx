@@ -11,15 +11,13 @@ import PolicyModal from '../../components/accounts/PolicyModal';
 const Signup = (props) => {
   return useObserver(() => {
     const router = useRouter();
-    const [isEmailUnique, setIsEmailUnique] = useState(false);
-    const [confirm, setConfirm] = useState(false);
-    const [visible, setVisible] = useState(false);
+
     const state = useLocalStore(() => {
       return {
         loading: false,
         confirm: false,
         value: {
-          nickname: '',
+          userId: '',
           id: '',
           email: '',
           password1: '',
@@ -28,12 +26,33 @@ const Signup = (props) => {
       };
     });
 
+    const [isUserIdUnique, setIsUserIdUnique] = useState(false);
+    const [isEmailUnique, setIsEmailUnique] = useState(false);
+    const [confirm, setConfirm] = useState(false);
+    const [visible, setVisible] = useState(false);
+
     const [form] = Form.useForm();
+
+    const checkUserIdDuplication = async () => {
+      const res = await AuthAPI.check_userId(state.value.userId);
+      if (state.value.userId.match(regExp.checkUserId)) {
+        if (res?.data?.msg === '존재하지 않는 유저 입니다.') {
+          message.success('사용가능한 아이디입니다.');
+          setIsUserIdUnique(true);
+        } else {
+          message.error('이미 사용중인 아이디입니다.');
+          setIsUserIdUnique(false);
+        }
+      }
+      if (!state.value.userId.match(regExp.checkUserId)) {
+        message.error('영문, 한글, 숫자 조합 입력가능');
+      }
+    };
 
     const checkEmailDuplication = async () => {
       const res = await AuthAPI.check_email(state.value.email);
       if (state.value.email.match(regExp.checkEmail)) {
-        if (res?.data?.msg === '존재하지 않는 유저 입니다.') {
+        if (res?.data?.msg === '존재하지 않는 이메일 입니다.') {
           message.success('사용가능한 이메일입니다.');
           setIsEmailUnique(true);
         } else {
@@ -47,10 +66,10 @@ const Signup = (props) => {
     };
 
     const onSignup = async () => {
-      if (confirm && isEmailUnique) {
+      if (confirm && isUserIdUnique && isEmailUnique) {
         state.loading = true;
         if (
-          state.value.nickname &&
+          state.value.userId &&
           // state.value.id &&
           state.value.email &&
           state.value.password1 &&
@@ -59,11 +78,7 @@ const Signup = (props) => {
           const resAuth = await AuthAPI.signup(state);
           if (resAuth.data.code === '200') {
             router.push({
-              pathname: '/accounts/result/success',
-              query: {
-                nickname: state.value.nickname,
-                email: state.value.email,
-              },
+              pathname: '/accounts/result/complete',
             });
           }
           if (resAuth.data.code === '500') {
@@ -72,11 +87,14 @@ const Signup = (props) => {
           }
         } else message.info('모든 빈 칸에 입력을 부탁드립니다.');
       }
-      if (!confirm) {
-        message.info('개인 정보 취급에 동의 부탁드립니다.');
+      if (!isUserIdUnique) {
+        message.info('아이디 중복 확인 부탁드립니다.');
       }
       if (!isEmailUnique) {
         message.info('이메일 중복 확인 부탁드립니다.');
+      }
+      if (!confirm) {
+        message.info('개인 정보 취급에 동의 부탁드립니다.');
       }
     };
 
@@ -102,20 +120,31 @@ const Signup = (props) => {
           <div className='wrapper'>
             <Form.Item
               className='center form-item'
-              name={['user', 'nickname']}
-              rules={inputRules.nickname}
+              name={['user', 'userId']}
+              rules={inputRules.userId}
             >
-              <Input
-                className='input'
-                placeholder='활동 닉네임'
-                value={state.value.nickname}
-                onChange={(e) => {
-                  state.value.nickname = e.target.value;
-                }}
-                autoComplete='off'
-              />
+              <div style={{ display: 'flex' }}>
+                <Input
+                  className='input'
+                  type='text'
+                  name='email'
+                  placeholder='유저 이이디를 입력해주세요'
+                  style={{ width: 200 }}
+                  value={state.value.userId}
+                  onChange={(e) => {
+                    state.value.userId = e.target.value;
+                  }}
+                  autoComplete='off'
+                />
+                <Button
+                  className='button-id'
+                  type='primary'
+                  onClick={() => checkUserIdDuplication()}
+                >
+                  중복 확인
+                </Button>
+              </div>
             </Form.Item>
-
             <Form.Item
               className='center form-item'
               name={['user', 'email']}

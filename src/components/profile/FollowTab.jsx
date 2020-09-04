@@ -5,16 +5,16 @@ import { toJS } from "mobx";
 
 const { TabPane } = Tabs;
 
-const FollowTab = ({ data, tabActive, onChange }) => {
+const FollowTab = ({ loading, data, tabActive, onChange }) => {
   return useObserver(() => {
     return (
       <div>
         <Tabs defaultActiveKey={tabActive} activeKey={tabActive} onChange={onChange}>
           <TabPane tab="팔로잉" key="following">
-            <FollowList data={data} />
+            <FollowList loading={loading} data={data} />
           </TabPane>
           <TabPane tab="팔로워" key="followers">
-            <FollowList data={data} />
+            <FollowList loading={loading} data={data} />
           </TabPane>
         </Tabs>
       </div>

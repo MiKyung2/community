@@ -1,9 +1,9 @@
-import AxiosWrapper from "./axiosWrapper";
+import instance from "./axiosWrapper";
 
 const BoardScrapAPI = {
   get: async (payload) => {
     try {
-      const res = await AxiosWrapper.get(`board/scrap/${payload.userId}`);
+      const res = await instance.get(`board/scrap/${payload.userId}`);
       return res;
     } catch (error) {
       console.error(error);
@@ -11,7 +11,7 @@ const BoardScrapAPI = {
   },
   post: async (payload) => {
     try {
-      const res = await AxiosWrapper.post(`board/scrap`, payload.data);
+      const res = await instance.post(`board/scrap`, payload.data);
       return res;
     } catch (error) {
       // throw error;
@@ -20,7 +20,7 @@ const BoardScrapAPI = {
   },
   delete: async (payload) => {
     try {
-      const res = await AxiosWrapper.post('board/delete', payload.data);
+      const res = await instance.post('board/delete', payload.data);
       return res;
     } catch (error) {
       // throw error;

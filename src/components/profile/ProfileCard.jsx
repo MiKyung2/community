@@ -46,7 +46,6 @@ const ProfileCard = (props) => {
               title='팔로잉'
               value={props.data.followingList.cnt || 0}
               onClick={() => {
-                console.log('D');
                 props.onClickFollow('following');
               }}
             />,
@@ -75,13 +74,15 @@ const ProfileCard = (props) => {
             >
               <Meta
                 avatar={
-                  <Avatar
-                    src={
-                      props.data.profileImg ||
-                      'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-                    }
-                    size='large'
-                  />
+                  <>
+                    <Avatar
+                      src={
+                        props.data.profileImg ||
+                        'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+                      }
+                      size='large'
+                    />
+                  </>
                 }
                 title={props.data.nickname || ''}
                 description={
