@@ -91,7 +91,8 @@ const BoardPage = (props) => {
     }
 
     const onChangeSort = (selectedFilter) => {
-      if (selectedFilter !== "newest" || selectedFilter !== "like" || selectedFilter !== "commentCnt" || selectedFilter !== "viewCount") return;
+      console.log("change sort:", selectedFilter);
+      // if (selectedFilter !== "newest" || selectedFilter !== "like" || selectedFilter !== "commentCnt" || selectedFilter !== "viewCount") return;
 
       // 정미경의 코멘트 : sortLists id를 서버에 주는 값과 똑같이 쓰면 코드가 간단해집니다.
       state.page.sort = selectedFilter;
@@ -136,7 +137,7 @@ const BoardPage = (props) => {
         key: "writer",
         render: writer => (
           <Tooltip title="프로필 이동">
-          <span id="writer" className="hover">{writer}</span>
+            <span id="writer" className="hover">{writer}</span>
           </Tooltip>)
       }, {
         title: "좋아요",

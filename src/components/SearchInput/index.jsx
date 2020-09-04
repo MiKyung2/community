@@ -116,14 +116,16 @@ const SearchInput = (props) => {
           </a>
         </Dropdown>
         <Dropdown overlay={searchHistory} trigger={['click']} className="dropdown">
-        <Search 
-          placeholder="검색어를 입력하세요." 
-          onSearch={onSubmit} 
-          onClick={(e) => e.target.value=""}
-          enterButton 
-          maxLength="255"
-          className="input"
-        />
+          <div>
+            <Search 
+              placeholder="검색어를 입력하세요." 
+              onSearch={onSubmit} 
+              onClick={(e) => e.target.value=""}
+              enterButton 
+              maxLength="255"
+              className="input"
+            />
+          </div>
        </Dropdown>
 
       </div>

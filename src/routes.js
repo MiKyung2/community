@@ -4,7 +4,7 @@ const routes = [
     url: "/",
   },
   {
-    name: "게시판",
+    name: "자유 게시판",
     url: "/board",
   },
   // {
