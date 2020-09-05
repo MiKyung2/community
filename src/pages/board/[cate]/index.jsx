@@ -24,7 +24,7 @@ const BoardPage = (props) => {
     const boardCate = props.props.cate;
     let board_title;
 
-    // console.log("board lists:", boardListProps)
+    console.log("board lists:", boardListProps)
 
   switch(boardCate) {
     case "free":
@@ -122,7 +122,7 @@ const BoardPage = (props) => {
           if(target === 'title') {
             moveToBoardPost(record.id);
           } else if (target === 'writer') {
-            moveToWriterProfile();
+            moveToWriterProfile(e);
           } else {
             return;
           }
@@ -135,9 +135,10 @@ const BoardPage = (props) => {
       router.push(`/board/${boardCate}/[id]`, `/board/${boardCate}/${boardId}`);
     }
 
-    const moveToWriterProfile = () => {
-      // 작성자 아이디로 변수처리 필요!!
-      router.push(`/profile/20`);
+    // 작성자 프로필로 이동
+    const moveToWriterProfile = (e) => {
+      const writer = e.target.dataset.name;
+      router.push(`/profile/${writer}`); 
     }
 
     // 페이지 변경
@@ -245,6 +246,8 @@ BoardPage.getInitialProps = async(ctx) => {
     size: 20,
     sort: "date"
   });
+
+  console.log("테스트테스트")
   
   return {
     props: {

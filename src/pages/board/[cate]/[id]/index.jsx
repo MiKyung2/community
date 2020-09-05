@@ -119,9 +119,9 @@ const Board = (props) => {
       state.modal.delete = false;
     }
 
+    // 작성자 프로필로 이동
     const moveToWriterProfile = () => {
-      // 작성자 아이디로 변수처리 필요!!
-      router.push(`/profile/20`);
+      router.push(`/profile/${state.data.writer}`);
     }
     
     return (

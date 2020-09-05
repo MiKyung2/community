@@ -14,7 +14,7 @@ export const boardColumns = [
       key: "writer",
       render: writer => (
         <Tooltip title="프로필 이동">
-          <span id="writer" className="hover">{writer}</span>
+          <span id="writer" data-name={writer} className="hover">{writer}</span>
         </Tooltip>)
     }, {
       title: "좋아요",
