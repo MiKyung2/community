@@ -7,13 +7,13 @@ const instance = axios.create({
 });
 
 export const handleSuccess = (response) => {
-  console.info(`${response.data.code}: ${response.data.msg}`)
-  console.info(response.data.body);
+  CONFIG.INFO(`${response.data.code}: ${response.data.msg}`)
+  CONFIG.INFO(response.data.body);
   return response;
 };
 
 export const handleError = (error) => {
-  console.error(`${error.response?.data?.code} : ${error.response?.data?.msg}`);
+  CONFIG.ERROR(`${error.response?.data?.code}: ${error.response?.data?.msg}`);
 
   switch (error.response?.data?.codes) {
     case 401:

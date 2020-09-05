@@ -21,7 +21,6 @@ const SocialLogin = () => {
         config,
       );
     } catch (err) {
-      console.log(err);
     }
     // window.location.href = `https://toyproject.okky.kro.kr:8443/oauth2/authorization/${type}`;
   };

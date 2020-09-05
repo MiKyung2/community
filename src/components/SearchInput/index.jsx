@@ -43,7 +43,6 @@ const SearchInput = (props) => {
     }
 
     const onClickSearchHistory = () => {
-      console.log("search historyyy")
     }
 
     const filterName = () => {

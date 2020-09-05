@@ -9,6 +9,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import CommentAPI from '../../../api/comment';
 import UserAPI from '../../../api/user';
+import { AppContext } from '../../App/context';
 
 
 const EachComment = (props) => {
@@ -16,6 +17,8 @@ const EachComment = (props) => {
   const { data, updateComments } = props;  
 
   return useObserver(() => {
+    const global = React.useContext(AppContext);
+    const userToken = global.state.user.token;
 
     const state = useLocalStore(() => {
       return {
@@ -51,8 +54,8 @@ const EachComment = (props) => {
 
       // 유저 정보
       const getUserInfo = async() => {
-        if(!cookies.token) return;
-        const userInfo = await UserAPI.get({id: cookies.id});    
+        if(!userToken) return;
+        const userInfo = await UserAPI.get({userId: global.state.user.userId});    
         state.userData = userInfo.body;      
         state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
         state.login = true;

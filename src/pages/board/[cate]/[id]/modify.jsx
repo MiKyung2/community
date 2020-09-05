@@ -2,16 +2,17 @@ import React from 'react';
 import { useObserver, useLocalStore } from 'mobx-react';
 import {useRouter} from 'next/router';
 // import {CONFIG} from '../../../utils/CONFIG';
-import BoardAPI from "../../../api/board";
 import { Modal } from 'antd';
-
-
-import WriteBoardForm from '../../../components/Board/WriteBoardForm';
+import BoardAPI from "../../../../api/board";
+import WriteBoardForm from '../../../../components/Board/WriteBoardForm';
 
 
 const EditBoard = (props) => {
 
     return useObserver(() => {
+
+        const boardCate = props.props.boardCate;
+        const boardId = props.props.boardId;
 
         const router = useRouter();
         const state = useLocalStore(() => {
@@ -44,7 +45,7 @@ const EditBoard = (props) => {
                 const boardEditRes = async() => await BoardAPI.edit(formData);
                 boardEditRes();
     
-                router.replace('/board/[id]', `/board/${state.id}`);
+                router.replace('/board/[cate]/[id]', `/board/${boardCate}/${boardId}`);
             }
 
         }
@@ -60,7 +61,7 @@ const EditBoard = (props) => {
         }	
 
         const handleOk = () => {
-            router.push('/board/[id]', `/board/${state.id}`);
+            router.push('/board/[cate]/[id]', `/board/${boardCate}/${boardId}`);
         }
 
         const handleCancel = () => {
@@ -110,7 +111,9 @@ const EditBoard = (props) => {
     })
 };
 
-EditBoard.getInitialProps = async({ query }) => {
+EditBoard.getInitialProps = async(ctx) => {
+
+    const query = ctx.query
 
     const boardDetailRes = await BoardAPI.detail({ 
         id: query.id
@@ -119,6 +122,8 @@ EditBoard.getInitialProps = async({ query }) => {
     return {
         props: {
         board: boardDetailRes,
+        boardCate: query.cate,
+        boardId: query.id
         }
     };
   

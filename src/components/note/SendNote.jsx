@@ -6,26 +6,34 @@ import { toJS } from "mobx";
 
 const SendNote = (props) => {
   return useObserver(() => {
-    const user = { id: "8", userId: "123jmk@naver.com", nickname: "nick" };
     const global = React.useContext(AppContext);
     const state = useLocalStore(() => {
       return {
         confirmLoading: false,
         error: "",
         form: [
-          { "name": "revId", "value": props?.receiveUser?.userId || "" },
+          { 
+            name: "revId", 
+            value: props?.receiveUser?.userId || "" 
+          },
         ],
       };
     });
 
     const handleOk = () => {
       state.confirmLoading = true;
-      const result = { sendId: user.userId };
+      const result = { sendId: global.state.user.userId };
       state.form.map((d) => {
         result[d.name[0]] = d.value;
       });
 
       onFinish(result);
+    };
+
+    const handleCancel = () => {
+      state.form.map((i) => {
+        i.value = "";
+      })
     };
 
     const onFinish = (form) => {
@@ -59,9 +67,15 @@ const SendNote = (props) => {
           visible={props.visible}
           onOk={handleOk}
           confirmLoading={state.confirmLoading}
-          onCancel={props.onCancel}
+          onCancel={() => {
+            props.onCancel();
+            handleCancel();
+          }}
           footer={[
-            <Button key="cancel" onClick={props.onCancel}>
+            <Button key="cancel" onClick={() => {
+              props.onCancel();
+              handleCancel();
+            }}>
               취소
             </Button>,
             <Button
@@ -81,7 +95,7 @@ const SendNote = (props) => {
               state.form = allFields;
             }}
           >
-            <Form.Item name="revId">
+            <Form.Item name="revId" value>
               <Input
                 style={{
                   borderRadius: 0,

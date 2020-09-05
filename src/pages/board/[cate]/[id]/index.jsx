@@ -10,6 +10,7 @@ import ReactHtmlParser from 'react-html-parser';
 import styled from 'styled-components';
 
 import BoardAPI from "../../../../api/board";
+// import BoardAPI from "../../../../api/board";
 import UserAPI from "../../../../api/user";
 import CommentAPI from "../../../../api/comment";
 import Comments from "../../../../components/Board/Comment/Comments";
@@ -49,13 +50,14 @@ const Board = (props) => {
       };
     });
 
+
     // 유저 정보
     // const [cookies, _, removeCookie] = useCookies(['token', 'id']);
 
     useEffect(() => {
       const getUserInfo = async() => {
         if(!userToken) return;
-          const userInfo = await UserAPI.get({id: global.state.user.userId});            
+          const userInfo = await UserAPI.get({userId: global.state.user.userId}); 
           state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
           state.login = true;
       };
@@ -98,7 +100,7 @@ const Board = (props) => {
     };
 
     const onClickEdit = () => {
-      router.push(`/board/${boardCate}/${queryId}/modify`);
+      router.push(`/board/${boardCate}/${boardId}/modify`);
     }
 
     const onClickDelete = () => {

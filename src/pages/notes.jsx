@@ -7,6 +7,7 @@ import cookie from 'cookie';
 import jwt from "jsonwebtoken";
 import { toJS } from "mobx";
 import { AppContext } from "../components/App/context";
+import CONFIG from '../utils/config';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -201,7 +202,12 @@ const Notes = (props) => {
               <Option value="title">제목</Option>
               <Option value="writer">{state.tabActive === "R" ? "보낸 사람" : "받는 사람"}</Option>
             </Select>
-            <Search style={{ width: "65%"}} placeholder="input search text" onSearch={value => console.log(value)} enterButton />
+            {/* <Search 
+              style={{ width: "65%"}} 
+              placeholder="input search text" 
+              onSearch={value => console.log(value)} 
+              enterButton 
+            /> */}
           </Input.Group>
         </div>
         <Tabs
@@ -223,7 +229,7 @@ const Notes = (props) => {
               onRow={(record, rowIndex) => {
                 return {
                   onClick: event => { 
-                    console.log(`${rowIndex} : ${record.id}`)
+                    CONFIG.LOG(`${rowIndex} : ${record.id}`);
                   },
                 }
               }}
@@ -248,7 +254,7 @@ const Notes = (props) => {
               onRow={(record, rowIndex) => {
                 return {
                   onClick: event => { 
-                    console.log(`${rowIndex} : ${record.id}`)
+                    CONFIG.LOG(`${rowIndex} : ${record.id}`)
                   },
                 }
               }}
