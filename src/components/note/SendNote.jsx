@@ -31,9 +31,7 @@ const SendNote = (props) => {
     };
 
     const handleCancel = () => {
-      state.form.map((i) => {
-        i.value = "";
-      })
+      state.form = state.form.map((i) => i.value = "");
     };
 
     const onFinish = (form) => {
@@ -51,6 +49,9 @@ const SendNote = (props) => {
         }
       })();
     };
+
+    // console.log(toJS(props));
+    // console.log(toJS(state.form));
 
     return (
       <div className={props.className}>
@@ -92,6 +93,9 @@ const SendNote = (props) => {
             layout="horizontal" 
             fields={state.form} 
             onFieldsChange={(changedFields, allFields) => {
+            }}
+            onValuesChange={(changedValues, allValues) => {
+              console.log("onValuesChange : ", allValues);
               state.form = allFields;
             }}
           >

@@ -13,7 +13,7 @@ const ProfileList = (props) => {
           key={item.title} 
           onClick={(e) => {
             e.preventDefault();
-            // router.push(`/board/${item.boardId}`);
+            router.push(`/board/${item.id}`);
           }}
         >
           <List.Item.Meta
