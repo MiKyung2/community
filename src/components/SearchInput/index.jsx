@@ -42,6 +42,10 @@ const SearchInput = (props) => {
 
     }
 
+    const onClickSearchHistory = () => {
+      console.log("search historyyy")
+    }
+
     const filterName = () => {
 
       let filter;
@@ -83,31 +87,61 @@ const SearchInput = (props) => {
       </Menu>
     );
 
+    const searchHistory = (
+      <Menu>
+        <Menu.Item>
+          <a target="_blank" onClick={onClickSearchHistory}>
+            Search 1
+          </a>
+        </Menu.Item>
+        <Menu.Item>
+          <a target="_blank" onClick={onClickSearchHistory}>
+            Search 2
+          </a>
+        </Menu.Item>
+        <Menu.Item>
+          <a target="_blank" onClick={onClickSearchHistory}>
+            Search 3
+          </a>
+        </Menu.Item>
+      </Menu>
+    )
+
     return (
       <div className={props.className}>
-        <Dropdown overlay={menu}>
-          <a className="ant-dropdown-link">
+        <Dropdown overlay={menu} className="dropdown">
+          <a>
             {filterName()}
             <DownOutlined />
           </a>
         </Dropdown>
-        <Search 
-          placeholder="검색어를 입력하세요." 
-          onSearch={onSubmit} 
-          onClick={(e) => e.target.value=""}
-          enterButton 
-          maxLength="255"
-          className="input"
-        />
+        <Dropdown overlay={searchHistory} trigger={['click']} className="dropdown">
+          <div>
+            <Search 
+              placeholder="검색어를 입력하세요." 
+              onSearch={onSubmit} 
+              onClick={(e) => e.target.value=""}
+              enterButton 
+              maxLength="255"
+              className="input"
+            />
+          </div>
+       </Dropdown>
+
       </div>
     );
   });
 };
 
 export default styled(SearchInput)`
+  /* border: 1px solid red; */
   display: flex;
-  flex-direction: column;
+  align-items: center;
   & {
+    .dropdown {
+      margin-right: 10px;
+      color: gray;
+    }
     .input {
       /* border: 1px solid blue; */
       width: 300px;
