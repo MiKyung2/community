@@ -9,7 +9,6 @@ const AuthAPI = {
         email: payload.value.email,
         password: payload.value.password1,
       });
-      console.log(res);
       return res;
     } catch (error) {
       throw error;
@@ -89,7 +88,7 @@ const AuthAPI = {
       return '500';
     }
   },
-  edit_user_info: async (data, id) => {
+  edit_user_info: async (data) => {
     try {
       const config = {
         headers: {
