@@ -15,7 +15,7 @@ const BoardAPI = {
       const res = await instance.get(
         `board/page?currentPage=${currentPage}&gb=${gb}&keyword=${keyword}&size=${size}&sort=${sort}`
         );
-      return res ? res.data : dummy;
+      return res.data
       }
     } catch (error) {
       // throw error;
