@@ -295,7 +295,7 @@ BoardPage.getInitialProps = async(ctx) => {
   
   return {
     props: {
-      listByDate: boardListByDate.body,
+      listByDate: boardListByDate?.body,
       cate: ctx.query.cate,
     },
   };
