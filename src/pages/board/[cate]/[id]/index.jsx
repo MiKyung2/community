@@ -4,29 +4,37 @@ import { useLocalStore, useObserver } from 'mobx-react';
 import {toJS} from 'mobx';
 import { useRouter } from 'next/router';
 import { useCookies } from 'react-cookie';
-import { AppContext } from '../../../components/App/context';
+import { AppContext } from '../../../../components/App/context';
 import React, {useEffect} from 'react';
 import ReactHtmlParser from 'react-html-parser';
 import styled from 'styled-components';
 
-import BoardAPI from "../../../api/board";
-import UserAPI from "../../../api/user";
-import CommentAPI from "../../../api/comment";
-import Comments from "../../../components/Board/Comment/Comments";
-import { formatDate } from '../../../utils/dateFormatter';
-import { numFormatter } from '../../../utils/numFormatter';
+import BoardAPI from "../../../../api/board";
+import UserAPI from "../../../../api/user";
+import CommentAPI from "../../../../api/comment";
+import Comments from "../../../../components/Board/Comment/Comments";
+import { formatDate } from '../../../../utils/dateFormatter';
+import { numFormatter } from '../../../../utils/numFormatter';
+import Modal_cancel from '../../../../components/Board/Modals/Modal_cancel';
 
 const Board = (props) => {
+  
   return useObserver(() => {
     const router = useRouter();
-    const queryId = router.query.id;
 
+    const global = React.useContext(AppContext);
+    const userToken = global.state.user.token;
+
+    const boardData = props.board.body;
+    const boardCate = props.boardCate
+    const boardId = props.boardId;
+    
     const state = useLocalStore(() => {
       return {
-        data: props.board.body,
+        data: boardData,
         events: {
-          like: props.board.body.rowLike,
-          dislike: props.board.body.rowDisLike,
+          like: boardData.rowLike,
+          dislike: boardData.rowDisLike,
           action: '',
         },
         comments: props.comments.body,
@@ -34,7 +42,7 @@ const Board = (props) => {
           delete: false,
           login: false
         },
-        writer: props.board.body.writer,
+        writer: boardData.writer,
         user: '',
         isWriter: false,
         login: false
@@ -42,12 +50,12 @@ const Board = (props) => {
     });
 
     // 유저 정보
-    const [cookies, _, removeCookie] = useCookies(['token', 'id']);
+    // const [cookies, _, removeCookie] = useCookies(['token', 'id']);
 
     useEffect(() => {
       const getUserInfo = async() => {
-        if(!cookies.token) return;
-          const userInfo = await UserAPI.get({id: cookies.id});            
+        if(!userToken) return;
+          const userInfo = await UserAPI.get({id: global.state.user.userId});            
           state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
           state.login = true;
       };
@@ -66,7 +74,7 @@ const Board = (props) => {
     setIsWriter();
 
     const onClickBackToList = () => {
-      router.push('/board');
+      router.push(`/board/${boardCate}`);
     }
 
     const onClickLike = async () => {
@@ -90,7 +98,7 @@ const Board = (props) => {
     };
 
     const onClickEdit = () => {
-      router.push(`/board/${queryId}/modify`);
+      router.push(`/board/${boardCate}/${queryId}/modify`);
     }
 
     const onClickDelete = () => {
@@ -106,20 +114,30 @@ const Board = (props) => {
         id: queryId
       });
       boardDeleteRes();
-      router.push('/board');
+      router.push(`/board/${boardCate}`);
       state.modal.delete = false;
+    }
+
+    const moveToWriterProfile = () => {
+      // 작성자 아이디로 변수처리 필요!!
+      router.push(`/profile/20`);
     }
     
     return (
       <div className={props.className}>
         <Row justify="space-between" className="header_top">
-          <h2>{state.data.title}</h2>
+          <h2>test-{state.data.title}</h2>
           <Button type="default" onClick={onClickBackToList}>글 목록</Button>
         </Row>
 
         <div className="header_bottom">
           <span><strong>작성일:</strong> {formatDate(state.data.createdDate)}</span>
-          <span><strong>작성자:</strong> {state.data.writer}</span>
+            <p>
+              <strong>작성자: </strong> 
+              <Tooltip title="프로필 이동">
+                <span className="hover" onClick={moveToWriterProfile}>{state.data.writer}</span>
+              </Tooltip>
+            </p>
         </div>
 
 
@@ -155,18 +173,15 @@ const Board = (props) => {
         {/* 댓글 */}
         <div className="comment-section">
           <h3>댓글</h3>
-          {/* <Comments queryId={queryId} data={state.comments} /> */}
-          <Comments queryId={queryId} data={props.comments.body} />
+          <Comments queryId={boardId} data={props.comments.body} />
         </div>
 
         {/* 삭제 확인 메세지 */}
-        <Modal
-          visible={state.modal.delete}
-          onOk={handleOk_DeleteModal}
-          onCancel={handleCancel_DeleteModal}
-        >
-          <p>정말 삭제하시겠습니까?</p>
-        </Modal>
+        <Modal_cancel
+          isCancel={state.modal.delete}
+          handleOk={handleOk_DeleteModal}
+          handleCancel={handleCancel_DeleteModal}
+        />
       </div>
     );
   });
@@ -174,7 +189,10 @@ const Board = (props) => {
 
 
 
-Board.getInitialProps = async ({ query }) => {
+Board.getInitialProps = async (ctx) => {
+
+  const query = ctx.query;
+
   const boardDetailRes = await BoardAPI.detail({
     id: query.id
   });
@@ -184,7 +202,9 @@ Board.getInitialProps = async ({ query }) => {
 
   return {
     board: boardDetailRes,
-    comments
+    comments,
+    boardCate: query.cate,
+    boardId: query.id
   };
 
 }
@@ -240,6 +260,13 @@ export default styled(Board)`
     .comment-section {
       > h3 {
         margin-bottom: 15px;
+      }
+    }
+    .hover {
+      &:hover {
+        cursor: pointer;
+        color: #1980ff;
+        font-weight: bold;
       }
     }
   }
