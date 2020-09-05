@@ -91,7 +91,6 @@ const BoardPage = (props) => {
     }
 
     const onChangeSort = (selectedFilter) => {
-      console.log("change sort:", selectedFilter);
       // if (selectedFilter !== "newest" || selectedFilter !== "like" || selectedFilter !== "commentCnt" || selectedFilter !== "viewCount") return;
 
       // 정미경의 코멘트 : sortLists id를 서버에 주는 값과 똑같이 쓰면 코드가 간단해집니다.
