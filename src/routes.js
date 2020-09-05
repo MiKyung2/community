@@ -1,3 +1,8 @@
+import { AppContext } from "./components/App/context";
+
+const global = React.useContext(AppContext);
+const test_role = "Y";
+
 const routes = [
   {
     name: "Home",
@@ -23,6 +28,7 @@ const routes = [
     name: "구직",
     url: "/board/resumes",
   },
+  test_role === 'A' &&
   {
     name: "비밀게시판",
     url: "/board/secret",
@@ -34,3 +40,5 @@ const routes = [
 ];
 
 export default routes;
+
+// global?.state?.user?.token ?
