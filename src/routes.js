@@ -4,12 +4,8 @@ const routes = [
     url: "/",
   },
   {
-    name: "게시판",
-    url: "/board",
-  },
-  {
     name: "자유게시판",
-    url: "/board/test",
+    url: "/board/free",
   },
   {
     name: "공지사항",

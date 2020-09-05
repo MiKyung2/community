@@ -15,31 +15,34 @@ import CommentAPI from "../../../../api/comment";
 import Comments from "../../../../components/Board/Comment/Comments";
 import { formatDate } from '../../../../utils/dateFormatter';
 import { numFormatter } from '../../../../utils/numFormatter';
+import Modal_cancel from '../../../../components/Board/Modals/Modal_cancel';
 
 const Board = (props) => {
   
   return useObserver(() => {
     const router = useRouter();
-    const queryId = router.query.id;
-    const boardProps = props.props;
-    
-    // const global = React.useContext(AppContext);
-    // console.log("global", toJS(global.state));
 
+    const global = React.useContext(AppContext);
+    const userToken = global.state.user.token;
+
+    const boardData = props.board.body;
+    const boardCate = props.boardCate
+    const boardId = props.boardId;
+    
     const state = useLocalStore(() => {
       return {
-        // data: props.board.body,
+        data: boardData,
         events: {
-          // like: props.board.body.rowLike,
-          // dislike: props.board.body.rowDisLike,
+          like: boardData.rowLike,
+          dislike: boardData.rowDisLike,
           action: '',
         },
-        // comments: props.comments.body,
+        comments: props.comments.body,
         modal: {
           delete: false,
           login: false
         },
-        // writer: props.board.body.writer,
+        writer: boardData.writer,
         user: '',
         isWriter: false,
         login: false
@@ -47,12 +50,12 @@ const Board = (props) => {
     });
 
     // 유저 정보
-    const [cookies, _, removeCookie] = useCookies(['token', 'id']);
+    // const [cookies, _, removeCookie] = useCookies(['token', 'id']);
 
     useEffect(() => {
       const getUserInfo = async() => {
-        if(!cookies.token) return;
-          const userInfo = await UserAPI.get({id: cookies.id});            
+        if(!userToken) return;
+          const userInfo = await UserAPI.get({id: global.state.user.userId});            
           state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
           state.login = true;
       };
@@ -71,7 +74,7 @@ const Board = (props) => {
     setIsWriter();
 
     const onClickBackToList = () => {
-      router.push('/board');
+      router.push(`/board/${boardCate}`);
     }
 
     const onClickLike = async () => {
@@ -95,7 +98,7 @@ const Board = (props) => {
     };
 
     const onClickEdit = () => {
-      router.push(`/board/${queryId}/modify`);
+      router.push(`/board/${boardCate}/${queryId}/modify`);
     }
 
     const onClickDelete = () => {
@@ -111,7 +114,7 @@ const Board = (props) => {
         id: queryId
       });
       boardDeleteRes();
-      router.push('/board');
+      router.push(`/board/${boardCate}`);
       state.modal.delete = false;
     }
 
@@ -170,18 +173,15 @@ const Board = (props) => {
         {/* 댓글 */}
         <div className="comment-section">
           <h3>댓글</h3>
-          {/* <Comments queryId={queryId} data={state.comments} /> */}
-          <Comments queryId={queryId} data={props.comments.body} />
+          <Comments queryId={boardId} data={props.comments.body} />
         </div>
 
         {/* 삭제 확인 메세지 */}
-        <Modal
-          visible={state.modal.delete}
-          onOk={handleOk_DeleteModal}
-          onCancel={handleCancel_DeleteModal}
-        >
-          <p>정말 삭제하시겠습니까?</p>
-        </Modal>
+        <Modal_cancel
+          isCancel={state.modal.delete}
+          handleOk={handleOk_DeleteModal}
+          handleCancel={handleCancel_DeleteModal}
+        />
       </div>
     );
   });
@@ -189,7 +189,10 @@ const Board = (props) => {
 
 
 
-Board.getInitialProps = async ({ query }) => {
+Board.getInitialProps = async (ctx) => {
+
+  const query = ctx.query;
+
   const boardDetailRes = await BoardAPI.detail({
     id: query.id
   });
@@ -199,7 +202,9 @@ Board.getInitialProps = async ({ query }) => {
 
   return {
     board: boardDetailRes,
-    comments
+    comments,
+    boardCate: query.cate,
+    boardId: query.id
   };
 
 }

@@ -1,6 +1,7 @@
 import { EditOutlined } from '@ant-design/icons';
 import { Button, Row, Table, Modal, Tabs, Tooltip } from "antd";
 import { useLocalStore, useObserver } from "mobx-react";
+import { toJS } from 'mobx';
 import { useRouter } from "next/router";
 import { useCookies } from 'react-cookie';
 
@@ -11,26 +12,27 @@ import SearchInput from "../../../components/SearchInput";
 import Modal_login from '../../../components/Board/Modals/Modal_login';
 import { sortLists } from '../../../components/Board/SortLists';
 import { boardColumns } from '../../../components/Board/BoardColumns';
+import { AppContext } from '../../../components/App/context';
 
 const { TabPane } = Tabs;
 
 const BoardPage = (props) => {
-    const router = useRouter();
     const boardListProps = props.props;
-    const boardPath = props.props.asPath;
-    let boardName;
-    // const queryId = router.query.id;
-  // console.log("boardpage props", props);
+    const boardCate = props.props.cate;
+    let board_title;
+  // console.log("boardpage props", boardCate);
+  const global = React.useContext(AppContext);
+    console.log("global", toJS(global.state));
 
-  switch(boardPath) {
-    case "/board/test":
-      boardName = "Test게시판"
+  switch(boardCate) {
+    case "free":
+      board_title = "자유게시판"
       break;
-    case "/board/noti":
-      boardName = "공지사항"
+    case "noti":
+      board_title = "공지사항"
       break;
-    case "/board/secret":
-      boardName = "비밀게시판"
+    case "secret":
+      board_title = "비밀게시판"
       break;
     default:
       console.log("board name error")
@@ -53,7 +55,7 @@ const BoardPage = (props) => {
         modal: {
           login: false
         },
-        boardTitle: boardName
+        boardTitle: board_title
       };
     });
 
@@ -116,7 +118,7 @@ const BoardPage = (props) => {
     }
 
     const moveToBoardPost = (boardId) => {
-      router.push(`${boardPath}/[id]`, `${boardPath}/${boardId}`);
+      router.push(`/board/${boardCate}/[id]`, `/board/${boardCate}/${boardId}`);
     }
 
     const moveToWriterProfile = () => {
@@ -152,7 +154,7 @@ const BoardPage = (props) => {
       if(!cookies.token) {
         state.modal.login = true;
       } else {
-        router.push("/board/articles/create");
+        router.push(`/board/${boardCate}/articles/create`);
       }
     };
 
@@ -233,7 +235,7 @@ BoardPage.getInitialProps = async(ctx) => {
   return {
     props: {
       listByDate: boardListByDate.body,
-      asPath: ctx.asPath
+      cate: ctx.query.cate,
     },
   };
 
