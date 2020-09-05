@@ -50,13 +50,17 @@ const Board = (props) => {
       };
     });
 
+    console.log("state writer", state.writer)
+    console.log("state user", state.user)
+
     // 유저 정보
     // const [cookies, _, removeCookie] = useCookies(['token', 'id']);
 
     useEffect(() => {
       const getUserInfo = async() => {
         if(!userToken) return;
-          const userInfo = await UserAPI.get({id: global.state.user.userId});            
+          const userInfo = await UserAPI.get({userId: global.state.user.userId}); 
+          console.log("userinfo", userInfo);
           state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
           state.login = true;
       };
@@ -99,7 +103,7 @@ const Board = (props) => {
     };
 
     const onClickEdit = () => {
-      router.push(`/board/${boardCate}/${queryId}/modify`);
+      router.push(`/board/${boardCate}/${boardId}/modify`);
     }
 
     const onClickDelete = () => {
