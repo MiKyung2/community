@@ -97,6 +97,7 @@ App.getInitialProps = async (appContext) => {
   const token = ck.token ?? '';
   const decodedToken = jwt.decode(token.replace('Bearer ', ''));
   const userId = decodedToken?.userId ?? '';
+  const role = decodedToken?.role ?? "";
 
   return {
     ...nextAppProps,
@@ -104,6 +105,7 @@ App.getInitialProps = async (appContext) => {
     cookie,
     init: {
       user: {
+        role,
         token,
         userId,
       },

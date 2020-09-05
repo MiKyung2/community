@@ -95,7 +95,7 @@ const SendNote = (props) => {
               state.form = allFields;
             }}
           >
-            <Form.Item name="revId" value>
+            <Form.Item name="revId">
               <Input
                 style={{
                   borderRadius: 0,
