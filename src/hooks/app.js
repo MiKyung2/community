@@ -47,7 +47,6 @@ const useApp = (props) => {
   const action = dispatch($);
 
   React.useMemo(() => {
-    
     instance.interceptors.request.use((reqConfig) => {
       const isServerUrls = [
         CONFIG.API_BASE_URL,
