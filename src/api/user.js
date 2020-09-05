@@ -1,5 +1,5 @@
 import instance from "./axiosWrapper";
-import CONFIG from "../utils/config";
+import CONFIG from "../utils/CONFIG";
 
 const UserAPI = {
   get: async (payload) => {

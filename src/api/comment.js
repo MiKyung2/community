@@ -1,6 +1,4 @@
 import instance from "./axiosWrapper";
-import CONFIG from '../utils/config';
-
 
 const CommentAPI = {
   get: async (payload) => {
@@ -11,7 +9,6 @@ const CommentAPI = {
         );
       return res.data;
     } catch (error) {
-      // throw error;
       console.error(error);
     }
   },
@@ -20,7 +17,6 @@ const CommentAPI = {
       const res = await instance.post('comment/write', payload);
       return res.data;
     } catch (error) {
-      // throw error;
       console.error(error);
     }
   },
@@ -30,7 +26,6 @@ const CommentAPI = {
       const res = await instance.post('comment/event/like', payload);
       return res;
     } catch (error) {
-      // throw error;
       console.error(error);
     }
   },
@@ -39,7 +34,6 @@ const CommentAPI = {
       const res = await instance.post('comment/remove', payload);
       return res;
     } catch (error) {
-      // throw error;
       console.error(error);
     }
   },

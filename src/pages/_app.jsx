@@ -11,7 +11,7 @@ import { CookiesProvider, Cookies } from 'react-cookie';
 import NextApp, { AppContext as NextAppContext } from 'next/app';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
-import CONFIG from "../utils/config";
+import CONFIG from "../utils/CONFIG";
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 
