@@ -24,7 +24,6 @@ const initializer = (props) => {
 
 const dispatch = ($) => {
   const login = (data) => {
-    $.state.user.id = data?.userPkId;
     $.state.user.token = data?.token;
     $.state.user.userId = data?.userId;
   };
@@ -32,7 +31,6 @@ const dispatch = ($) => {
   const logout = () => {
     $.state.user.token = null;
     $.state.user.userId = '';
-    $.state.user.id = 0;
   };
 
   return {
@@ -74,7 +72,6 @@ const useApp = (props) => {
       if (err?.response?.status === 401) {
         $.state.user.token = "";
         $.state.user.level = "none";
-        notification.open("인증 에러가 발생했습니다.", { containerId: "global", id: notification.ID.unauthorized });
       }
 
       return Promise.reject(err);

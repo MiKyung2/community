@@ -30,7 +30,7 @@ const SignIn = (props) => {
 
     const [visible, setVisible] = React.useState(false);
 
-    const [_, setCookie] = useCookies(['token', 'id']);
+    const [_, setCookie] = useCookies(['token']);
 
     // 사인 버튼 누르고 skeleton 추가
     // 1.5 초 안에 반응 없을 때 잘 못 된 방식이라는 메시지 추가
@@ -51,7 +51,6 @@ const SignIn = (props) => {
       if (global.state.user?.token) {
         Router.push('/');
         setCookie('token', global.state.user?.token);
-        setCookie('id', global.state.user?.id);
       }
     }, [global.state.user?.token]);
 
