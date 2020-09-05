@@ -19,7 +19,6 @@ const FindPassModal = ({ visible, setVisible }) => {
   const onFindPassword = async () => {
     setLoading(true);
     const resAuth = (await AuthAPI.find_pass(email)) || 'aa';
-    console.log(resAuth);
     if (resAuth.status === 200) {
       setLoading(false);
       message.success(`이메일로 새 비밀번호를 발송했습니다.`);

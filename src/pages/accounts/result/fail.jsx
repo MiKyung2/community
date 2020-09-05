@@ -15,12 +15,10 @@ const SignUpFail = (props) => {
  
 
     const onClickToSignUp = () => {
-        console.log("회원가입 페이지로 이동!");
         router.push('/accounts/signup');
     }
 
     const onClickToHome = () => {
-        console.log("홈으로 이동!");
         router.push('/');
     }
 

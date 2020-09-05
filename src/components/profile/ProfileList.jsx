@@ -13,7 +13,6 @@ const ProfileList = (props) => {
           key={item.title} 
           onClick={(e) => {
             e.preventDefault();
-            console.log("item : ", JSON.stringify(item, null, 3));
             // router.push(`/board/${item.boardId}`);
           }}
         >

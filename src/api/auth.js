@@ -66,7 +66,6 @@ const AuthAPI = {
       );
       return res;
     } catch (error) {
-      console.log(error);
       return '500';
     }
   },
@@ -84,7 +83,6 @@ const AuthAPI = {
       const res = await instance.put(`user/password`, data, config);
       return res;
     } catch (error) {
-      console.log(error);
       return '500';
     }
   },
