@@ -29,8 +29,8 @@ EditProfile.getInitialProps = async (ctx) => {
   const ck = cookie.parse(
     (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
   );
-  const id = ck.id ?? '';
-  const profileRes = await UserAPI.get({ id });
+  const userId = ck.userId ?? '';
+  const profileRes = await UserAPI.get({ userId });
 
   // const token = ck.token ?? '';
   // const decodedToken = jwt.decode(token.replace('Bearer ', ''));
@@ -38,7 +38,7 @@ EditProfile.getInitialProps = async (ctx) => {
 
   return {
     profile: profileRes.body,
-    id,
+    userId,
   };
 };
 

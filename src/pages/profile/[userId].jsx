@@ -54,7 +54,7 @@ const ProfilePage = (props) => {
 
     const getProfile = async () => {
       try {
-        const profileRes = await UserAPI.get({ id: router.query.id });
+        const profileRes = await UserAPI.get({ id: router.query.userId });
         if (profileRes.code != 200) return;
         
         state.profile = profileRes.body;
@@ -67,7 +67,7 @@ const ProfilePage = (props) => {
       state.follow.loading = true;
       try {
         const followingListRes = await UserAPI.followingList({
-          userId: router.query.id,
+          userId: router.query.userId,
         });
         state.follow.list = followingListRes.following_users;
       } catch (error) {
@@ -81,7 +81,7 @@ const ProfilePage = (props) => {
       state.follow.loading = true;
       try {
         const followerListRes = await UserAPI.followerList({
-          userId: router.query.id,
+          userId: router.query.userId,
         });
         state.follow.list = followerListRes.followed_users;
       } catch (error) {
@@ -94,7 +94,7 @@ const ProfilePage = (props) => {
     const getBoardRecent = async () => {
       state.tab.recent.loading = true;
       try {
-        const boardRecentRes = await BoardRecentAPI.get({ id: router.query.id });
+        const boardRecentRes = await BoardRecentAPI.get({ id: router.query.userId });
         state.tab.recent.list = boardRecentRes.body;
       } catch (e) {
 
@@ -209,8 +209,8 @@ const ProfilePage = (props) => {
 };
 
 ProfilePage.getInitialProps = async (ctx) => {
-  const profileRes = await UserAPI.get({ id: ctx.query.id });
-  const boardRecentRes = await BoardRecentAPI.get({ id: ctx.query.id });
+  const profileRes = await UserAPI.get({ userId: ctx.query.userId });
+  const boardRecentRes = await BoardRecentAPI.get({ userId: ctx.query.userId });
 
   return {
     profile: profileRes.body,

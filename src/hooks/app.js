@@ -10,7 +10,6 @@ const initializer = (props) => {
   const state = {
     status: { loading: false },
     user: {
-      id: props.init?.user?.id,
       token: props.init?.user?.token,
       userId: props.init?.user?.userId,
     },
