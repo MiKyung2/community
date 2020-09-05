@@ -1,6 +1,4 @@
 import instance from "./axiosWrapper";
-import CONFIG from '../utils/config';
-import {dummy} from '../data/dummy';
 
  // `board/page?gb=${gb}&keyword=${keyword}&offset=${offset}&pageNumber=${pageNumber}&pageSize=${pageSize}&sort=${sort}`
 
@@ -8,15 +6,11 @@ import {dummy} from '../data/dummy';
 const BoardAPI = {
   list: async (payload) => {
     try {
-      if (CONFIG.NODE_ENV == "test") {
-        return dummy;
-      } else {
       const {currentPage, gb, keyword, size, sort} = payload;
       const res = await instance.get(
         `board/page?currentPage=${currentPage}&gb=${gb}&keyword=${keyword}&size=${size}&sort=${sort}`
         );
       return res.data
-      }
     } catch (error) {
       // throw error;
       console.error(error);
