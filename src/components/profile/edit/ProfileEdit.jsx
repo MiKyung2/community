@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Card,
-  Avatar,
-  Form,
-  Button,
-  Upload,
-  Input,
-  message,
-  Badge,
-} from 'antd';
-import { useObserver } from 'mobx-react';
+import { Card, Avatar, Form, Button, Input, message } from 'antd';
+
 import AuthAPI from '../../../api/auth';
 import ChangeImage from './ChangeImage';
 import { inputRules, regExp } from './validator';
@@ -27,10 +18,13 @@ const EditProfile = ({ profile, id }) => {
     });
   }, [profile]);
 
+  // const checkInputs = () => {};
+
   const onFinish = async (values) => {
     const res = await AuthAPI.edit_user_info(values, id);
     if (res.status === 200) {
       message.success('프로필 정보가 수정 되었습니다.');
+      window.location.reload();
     } else {
       message.error('잘못된 정보입니다.');
     }
@@ -63,14 +57,14 @@ const EditProfile = ({ profile, id }) => {
             <div>
               <Avatar
                 src={
-                  profile.profileImg ||
+                  profile?.profileImg ||
                   'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
                 }
                 style={{ height: 120, width: 120 }}
               />
             </div>
             <div style={{ margin: 'auto 40px' }}>
-              <h2>{profile.nickname}</h2>
+              <h2>{profile?.userId}</h2>
               <h3 style={{ margin: 0, border: 0, padding: 0 }}>
                 안녕하세요 :)
               </h3>
@@ -95,32 +89,28 @@ const EditProfile = ({ profile, id }) => {
           </div>
         </Form.Item>
         <Form.Item name='userId' label='아이디' rules={inputRules.userId}>
-          <Input />
+          <Input disabled />
         </Form.Item>
         <Form.Item name='nickname' label='닉네임' rules={inputRules.nickname}>
           <Input />
+          {/* <Input
+            value={profile?.nickname}
+            onChange={(e) => console.log(e.target.value)}
+          /> */}
         </Form.Item>
-        <Form.Item name='gitAddr' label='Git ID'>
+        <Form.Item
+          name='gitAddr'
+          label='Git ID'
+          rules={[
+            {
+              required: false,
+              whitespace: false,
+              message: '아이디를 넣어주세요',
+            },
+          ]}
+        >
           <Input />
         </Form.Item>
-        {/* <Form.Item name='profileImg' label='프로필 사진'>
-            <Form.Item
-              name='dragger'
-              valuePropName='fileList'
-              getValueFromEvent={normFile}
-              noStyle
-            >
-              <Upload.Dragger name='files' action='/upload.do'>
-                <p className='ant-upload-drag-icon'>
-                  <InboxOutlined />
-                </p>
-                <p className='ant-upload-text'>
-                  Click or drag file to this area to upload
-                </p>
-                <p className='ant-upload-hint'>변경예정</p>
-              </Upload.Dragger>
-            </Form.Item>
-          </Form.Item> */}
         <Form.Item>
           <Button style={{ marginRight: '8px' }}>취소</Button>
           <Button type='primary' htmlType='submit'>

@@ -4,12 +4,11 @@ const AuthAPI = {
   signup: async (payload) => {
     try {
       const res = await instance.post('user', {
-        nickname: payload.value.userId,
+        nickname: '',
         userId: payload.value.userId,
         email: payload.value.email,
         password: payload.value.password1,
       });
-      console.log(res);
       return res;
     } catch (error) {
       throw error;
@@ -20,7 +19,7 @@ const AuthAPI = {
     return await instance.post(
       'user/login',
       {
-        id: payload.value.userId,
+        userId: payload.value.userId,
         password: payload.value.password,
       },
       {
@@ -71,7 +70,7 @@ const AuthAPI = {
       return '500';
     }
   },
-  change_pass: async (id, newPassword) => {
+  change_pass: async (userId, newPassword) => {
     try {
       const config = {
         headers: {
@@ -79,7 +78,7 @@ const AuthAPI = {
         },
       };
       const data = {
-        id,
+        userId,
         newPassword,
       };
       const res = await instance.put(`user/password`, data, config);
@@ -89,7 +88,7 @@ const AuthAPI = {
       return '500';
     }
   },
-  edit_user_info: async (data, id) => {
+  edit_user_info: async (data) => {
     try {
       const config = {
         headers: {
@@ -98,10 +97,9 @@ const AuthAPI = {
       };
 
       const formdata = new FormData();
-      formdata.append('userId', data.nickname);
+      formdata.append('userId', data.userId);
       formdata.append('nickname', data.nickname);
       formdata.append('gitAddr', data.gitAddr);
-      formdata.append('id', id);
       const res = await instance.put(`user`, formdata, config);
 
       return res;
@@ -126,9 +124,9 @@ const AuthAPI = {
       return '500';
     }
   },
-  withdraw: async (id) => {
+  withdraw: async (userId) => {
     try {
-      const res = await instance.delete(`user/${id}`);
+      const res = await instance.delete(`user/${userId}`);
       return res;
     } catch (error) {
       throw error;

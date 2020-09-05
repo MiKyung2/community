@@ -12,6 +12,8 @@ const { TabPane } = Tabs;
 import { toJS } from 'mobx';
 import FollowTab from '../../components/profile/FollowTab';
 import BoardRecentAPI from '../../api/board_recent';
+import MyBoardAPI from "../../api/board_my";
+import BoardScrapAPI from "../../api/board_scrap";
 
 const ProfilePage = (props) => {
   return useObserver(() => {
@@ -37,14 +39,20 @@ const ProfilePage = (props) => {
         tab: {
           active: 'recent',
           recent: {
+            page: 1,
+            max_page: 1,
             list: props.theLatestDate,
             loading: false,
           },
           board: {
+            page: 1,
+            max_page: 1,
             list: [],
             loading: false,
           },
           scrap: {
+            page: 1,
+            max_page: 1,
             list: [],
             loading: false,
           },
@@ -54,7 +62,7 @@ const ProfilePage = (props) => {
 
     const getProfile = async () => {
       try {
-        const profileRes = await UserAPI.get({ id: router.query.id });
+        const profileRes = await UserAPI.get({ id: router.query.userId });
         if (profileRes.code != 200) return;
         
         state.profile = profileRes.body;
@@ -67,7 +75,7 @@ const ProfilePage = (props) => {
       state.follow.loading = true;
       try {
         const followingListRes = await UserAPI.followingList({
-          userId: router.query.id,
+          userId: router.query.userId,
         });
         state.follow.list = followingListRes.following_users;
       } catch (error) {
@@ -81,7 +89,7 @@ const ProfilePage = (props) => {
       state.follow.loading = true;
       try {
         const followerListRes = await UserAPI.followerList({
-          userId: router.query.id,
+          userId: router.query.userId,
         });
         state.follow.list = followerListRes.followed_users;
       } catch (error) {
@@ -94,7 +102,7 @@ const ProfilePage = (props) => {
     const getBoardRecent = async () => {
       state.tab.recent.loading = true;
       try {
-        const boardRecentRes = await BoardRecentAPI.get({ id: router.query.id });
+        const boardRecentRes = await BoardRecentAPI.get({ userId: router.query.userId });
         state.tab.recent.list = boardRecentRes.body;
       } catch (e) {
 
@@ -103,17 +111,27 @@ const ProfilePage = (props) => {
       }
     };
   
-    const getTabList = () => {
-      switch (state.tab.active) {
-        case "recent":
-          getBoardRecent();
-          return;
+    const getMyBoard = async () => {
+      state.tab.board.loading = true;
+      try {
+        const boardMyBoardRes = await BoardScrapAPI.get({ userId: router.query.userId });
+        state.tab.board.list = boardMyBoardRes.body;
+      } catch (e) {
 
-        case "board":
-          return;
+      } finally {
+        state.tab.board.loading = false;
+      }
+    };
 
-        case "scrap":
-          return;
+    const getScrap = async () => {
+      state.tab.scrap.loading = true;
+      try {
+        const boardMyBoardRes = await BoardScrapAPI.get({ userId: router.query.userId });
+        state.tab.scrap.list = boardMyBoardRes.body;
+      } catch (e) {
+
+      } finally {
+        state.tab.scrap.loading = false;
       }
     };
 
@@ -128,7 +146,19 @@ const ProfilePage = (props) => {
     }, [state.follow.open, state.follow.active]);
 
     React.useEffect(() => {
-      getTabList();
+      switch (state.tab.active) {
+        case "recent":
+          getBoardRecent();
+          return;
+
+        case "board":
+          getMyBoard();
+          return;
+
+        case "scrap":
+          getScrap();
+          return;
+      }
     }, [state.tab.active]);
 
     React.useEffect(() => {
@@ -185,7 +215,7 @@ const ProfilePage = (props) => {
           <TabPane tab='최근 활동' key='recent'>
             <ProfileTabList loading={state.tab.recent.loading} dataSource={state.tab.recent.list} />
           </TabPane>
-          <TabPane tab='게시물' key='board'>
+          <TabPane tab='내가 쓴 게시물' key='board'>
             <ProfileTabList loading={state.tab.board.loading} dataSource={state.tab.board.list} />
           </TabPane>
           <TabPane tab='스크랩' key='scrap'>
@@ -209,8 +239,8 @@ const ProfilePage = (props) => {
 };
 
 ProfilePage.getInitialProps = async (ctx) => {
-  const profileRes = await UserAPI.get({ id: ctx.query.id });
-  const boardRecentRes = await BoardRecentAPI.get({ id: ctx.query.id });
+  const profileRes = await UserAPI.get({ userId: ctx.query.userId });
+  const boardRecentRes = await BoardRecentAPI.get({ userId: ctx.query.userId });
 
   return {
     profile: profileRes.body,

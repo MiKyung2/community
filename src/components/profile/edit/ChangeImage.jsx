@@ -17,6 +17,7 @@ const ChangeImage = ({ visible, setVisible, userId }) => {
     if (res.status === 200) {
       message.success('프로필 이미지가 수정 되었습니다.');
       handleOk();
+      window.location.reload();
     } else {
       message.error('잘못된 정보입니다.');
     }

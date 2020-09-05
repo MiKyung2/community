@@ -10,7 +10,7 @@ import { StyledSocialCard } from './edit.styles';
 const SnsCard = () => {
   const socialLogin = (type) => {};
   return (
-    <StyledSocialCard>
+    <StyledSocialCard title='sns 연결'>
       <div className='social-wrapper'>
         <FacebookOutlined
           className='btn_social facebook'

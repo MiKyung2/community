@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 import { useObserver } from 'mobx-react';
 import { useRouter } from 'next/router';
+import { AppContext } from "./../components/App/context";
 
 const Home = (props) => {
   return useObserver(() => {
+    const global = React.useContext(AppContext);
     const router = useRouter();
 
     return <div className={props.className}>home</div>;

@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import {
   FacebookOutlined,
   GoogleOutlined,
@@ -7,9 +8,22 @@ import {
 import { StyledSocialCard } from './account.styles';
 
 const SocialLogin = () => {
-  const socialLogin = (type) => {
-    window.location.href =
-      'https://toyproject.okky.kro.kr:8443/oauth2/authorization/' + type;
+  const socialLogin = async (type) => {
+    const config = {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+    };
+    try {
+      const response = await axios.get(
+        `https://toyproject.okky.kro.kr:8443/oauth2/authorization/${type}`,
+        null,
+        config,
+      );
+    } catch (err) {
+      console.log(err);
+    }
+    // window.location.href = `https://toyproject.okky.kro.kr:8443/oauth2/authorization/${type}`;
   };
   return (
     <StyledSocialCard>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { Row, Col, Card, Button } from 'antd';
+import { Card, Button } from 'antd';
 import ChangePassModal from './ChanagePassModal';
 
 const PassAndDeleteUser = ({ id }) => {

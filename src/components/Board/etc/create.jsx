@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import { useObserver, useLocalStore } from 'mobx-react';
 import {toJS} from 'mobx';
 import {useRouter} from 'next/router';
-// import {CONFIG} from '../../../utils/CONFIG';
+// import {CONFIG} from '../../../utils/config';
 import BoardAPI from "../../../api/board";
 import UserAPI from "../../../api/user";
 import { Modal } from 'antd';

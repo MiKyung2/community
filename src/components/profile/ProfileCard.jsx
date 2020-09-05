@@ -27,7 +27,7 @@ const ProfileCard = (props) => {
   return useObserver(() => {
     const router = useRouter();
     const global = React.useContext(AppContext);
-    const { id } = router.query;
+    const { userId } = router.query;
 
     return (
       <Row>
@@ -84,7 +84,7 @@ const ProfileCard = (props) => {
                     />
                   </>
                 }
-                title={props.data.nickname || ''}
+                title={props.data.userId || ''}
                 description={
                   <a
                     style={{ textDecoration: 'underline' }}
@@ -96,7 +96,7 @@ const ProfileCard = (props) => {
                 }
               />
               <div>
-                {id == global.state.user.id ? (
+                {userId == global.state.user.userId ? (
                   <Button
                     onClick={() => {
                       router.push('/profile/edit');
@@ -107,7 +107,7 @@ const ProfileCard = (props) => {
                 ) : (
                   <>
                     {props.data?.followedList?.followed_users.find(
-                      (d) => d.id === global.state.user.id,
+                      (d) => d.userId === global.state.user.userId,
                     ) ? (
                       <Popconfirm
                         placement='bottomRight'
@@ -115,8 +115,8 @@ const ProfileCard = (props) => {
                         onConfirm={() => {
                           UserAPI.unfollow({
                             data: {
-                              followed_id: id,
-                              following_id: global.state.user.id,
+                              followed_id: userId,
+                              following_id: global.state.user.userId,
                             },
                           });
                           // message.info("팔로우가 취소됬습니다.");
@@ -135,8 +135,8 @@ const ProfileCard = (props) => {
                         onClick={() => {
                           UserAPI.follow({
                             data: {
-                              followed_id: id,
-                              following_id: global.state.user.id,
+                              followed_id: userId,
+                              following_id: global.state.user.userId,
                             },
                           });
                           props.onUpdate();

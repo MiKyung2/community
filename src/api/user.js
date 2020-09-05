@@ -1,5 +1,5 @@
 import instance from "./axiosWrapper";
-import CONFIG from "../utils/CONFIG";
+import CONFIG from "../utils/config";
 import testUserData from "../data/user";
 
 const UserAPI = {
@@ -8,7 +8,7 @@ const UserAPI = {
       if (CONFIG.NODE_ENV == "test") {
         return testUserData.profile;
       } else {
-        const res = await instance.get(`user/${payload.id}`);
+        const res = await instance.get(`user/${payload.userId}`);
         return res.data;
       }
     } catch (error) {
@@ -69,7 +69,7 @@ const UserAPI = {
   },
   unfollow: async (data) => {
     try {
-      const res = await instance.delete("user/unfollow", data);
+      const res = await instance.put("user/unfollow", data);
       return res;
     } catch (error) {
       CONFIG.ERROR(error);

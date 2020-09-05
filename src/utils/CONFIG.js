@@ -3,7 +3,8 @@ import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
 
 const CONFIG = (() => {
-  let API_BASE_URL = 'https://toyproject.okky.kro.kr:8443';
+  let API_BASE_URL = ""
+  const URL = 'https://toyproject.okky.kro.kr:8443';
   const API_VERSION = 'v1';
   const IMAGE_BASE_URL = '';
 
@@ -38,9 +39,10 @@ const CONFIG = (() => {
       NODE_ENV = 'production';
   }
 
-  API_BASE_URL = API_BASE_URL + '/' + API_VERSION + '/api';
+  API_BASE_URL = URL + '/' + API_VERSION + '/api';
 
   return {
+    URL,
     API_BASE_URL,
     IMAGE_BASE_URL,
     NODE_ENV,
@@ -52,5 +54,4 @@ const CONFIG = (() => {
   };
 })();
 
-export const mapClickMaxLevel = 2;
 export default CONFIG;
