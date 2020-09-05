@@ -3,17 +3,22 @@ import { useObserver, useLocalStore } from 'mobx-react';
 import { Modal } from 'antd';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import { useCookies } from 'react-cookie';
 import CommentAPI from '../../../api/comment';
 import UserAPI from "../../../api/user";
+import { AppContext } from '../../App/context';
+import Modal_login from '../Modals/Modal_login';
+// import { useCookies } from 'react-cookie';
 
 
 const AddComment = (props) => {
 
-  const { queryId, comments } = props;
-  const router = useRouter();
-
   return useObserver(() => {
+    const global = React.useContext(AppContext);
+    const globalUserInfo = global.state.user;
+    const userToken = globalUserInfo.token;
+
+    const { queryId, comments } = props;
+    const router = useRouter();
 
     const state = useLocalStore(() => {
       return {
@@ -26,12 +31,12 @@ const AddComment = (props) => {
   });
 
   // 유저 정보
-  const [cookies, _, removeCookie] = useCookies(['token', 'id']);
+  // const [cookies, _, removeCookie] = useCookies(['token', 'id']);
 
   useEffect(() => {
     const getUserInfo = async() => {
-      if(!cookies.token) return;
-      const userInfo = await UserAPI.get({id: cookies.id});            
+      if(!userToken) return;
+      const userInfo = await UserAPI.get({userId: global.state.user.userId});  
       state.user = userInfo.body; 
     };
     getUserInfo();
@@ -50,7 +55,7 @@ const AddComment = (props) => {
         viewCount: 0
       }
       const resp = await CommentAPI.post(payload);
-      comments.push(resp.data.body);
+      comments.push(resp.body);
     }
 
     const onChangeTextArea = (e) => {
@@ -66,7 +71,7 @@ const AddComment = (props) => {
     const onSubmitComment = (e) => {
       e.preventDefault();
       
-      if (!cookies.token) {
+      if (!userToken) {
         state.modal.login = true;
       } else {
         if (state.content.trim() == '') {
@@ -97,16 +102,11 @@ const AddComment = (props) => {
       </div>
 
       {/* 로그인 메세지 */}
-      <Modal
-      visible={state.modal.login}
-      onOk={handleOk_LoginModal}
-      onCancel={handleCancel_LoginModal}
-      >
-        <p>
-          댓글을 등록하려면 로그인 해주세요.
-          로그인 페이지로 이동하시겠습니까?
-        </p>
-     </Modal>
+      <Modal_login 
+        isLogin={state.modal.login} 
+        handleOk={handleOk_LoginModal} 
+        handleCancel={handleCancel_LoginModal} 
+      />
      </>
     )
 

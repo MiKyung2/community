@@ -1,32 +1,84 @@
 import styled from 'styled-components';
+import { Row, Col, Card } from 'antd';
 import { useObserver } from 'mobx-react';
 import { useRouter } from 'next/router';
-import { AppContext } from "./../components/App/context";
+import { AppContext } from '../components/App/context';
+
+import Freeboard from '../components/home/Freeboard';
+import NoticeBoard from '../components/home/NoticeBoard';
+import JobBoard from '../components/home/JobBoard';
+import QABoard from '../components/home/QABoard';
 
 const Home = (props) => {
   return useObserver(() => {
     const global = React.useContext(AppContext);
     const router = useRouter();
 
-    return <div className={props.className}>home</div>;
+    return (
+      <div className={props.className}>
+        <div>
+          <Row
+            className='home-card row'
+            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+          >
+            <Col flex='1 1 400px'>
+              <Freeboard />
+            </Col>
+            <Col flex='1 1 400px'>
+              <NoticeBoard />
+            </Col>
+          </Row>
+          <Row
+            className='home-card row'
+            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+          >
+            <Col flex='0 1 600px'>
+              <QABoard />
+            </Col>
+            {/* <Col flex='1 1 400px'>
+              <Card title='Weekly Best' />
+            </Col> */}
+          </Row>
+          <Row
+            className='home-card row'
+            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+          >
+            <Col flex='0 1 600px'>
+              <JobBoard />
+            </Col>
+            {/* <Col flex='1 1 400px'>
+              <Card title='Weekly Best' />
+            </Col> */}
+          </Row>
+        </div>
+      </div>
+    );
   });
 };
 
 export default styled(Home)`
   & {
-    padding: 0 0.5rem;
+    /* padding: 0 0.5rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
 
-    main {
+    /* main {
       padding: 5rem 0;
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+    } */
+
+    .home-card {
+      margin-top: 25px;
+    }
+
+    .home-card > div {
+      margin-top: 20px;
     }
 
     footer {

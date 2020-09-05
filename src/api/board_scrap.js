@@ -4,7 +4,7 @@ const BoardScrapAPI = {
   get: async (payload) => {
     try {
       const res = await instance.get(`board/scrap/${payload.userId}`);
-      return res;
+      return res.data;
     } catch (error) {
       console.error(error);
     }
@@ -20,7 +20,7 @@ const BoardScrapAPI = {
   },
   delete: async (payload) => {
     try {
-      const res = await instance.post('board/delete', payload.data);
+      const res = await instance.post('board/scrap/delete', payload.data);
       return res;
     } catch (error) {
       // throw error;

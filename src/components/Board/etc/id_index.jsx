@@ -17,9 +17,14 @@ import { formatDate } from '../../../utils/dateFormatter';
 import { numFormatter } from '../../../utils/numFormatter';
 
 const Board = (props) => {
+  
   return useObserver(() => {
     const router = useRouter();
     const queryId = router.query.id;
+    const boardProps = props.props;
+    
+    // const global = React.useContext(AppContext);
+    // console.log("global", toJS(global.state));
 
     const state = useLocalStore(() => {
       return {
@@ -109,6 +114,11 @@ const Board = (props) => {
       router.push('/board');
       state.modal.delete = false;
     }
+
+    const moveToWriterProfile = () => {
+      // 작성자 아이디로 변수처리 필요!!
+      router.push(`/profile/20`);
+    }
     
     return (
       <div className={props.className}>
@@ -119,7 +129,12 @@ const Board = (props) => {
 
         <div className="header_bottom">
           <span><strong>작성일:</strong> {formatDate(state.data.createdDate)}</span>
-          <span><strong>작성자:</strong> {state.data.writer}</span>
+            <p>
+              <strong>작성자: </strong> 
+              <Tooltip title="프로필 이동">
+                <span className="hover" onClick={moveToWriterProfile}>{state.data.writer}</span>
+              </Tooltip>
+            </p>
         </div>
 
 
@@ -240,6 +255,13 @@ export default styled(Board)`
     .comment-section {
       > h3 {
         margin-bottom: 15px;
+      }
+    }
+    .hover {
+      &:hover {
+        cursor: pointer;
+        color: #1980ff;
+        font-weight: bold;
       }
     }
   }

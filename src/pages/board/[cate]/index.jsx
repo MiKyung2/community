@@ -1,5 +1,5 @@
 import { EditOutlined } from '@ant-design/icons';
-import { Button, Row, Table, Modal, Tabs } from "antd";
+import { Button, Row, Table, Modal, Tabs, Tooltip } from "antd";
 import { useLocalStore, useObserver } from "mobx-react";
 import { toJS } from 'mobx';
 import { useRouter } from "next/router";
@@ -7,85 +7,53 @@ import { useCookies } from 'react-cookie';
 
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import BoardAPI from "../../api/board";
-import SearchInput from "../../components/SearchInput";
-import { formatDateWithTooltip } from '../../utils/dateFormatter';
-import { numFormatter } from '../../utils/numFormatter';
+import BoardAPI from "../../../api/board";
+import SearchInput from "../../../components/SearchInput";
+import Modal_login from '../../../components/Board/Modals/Modal_login';
+import { sortLists } from '../../../components/Board/SortLists';
+import { boardColumns } from '../../../components/Board/BoardColumns';
+import { AppContext } from '../../../components/App/context';
 
 const { TabPane } = Tabs;
 
-const columns = [
-  {
-    title: "제목",
-    dataIndex: "title",
-    key: "title",
-  }, {
-    title: "작성자",
-    dataIndex: "writer",
-    key: "writer",
-    render: writer => (
-      <span 
-        onClick={()=>console.log("작성자:", writer)}
-        style={{cursor: 'pointer'}}
-      >
-        {writer}
-      </span>)
-  }, {
-    title: "좋아요",
-    dataIndex: "rowLike",
-    key: "rowLike",
-    render: like => <span>{numFormatter(like)}</span>
-  }, {
-    title: "조회수",
-    dataIndex: "viewCount",
-    key: "viewCount",
-    render: view => <span>{numFormatter(view)}</span>
-  }, {
-    title: "댓글수",
-    dataIndex: "commentCnt",
-    key: "commentCnt",
-    render: comment => <span>{numFormatter(comment)}</span>
-  },
-  {
-    title: "날짜",
-    dataIndex: "createdDate",
-    key: "createdDate",
-    render: date => (
-      <span>
-        {formatDateWithTooltip(date)}
-      </span>
-    )
-  },
-];
-
-// 최신순 | 좋아요순 | 댓글순 | 조회수순
-const sortLists = [
-  {
-    id: 'newest',
-    name: '최신순',
-  },
-  {
-    id: 'like',
-    name: '좋아요순'
-  },
-  {
-    id: 'commentCnt',
-    name: '댓글순'
-  },
-  {
-    id: 'viewCount',
-    name: '조회수순'
-  },
-];
-
 const BoardPage = (props) => {
-  // CONFIG.LOG("boardpage props", props);
+    const global = React.useContext(AppContext);
+    const userToken = global.state.user.token;
+    console.log("boardPage global-props:", toJS(global.props))
+    console.log("boardPage global-state:", toJS(global.state))
+    const boardListProps = props.props;
+    console.log("boardpage data:", boardListProps)
+    const boardCate = props.props.cate;
+    let board_title;
+
+  switch(boardCate) {
+    case "free":
+      board_title = "자유게시판"
+      break;
+    case "noti":
+      board_title = "공지사항"
+      break;
+    case "qna":
+      board_title = "Q&A"
+      break;
+    case "recruit":
+      board_title = "구인게시판"
+    break;
+    case "resumes":
+      board_title = "구직게시판"
+    break;
+    case "secret":
+      board_title = "비밀게시판"
+      break;
+    default:
+      console.log("board name error")
+  }
 
   return useObserver(() => {
     const router = useRouter();
     const state = useLocalStore(() => {
       return {
-        dataSource: props.listByDate.content,
+        dataSource: boardListProps.listByDate.content,
         page: {
           currentPage: 1,
           gb: 'title',
@@ -93,12 +61,16 @@ const BoardPage = (props) => {
           size: 20,
           sort: "date",
           tablePage: 1,
-          total: props.listByDate.totalElements
+          total: boardListProps.listByDate.totalElements
         },
         modal: {
           login: false
         },
-        boardTitle: '자유게시판'
+        boardTitle: board_title,
+        auth: {
+          member: false,
+          admin: false
+        }
       };
     });
 
@@ -135,12 +107,38 @@ const BoardPage = (props) => {
     }
 
     const onChangeSort = (selectedFilter) => {
-      if (selectedFilter !== "newest" || selectedFilter !== "like" || selectedFilter !== "commentCnt" || selectedFilter !== "viewCount") return;
+      console.log("change sort:", selectedFilter);
+      // if (selectedFilter !== "newest" || selectedFilter !== "like" || selectedFilter !== "commentCnt" || selectedFilter !== "viewCount") return;
 
       // 정미경의 코멘트 : sortLists id를 서버에 주는 값과 똑같이 쓰면 코드가 간단해집니다.
       state.page.sort = selectedFilter;
       moveToFirstPage();
       fetchListData();
+    }
+
+    // 제목 클릭 - 게시글로 이동 || 작성자 클릭 - 작성자 프로필로 이동
+    const onRowClick = (record, rowIndex) => {
+      return {
+        onClick: (e) => {
+          const target = e.target.id;
+          if(target === 'title') {
+            moveToBoardPost(record.id);
+          } else if (target === 'writer') {
+            moveToWriterProfile();
+          } else {
+            return;
+          }
+        }
+      }
+    }
+
+    const moveToBoardPost = (boardId) => {
+      router.push(`/board/${boardCate}/[id]`, `/board/${boardCate}/${boardId}`);
+    }
+
+    const moveToWriterProfile = () => {
+      // 작성자 아이디로 변수처리 필요!!
+      router.push(`/profile/20`);
     }
 
     // 페이지 변경
@@ -152,37 +150,30 @@ const BoardPage = (props) => {
 
     // 필터&검색
     const onSearch = (searchTerm) => {
-    const {gb, keyword, sort} = searchTerm;
+      const {gb, keyword, sort} = searchTerm;
 
-    state.page.currentPage = 1;
-    state.page.tablePage = 1;
-    state.page.gb = gb ? gb : state.page.gb;
-    state.page.keyword = keyword ? keyword : state.page.keyword;
-    state.page.sort = sort ? sort : state.page.sort;
+      state.page.currentPage = 1;
+      state.page.tablePage = 1;
+      state.page.gb = gb ? gb : state.page.gb;
+      state.page.keyword = keyword ? keyword : state.page.keyword;
+      state.page.sort = sort ? sort : state.page.sort;
 
       fetchListData();
+
     }
 
-    // 해당 게시물 이동
-    const onClickTableRow = (record, rowIndex) => {
-      return {
-        onClick: () => {
-          router.push('/board/[id]', `/board/${record.id}`);
-        }
-      }
-    }
-
-    // 새글쓰기로 이동
-    const [cookies, _, removeCookie] = useCookies(['token', 'id']);
+    // 유저 확인 & 새글쓰기로 이동
+    // const [cookies, _, removeCookie] = useCookies(['token', 'id']);
     
     const onClickNewPostBtn = () => {
-      if(!cookies.token) {
+      if(!userToken) {
         state.modal.login = true;
       } else {
-        router.push("/board/articles/create");
+        router.push(`/board/${boardCate}/articles/create`);
       }
     };
 
+    // Hadle Modal - 로그인 메세지
     const handleCancel_LoginModal = (e) => {
       state.modal.login = false;
     }
@@ -205,16 +196,11 @@ const BoardPage = (props) => {
         </Row>
 
         {/* 로그인 메세지 */}
-        <Modal
-        visible={state.modal.login}
-        onOk={handleOk_LoginModal}
-        onCancel={handleCancel_LoginModal}
-        >
-          <p>
-            새글을 등록하려면 로그인 해주세요.<br/>
-            로그인 페이지로 이동하시겠습니까?
-          </p>
-        </Modal>
+        <Modal_login 
+            isLogin={state.modal.login} 
+            handleOk={handleOk_LoginModal} 
+            handleCancel={handleCancel_LoginModal} 
+        />
 
         <Row align="top" justify="space-between" className="filter_container">
           {/* 최신순 | 좋아요순 | 댓글순 | 조회수순 */}
@@ -230,9 +216,9 @@ const BoardPage = (props) => {
 
         {/* 테이블 & 리스트 */}
         <Table
-          columns={columns}
+          columns={boardColumns}
           dataSource={state.dataSource}
-          onRow={onClickTableRow}
+          onRow={onRowClick}
           pagination={{
             pageSize: state.page.size,
             total: state.page.total,
@@ -249,8 +235,9 @@ const BoardPage = (props) => {
 // ++++++++++++++++++++++++++++++++++++++++++++
 // 서버사이드 영역
 // ++++++++++++++++++++++++++++++++++++++++++++
-export const getStaticProps = async () => {
 
+BoardPage.getInitialProps = async(ctx) => {
+  
   // 최신순
   const boardListByDate = await BoardAPI.list({
     currentPage: 1,
@@ -259,13 +246,35 @@ export const getStaticProps = async () => {
     size: 20,
     sort: "date"
   });
-
+  
   return {
     props: {
       listByDate: boardListByDate.body,
+      cate: ctx.query.cate,
     },
   };
-};
+
+}
+
+// export const getStaticProps = async (ctx) => {
+
+//     console.log("board test-ctx:", ctx);
+
+//   // 최신순
+//   const boardListByDate = await BoardAPI.list({
+//     currentPage: 1,
+//     gb: "title",
+//     keyword: '',
+//     size: 20,
+//     sort: "date"
+//   });
+
+//   return {
+//     props: {
+//       listByDate: boardListByDate.body,
+//     },
+//   };
+// };
 
 export default styled(BoardPage)`
   & {
@@ -275,15 +284,10 @@ export default styled(BoardPage)`
     .filter_container {
       margin-bottom: 20px;
     }
-    .filter {
-      display: flex;
-      > li {
-        margin-right: 10px;
-        font-size: 14px;
-        &:hover {
-          text-decoration: underline;
-          cursor: pointer;
-        }
+    .hover {
+      &:hover {
+        cursor: pointer;
+        color: #1890ff;
       }
     }
   }
