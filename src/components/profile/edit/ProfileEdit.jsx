@@ -9,8 +9,6 @@ const EditProfile = ({ profile, id }) => {
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
 
-  console.log(profile);
-
   useEffect(() => {
     form.setFieldsValue({
       nickname: profile?.nickname,

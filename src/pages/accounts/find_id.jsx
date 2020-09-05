@@ -50,9 +50,7 @@ const FindId = (props) => {
             remember: true,
           }}
           // onFinish={() => onLogin()}
-          onFinishFailed={() => {
-            console.log('onFinishFailed');
-          }}
+          onFinishFailed={() => { }}
         >
           <div className='wrapper'>
             <Form.Item

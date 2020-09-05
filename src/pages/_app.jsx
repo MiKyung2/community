@@ -28,17 +28,14 @@ function App(props) {
       if (global.state.user.userId) {
         stompClient.connect({},()=>{
           stompClient.subscribe('/socket/sub/note/' + global.state.user.userId, (data) => {
-            console.log("note>>>", data);
             global.state.alarm.note = true;
           });
 
           stompClient.subscribe('/socket/sub/board/' + global.state.user.userId, (event) => {
-            console.log("board>>>", event);
             global.state.alarm.board = true;
           });
 
           stompClient.subscribe('/socket/sub/profile/' + global.state.user.userId, (event) => {
-            console.log("profile>>>", event);
             global.state.alarm.profile = true;
           });
         });

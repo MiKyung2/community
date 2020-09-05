@@ -58,7 +58,6 @@ const useApp = (props) => {
 
   instance.interceptors.response.use(
     (res) => {
-      console.log("interceptors");
       const token = res.headers?.["x-authorization-update"] ?? "";
       if (token) {
         $.state.user.token = token;

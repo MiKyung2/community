@@ -28,7 +28,7 @@ const ChangeImage = ({ visible, setVisible, userId }) => {
   };
 
   useEffect(() => {
-    console.log(image);
+    // console.log(image);
   }, [visible]);
 
   return (

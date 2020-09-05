@@ -114,7 +114,6 @@ const Signup = (props) => {
           form={form}
           onFinish={() => onSignup()}
           onFinishFailed={() => {
-            console.log('onFinishFailed');
           }}
         >
           <div className='wrapper'>

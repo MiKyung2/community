@@ -9,7 +9,6 @@ const AuthAPI = {
         email: payload.value.email,
         password: payload.value.password1,
       });
-      console.log(res);
       return res;
     } catch (error) {
       throw error;
@@ -67,7 +66,6 @@ const AuthAPI = {
       );
       return res;
     } catch (error) {
-      console.log(error);
       return '500';
     }
   },
@@ -85,7 +83,6 @@ const AuthAPI = {
       const res = await instance.put(`user/password`, data, config);
       return res;
     } catch (error) {
-      console.log(error);
       return '500';
     }
   },
