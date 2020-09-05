@@ -36,7 +36,7 @@ const AddComment = (props) => {
   useEffect(() => {
     const getUserInfo = async() => {
       if(!userToken) return;
-      const userInfo = await UserAPI.get({id: global.state.user.userId});            
+      const userInfo = await UserAPI.get({userId: global.state.user.userId});  
       state.user = userInfo.body; 
     };
     getUserInfo();

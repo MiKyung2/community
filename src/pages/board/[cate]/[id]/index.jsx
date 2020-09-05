@@ -10,6 +10,7 @@ import ReactHtmlParser from 'react-html-parser';
 import styled from 'styled-components';
 
 import BoardAPI from "../../../../api/board";
+// import BoardAPI from "../../../../api/board";
 import UserAPI from "../../../../api/user";
 import CommentAPI from "../../../../api/comment";
 import Comments from "../../../../components/Board/Comment/Comments";
