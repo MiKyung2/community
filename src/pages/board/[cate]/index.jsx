@@ -14,6 +14,8 @@ import { sortLists } from '../../../components/Board/SortLists';
 import { boardColumns } from '../../../components/Board/BoardColumns';
 import { AppContext } from '../../../components/App/context';
 
+import {dummy} from '../../../data/dummy'
+
 const { TabPane } = Tabs;
 
 const BoardPage = (props) => {
@@ -53,7 +55,8 @@ const BoardPage = (props) => {
     const router = useRouter();
     const state = useLocalStore(() => {
       return {
-        dataSource: boardListProps.listByDate.content,
+        dataSource: boardListProps?.listByDate?.content,
+        // dataSource: dummy,
         page: {
           currentPage: 1,
           gb: 'title',
@@ -61,7 +64,8 @@ const BoardPage = (props) => {
           size: 20,
           sort: "date",
           tablePage: 1,
-          total: boardListProps.listByDate.totalElements
+          total: boardListProps?.listByDate?.totalElements
+          // total: 20
         },
         modal: {
           login: false
@@ -286,6 +290,8 @@ BoardPage.getInitialProps = async(ctx) => {
     size: 20,
     sort: "date"
   });
+
+  // console.log("boardListByDate 테스트!!", boardListByDate);
   
   return {
     props: {

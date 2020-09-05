@@ -13,7 +13,10 @@ const BoardAPI = {
       const res = await instance.get(
         `board/page?boardType=${boardType}&currentPage=${currentPage}&gb=${gb}&keyword=${keyword}&size=${size}&sort=${sort}`
         );
+
+        console.log("board res:", res)
       return res.data
+      }
     } catch (error) {
       // throw error;
       console.error(error);
