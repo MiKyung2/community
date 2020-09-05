@@ -23,7 +23,7 @@ const Board = (props) => {
     const router = useRouter();
 
     const global = React.useContext(AppContext);
-    const userToken = global.state.user.token;
+    const userToken = global.state.user.token; // token 따로 저장하지 말기
 
     const boardData = props.board.body;
     const boardCate = props.boardCate
