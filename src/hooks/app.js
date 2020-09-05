@@ -54,7 +54,6 @@ const useApp = (props) => {
       ].some((url) => reqConfig.url?.includes(url) ?? false);
 
       if ($.state.user.token && $.state.user.token !== "undefined") {
-        console.log("token : ", $.state.user.token);
         reqConfig.headers.Authorization = $.state.user.token;
       }
 

@@ -19,10 +19,7 @@ const { TabPane } = Tabs;
 const BoardPage = (props) => {
     const global = React.useContext(AppContext);
     const userToken = global.state.user.token;
-    console.log("boardPage global-props:", toJS(global.props))
-    console.log("boardPage global-state:", toJS(global.state))
     const boardListProps = props.props;
-    console.log("boardpage data:", boardListProps)
     const boardCate = props.props.cate;
     let board_title;
 
@@ -46,7 +43,6 @@ const BoardPage = (props) => {
       board_title = "비밀게시판"
       break;
     default:
-      console.log("board name error")
   }
 
   return useObserver(() => {
@@ -107,7 +103,6 @@ const BoardPage = (props) => {
     }
 
     const onChangeSort = (selectedFilter) => {
-      console.log("change sort:", selectedFilter);
       // if (selectedFilter !== "newest" || selectedFilter !== "like" || selectedFilter !== "commentCnt" || selectedFilter !== "viewCount") return;
 
       // 정미경의 코멘트 : sortLists id를 서버에 주는 값과 똑같이 쓰면 코드가 간단해집니다.

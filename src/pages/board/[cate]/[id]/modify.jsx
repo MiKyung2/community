@@ -11,12 +11,8 @@ const EditBoard = (props) => {
 
     return useObserver(() => {
 
-        console.log("modify page props:", props);
-
         const boardCate = props.props.boardCate;
         const boardId = props.props.boardId;
-
-        console.log("cate, id", boardCate, boardId)
 
         const router = useRouter();
         const state = useLocalStore(() => {
