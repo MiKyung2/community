@@ -98,7 +98,6 @@ App.getInitialProps = async (appContext) => {
   );
 
   const token = ck.token ?? '';
-  const id = ck.id ?? '';
   const decodedToken = jwt.decode(token.replace('Bearer ', ''));
   const userId = decodedToken?.userId ?? '';
 
@@ -110,7 +109,6 @@ App.getInitialProps = async (appContext) => {
       user: {
         token,
         userId,
-        id,
       },
     },
   };
