@@ -18,7 +18,7 @@ const EachComment = (props) => {
 
   return useObserver(() => {
     const global = React.useContext(AppContext);
-    const userToken = global.state.user.token;
+    const { isAdmin } = props;
 
     const state = useLocalStore(() => {
       return {
@@ -54,11 +54,14 @@ const EachComment = (props) => {
 
       // 유저 정보
       const getUserInfo = async() => {
-        if(!userToken) return;
-        const userInfo = await UserAPI.get({userId: global.state.user.userId});    
-        state.userData = userInfo.body;      
-        state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
-        state.login = true;
+        if(!global.state.user.token) {
+          state.login = false;
+        } else {
+          const userInfo = await UserAPI.get({userId: global.state.user.userId});    
+          state.userData = userInfo.body;      
+          state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
+          state.login = true;
+        }
       };
       getUserInfo();
     }, []);
@@ -110,30 +113,73 @@ const EachComment = (props) => {
       state.modal.delete = false;
     }
 
+    const checkAdmin = () => {
 
-    const actions = [
-      <span key="comment-basic-like">
-        <Tooltip title={state.login ? "좋아요" : "로그인 해주세요"}>
-          <span onClick={onLike}>{state.action === 'liked' ? <LikeFilled /> : <LikeOutlined />}</span>
-        </Tooltip>
-        <span className="comment-action">{state.comment.likes}</span>
-      </span>,
-      <span key="comment-basic-dislike">
-        <Tooltip title={state.login ? "싫어요" : "로그인 해주세요"}>
-          <span onClick={onDislike}>{state.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />}</span>
-        </Tooltip>
-        <span className="comment-action">{state.comment.dislikes}</span>
-      </span>,
-      // <span key="comment-basic-reply-to">Reply to</span>,
-      state.isWriter ? <span key="comment-basic-delete-btn" onClick={onDelete}>삭제</span> : null
-    ];
+      let actions;
+
+      if (isAdmin === 'A') {
+         actions = [
+          <span key="comment-basic-like">
+            <Tooltip title={"좋아요"}>
+              <span onClick={onLike}>{state.action === 'liked' ? <LikeFilled /> : <LikeOutlined />}</span>
+            </Tooltip>
+            <span className="comment-action">{state.comment.likes}</span>
+          </span>,
+          <span key="comment-basic-dislike">
+            <Tooltip title={"로그인 해주세요"}>
+              <span onClick={onDislike}>{state.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />}</span>
+            </Tooltip>
+            <span className="comment-action">{state.comment.dislikes}</span>
+          </span>,
+          // <span key="comment-basic-reply-to">Reply to</span>,
+          <span key="comment-basic-delete-btn" onClick={onDelete}>삭제</span>
+        ];
+      } else {
+        actions = [
+          <span key="comment-basic-like">
+            <Tooltip title={state.login ? "좋아요" : "로그인 해주세요"}>
+              <span onClick={onLike}>{state.action === 'liked' ? <LikeFilled /> : <LikeOutlined />}</span>
+            </Tooltip>
+            <span className="comment-action">{state.comment.likes}</span>
+          </span>,
+          <span key="comment-basic-dislike">
+            <Tooltip title={state.login ? "싫어요" : "로그인 해주세요"}>
+              <span onClick={onDislike}>{state.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />}</span>
+            </Tooltip>
+            <span className="comment-action">{state.comment.dislikes}</span>
+          </span>,
+          // <span key="comment-basic-reply-to">Reply to</span>,
+          state.isWriter ? <span key="comment-basic-delete-btn" onClick={onDelete}>삭제</span> : null
+        ];
+      }
+
+      return actions;
+    }
+
+
+    // const actions = [
+    //   <span key="comment-basic-like">
+    //     <Tooltip title={state.login ? "좋아요" : "로그인 해주세요"}>
+    //       <span onClick={onLike}>{state.action === 'liked' ? <LikeFilled /> : <LikeOutlined />}</span>
+    //     </Tooltip>
+    //     <span className="comment-action">{state.comment.likes}</span>
+    //   </span>,
+    //   <span key="comment-basic-dislike">
+    //     <Tooltip title={state.login ? "싫어요" : "로그인 해주세요"}>
+    //       <span onClick={onDislike}>{state.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />}</span>
+    //     </Tooltip>
+    //     <span className="comment-action">{state.comment.dislikes}</span>
+    //   </span>,
+    //   // <span key="comment-basic-reply-to">Reply to</span>,
+    //   state.isWriter ? <span key="comment-basic-delete-btn" onClick={onDelete}>삭제</span> : null
+    // ];
 
 
 
     return (
       <div>
         <Comment
-          actions={actions}
+          actions={checkAdmin()}
           author={<a>{state.comment.writer}</a>}
           avatar={
             <Avatar

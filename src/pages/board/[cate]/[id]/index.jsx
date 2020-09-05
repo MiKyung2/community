@@ -23,7 +23,7 @@ const Board = (props) => {
     const router = useRouter();
 
     const global = React.useContext(AppContext);
-    const userToken = global.state.user.token; // token 따로 저장하지 말기
+    const test_level = 'Y';
 
     const boardData = props.board.body;
     const boardCate = props.boardCate
@@ -55,7 +55,7 @@ const Board = (props) => {
 
     useEffect(() => {
       const getUserInfo = async() => {
-        if(!userToken) return;
+        if(!global.state.user.token) return;
           const userInfo = await UserAPI.get({userId: global.state.user.userId}); 
           state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
           state.login = true;
@@ -123,11 +123,28 @@ const Board = (props) => {
     const moveToWriterProfile = () => {
       router.push(`/profile/${state.data.writer}`);
     }
+
+    const checkAdmin = () => {
+      const btn = <Row>
+      <Button type="text" onClick={onClickEdit}>수정</Button>
+      <Button type="text" onClick={onClickDelete}>삭제</Button>
+      </Row>;
+
+      if (test_level === 'A') {
+        return btn;
+      } else {
+        if(state.isWriter) {
+          return btn;
+        } else {
+          return null;
+        }
+      }
+    } 
     
     return (
       <div className={props.className}>
         <Row justify="space-between" className="header_top">
-          <h2>test-{state.data.title}</h2>
+          <h2>{state.data.title}</h2>
           <Button type="default" onClick={onClickBackToList}>글 목록</Button>
         </Row>
 
@@ -158,12 +175,7 @@ const Board = (props) => {
             </Row>
 
             {/* 수정 & 삭제 */}
-            {state.isWriter && 
-              <Row>
-                <Button type="text" onClick={onClickEdit}>수정</Button>
-                <Button type="text" onClick={onClickDelete}>삭제</Button>
-              </Row>
-            }
+            {checkAdmin()}
           </Row>
 
           {/* 게시글 내용 */}
@@ -174,7 +186,7 @@ const Board = (props) => {
         {/* 댓글 */}
         <div className="comment-section">
           <h3>댓글</h3>
-          <Comments queryId={boardId} data={props.comments.body} />
+          <Comments queryId={boardId} data={props.comments.body} isAdmin={test_level} />
         </div>
 
         {/* 삭제 확인 메세지 */}

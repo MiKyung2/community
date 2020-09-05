@@ -11,9 +11,9 @@ const BoardAPI = {
       if (CONFIG.NODE_ENV == "test") {
         return dummy;
       } else {
-      const {currentPage, gb, keyword, size, sort} = payload;
+      const {boardType, currentPage, gb, keyword, size, sort} = payload;
       const res = await instance.get(
-        `board/page?currentPage=${currentPage}&gb=${gb}&keyword=${keyword}&size=${size}&sort=${sort}`
+        `board/page?boardType=${boardType}&currentPage=${currentPage}&gb=${gb}&keyword=${keyword}&size=${size}&sort=${sort}`
         );
       return res.data
       }

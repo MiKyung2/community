@@ -18,13 +18,14 @@ const { TabPane } = Tabs;
 
 const BoardPage = (props) => {
     const global = React.useContext(AppContext);
-    const userToken = global.state.user.token;
+    console.log("boardList-global:", toJS(global.state))
+    const test_level = 'Y';
 
     const boardListProps = props.props;
     const boardCate = props.props.cate;
     let board_title;
 
-    console.log("board lists:", boardListProps)
+    console.log("boardList:", props)
 
   switch(boardCate) {
     case "free":
@@ -163,10 +164,8 @@ const BoardPage = (props) => {
     }
 
     // 유저 확인 & 새글쓰기로 이동
-    // const [cookies, _, removeCookie] = useCookies(['token', 'id']);
-    
     const onClickNewPostBtn = () => {
-      if(!userToken) {
+      if(!global.state.user.token) {
         state.modal.login = true;
       } else {
         router.push(`/board/${boardCate}/articles/create`);
@@ -182,6 +181,25 @@ const BoardPage = (props) => {
       router.push('/accounts/signin');
     }
 
+    const checkAdmin = () => {
+      const btn = <Button className="new_post_btn" type="primary" onClick={onClickNewPostBtn}>
+                      <EditOutlined />
+                      새글쓰기
+                  </Button>;
+
+      if(boardCate === 'recruit' || boardCate === 'noti') {
+        if(test_level === 'A') {
+          return btn;
+        } else {
+          return <div className="blank_post_btn"></div>;
+        }
+      } else {
+        return btn;
+      }
+    }
+
+
+
     return (
       <div className={props.className}>
 
@@ -189,10 +207,7 @@ const BoardPage = (props) => {
           <h1>{state.boardTitle}</h1>
 
           {/* "새글쓰기" 버튼 */}
-          <Button className="new_post_btn" type="primary" onClick={onClickNewPostBtn}>
-            <EditOutlined />
-            새글쓰기
-          </Button>
+          {checkAdmin()}
         </Row>
 
         {/* 로그인 메세지 */}
@@ -237,17 +252,40 @@ const BoardPage = (props) => {
 // ++++++++++++++++++++++++++++++++++++++++++++
 
 BoardPage.getInitialProps = async(ctx) => {
+
+  const cate = ctx.query.cate;
+  let board_type;
+
+  switch(cate) {
+    case "free":
+      board_type = "FREE"
+      break;
+    case "noti":
+      board_type = "NOTICE"
+      break;
+    case "qna":
+      board_type = "QNA"
+      break;
+    case "recruit":
+      board_type = "JOB_OFFER"
+    break;
+    case "resumes":
+      board_type = "JOB_SEARCH"
+    break;
+    case "secret":
+      board_type = "SECRET"
+      break;
+  }
   
   // 최신순
   const boardListByDate = await BoardAPI.list({
+    boardType: board_type,
     currentPage: 1,
     gb: "title",
     keyword: '',
     size: 20,
     sort: "date"
   });
-
-  console.log("테스트테스트")
   
   return {
     props: {
@@ -258,30 +296,13 @@ BoardPage.getInitialProps = async(ctx) => {
 
 }
 
-// export const getStaticProps = async (ctx) => {
-
-//     console.log("board test-ctx:", ctx);
-
-//   // 최신순
-//   const boardListByDate = await BoardAPI.list({
-//     currentPage: 1,
-//     gb: "title",
-//     keyword: '',
-//     size: 20,
-//     sort: "date"
-//   });
-
-//   return {
-//     props: {
-//       listByDate: boardListByDate.body,
-//     },
-//   };
-// };
-
 export default styled(BoardPage)`
   & {
     .new_post_btn {
       margin-bottom: 40px;
+    }
+    .blank_post_btn {
+      margin-bottom: 60px;
     }
     .filter_container {
       margin-bottom: 20px;
