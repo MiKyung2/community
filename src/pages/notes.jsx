@@ -7,7 +7,7 @@ import cookie from 'cookie';
 import jwt from "jsonwebtoken";
 import { toJS } from "mobx";
 import { AppContext } from "../components/App/context";
-import CONFIG from '../utils/config';
+import CONFIG from '../utils/CONFIG';
 
 const { Option } = Select;
 const { Search } = Input;
