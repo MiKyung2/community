@@ -74,13 +74,15 @@ const ProfileCard = (props) => {
             >
               <Meta
                 avatar={
-                  <Avatar
-                    src={
-                      props.data.profileImg ||
-                      'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-                    }
-                    size='large'
-                  />
+                  <>
+                    <Avatar
+                      src={
+                        props.data.profileImg ||
+                        'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+                      }
+                      size='large'
+                    />
+                  </>
                 }
                 title={props.data.nickname || ''}
                 description={

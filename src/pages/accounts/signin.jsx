@@ -3,13 +3,15 @@ import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useCookies } from 'react-cookie';
-import { Form, Input, Button, Checkbox, Row, Col, message } from 'antd';
+import { Form, Input, Button, Checkbox, Row, Col, message, Card } from 'antd';
 import { OuterWrapper } from '../../styles/styles';
 import AuthAPI from '../../api/auth';
 import { AppContext } from '../../components/App/context';
 import { inputRules } from '../../components/accounts/validator';
 import { toJS } from 'mobx';
 import FindPassModal from '../../components/accounts/FindPassModal';
+
+import SocialMeiaLoginCard from '../../components/accounts/SociaLoginCard';
 
 const SignIn = (props) => {
   const global = React.useContext(AppContext);
@@ -70,6 +72,7 @@ const SignIn = (props) => {
               : '패스워드를 입력해주세요'
           }
           onChange={(e) => {
+            e.preventDefault();
             name === 'password'
               ? (state.value.password = e.target.value)
               : (state.value.userId = e.target.value);
@@ -83,11 +86,7 @@ const SignIn = (props) => {
       <OuterWrapper className={props.className}>
         <Form
           name='basic'
-          initialValues={{
-            remember: true,
-          }}
-          onFinishFailed={() => {
-            console.log('onFinishFailed');
+          onFinish={() => {
             onLogin();
           }}
         >
@@ -123,6 +122,7 @@ const SignIn = (props) => {
             </Col>
           </Row>
         </Form>
+        <SocialMeiaLoginCard />
       </OuterWrapper>
     );
   });
