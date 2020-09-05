@@ -197,18 +197,18 @@ const Notes = (props) => {
               </Button>
             </Popconfirm>
           </div>
-          <Input.Group compact style={{ width: "40%"}}>
+          {/* <Input.Group compact style={{ width: "40%"}}>
             <Select defaultValue="title" style={{ width: '35%' }}>
               <Option value="title">제목</Option>
               <Option value="writer">{state.tabActive === "R" ? "보낸 사람" : "받는 사람"}</Option>
             </Select>
-            {/* <Search 
+            <Search 
               style={{ width: "65%"}} 
               placeholder="input search text" 
               onSearch={value => console.log(value)} 
               enterButton 
-            /> */}
-          </Input.Group>
+            />
+          </Input.Group> */}
         </div>
         <Tabs
           defaultActiveKey={state.tabActive}

@@ -13,7 +13,7 @@ const initializer = (props) => {
     user: {
       token: props.init?.user?.token,
       userId: props.init?.user?.userId,
-      level: "",
+      role: props.init?.user?.role,
     },
     alarm: {
       note: false,
@@ -28,11 +28,13 @@ const dispatch = ($) => {
   const login = (data) => {
     $.state.user.token = data?.token;
     $.state.user.userId = data?.userId;
+    $.state.user.role = data?.role;
   };
 
   const logout = () => {
     $.state.user.token = null;
     $.state.user.userId = '';
+    $.state.user.role = "";
   };
 
   return {
@@ -47,7 +49,6 @@ const useApp = (props) => {
   const action = dispatch($);
 
   React.useMemo(() => {
-    
     instance.interceptors.request.use((reqConfig) => {
       const isServerUrls = [
         CONFIG.API_BASE_URL,

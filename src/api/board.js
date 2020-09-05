@@ -1,6 +1,4 @@
 import instance from "./axiosWrapper";
-import CONFIG from '../utils/config';
-import {dummy} from '../data/dummy';
 
  // `board/page?gb=${gb}&keyword=${keyword}&offset=${offset}&pageNumber=${pageNumber}&pageSize=${pageSize}&sort=${sort}`
 
@@ -16,7 +14,6 @@ const BoardAPI = {
         `board/page?boardType=${boardType}&currentPage=${currentPage}&gb=${gb}&keyword=${keyword}&size=${size}&sort=${sort}`
         );
       return res.data
-      }
     } catch (error) {
       // throw error;
       console.error(error);

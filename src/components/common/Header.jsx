@@ -12,6 +12,8 @@ import styled from 'styled-components';
 import { AppContext } from '../App/context';
 import { toJS } from 'mobx';
 
+import AuthAPI from '../../api/auth';
+
 const theLatestDate = [
   {
     key: 1,
@@ -60,18 +62,14 @@ const LayoutHeader = (props) => {
       followNotReadCnt: false,
     };
 
-    const removeCookies = () => {
+    const handleClickLogin = () => {
+      router.push('/accounts/signin');
+    };
+
+    const handleClickLogout = async () => {
       removeCookie('token');
       removeCookie('id');
-    };
-
-    const handleClickLogin = () => {
-      router.push("/accounts/signin");
-    };
-
-    const handleClickLogout = () => {
-      removeCookies();
-      global.action.logout();
+      await global.action.logout();
     };
 
     return (
@@ -97,11 +95,7 @@ const LayoutHeader = (props) => {
           {global?.state?.user?.token ? (
             <Menu.Item onClick={handleClickLogout}>로그아웃</Menu.Item>
           ) : (
-            <Menu.Item
-              onClick={handleClickLogin}
-            >
-              로그인
-            </Menu.Item>
+            <Menu.Item onClick={handleClickLogin}>로그인</Menu.Item>
           )}
         </Menu>
 
@@ -112,7 +106,7 @@ const LayoutHeader = (props) => {
                 router.push('/notes');
               }}
             >
-              <Badge count={global.state.alarm.note ? "N" : ""}>
+              <Badge count={global.state.alarm.note ? 'N' : ''}>
                 <MessageOutlined />
               </Badge>
             </Button>
@@ -124,7 +118,13 @@ const LayoutHeader = (props) => {
               trigger='click'
             >
               <Button>
-                <Badge count={global.state.alarm.board || global.state.alarm.profile ? "N" : ""}>
+                <Badge
+                  count={
+                    global.state.alarm.board || global.state.alarm.profile
+                      ? 'N'
+                      : ''
+                  }
+                >
                   <BellOutlined />
                 </Badge>
               </Button>
