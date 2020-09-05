@@ -1,5 +1,5 @@
 import { useLocalStore, useObserver } from "mobx-react-lite";
-import { Input, Menu, Select, Table, Button, Tabs, Popconfirm, message } from "antd";
+import { Input, Menu, Select, Table, Button, Tabs, Popconfirm, message, Pagination } from "antd";
 import NoteAPI from "../api/note";
 import SendNote from "../components/note/SendNote";
 import { SearchOutlined } from '@ant-design/icons';
@@ -36,12 +36,12 @@ const Notes = (props) => {
         pageSize: 10,
         receive: {
           page: 1,
-          totalPage: props.receive?.totalPages || 1,
+          totalPages: props.receive?.totalElements || 1,
           list: props.receive?.content || [],
         },
         sendnote: {
           page: 1,
-          totalPage: 1,
+          totalPages: 1,
           list: [],
         },
         delete: {
@@ -90,11 +90,11 @@ const Notes = (props) => {
 
     const getSendList = async () => {
       state.sendnote.list = [];
-      
+  
       try {
         const res = await NoteAPI.sendList({ pageSize: state.pageSize, userId: global.state.user.userId, page: state.sendnote.page });
         state.sendnote.list = res.content;
-        state.sendnote.totalPage = res.totalPages;
+        state.sendnote.totalPages = res.totalElements;
       } catch (error) {
         state.error = true;
       }
@@ -104,9 +104,9 @@ const Notes = (props) => {
       state.receive.list = [];
       (async () => {
         try {
-          const res = await NoteAPI.receiveList({ pageSize: state.pageSize, userId: global.state.user.userId, page: 2 });
+          const res = await NoteAPI.receiveList({ pageSize: state.pageSize, userId: global.state.user.userId, page: state.receive.page });
           state.receive.list = res.content;
-          state.receive.totalPage = res.totalPages;
+          state.receive.totalPages = res.totalElements;
         } catch (error) {
           state.error = true;
         }
@@ -135,11 +135,31 @@ const Notes = (props) => {
 
     const onChangePage = (page, pageSize) => {
       if (state.tabActive === "S") {
-        state.send.page = page;
+        state.sendnote.list = [];
+  
+        (async () => {
+          try {
+            const res = await NoteAPI.sendList({ pageSize: state.pageSize, userId: global.state.user.userId, page: page });
+            state.sendnote.list = res.content;
+            state.sendnote.page = page;
+            state.sendnote.totalPages = res.totalElements;
+          } catch (error) {
+            state.error = true;
+          }
+        })();
       } else if (state.tabActive === "R") {
-        state.receive.page = page;
+      (async () => {
+        try {
+          const res = await NoteAPI.receiveList({ pageSize: state.pageSize, userId: global.state.user.userId, page: page });
+          state.receive.list = res.content;
+          state.receive.page = page;
+          state.receive.totalPages = res.totalElements;
+        } catch (error) {
+          state.error = true;
+        }
+      })();
       }
-      getCurrentList();
+      
     }
 
     return (
@@ -209,12 +229,13 @@ const Notes = (props) => {
               }}
               pagination={{
                 pageSize: state.pageSize,
-                total: state.receive.totalPage,
+                total: state.receive.totalPages,
                 onChange: onChangePage,
                 current: state.receive.page,
               }}
             />
           </TabPane>
+
           <TabPane tab="보낸 쪽지함" key="S">
             <Table
               rowSelection={rowSelection}
@@ -233,14 +254,14 @@ const Notes = (props) => {
               }}
               pagination={{
                 pageSize: state.pageSize,
-                total: state.sendnote.total,
+                total: state.sendnote.totalPages,
                 onChange: onChangePage,
                 current: state.sendnote.page,
               }}
             />
           </TabPane>
         </Tabs>
-
+          
         <SendNote
           visible={state.send.open}
           onCancel={() => {
