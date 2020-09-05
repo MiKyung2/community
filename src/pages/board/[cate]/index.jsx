@@ -17,12 +17,10 @@ import { AppContext } from '../../../components/App/context';
 const { TabPane } = Tabs;
 
 const BoardPage = (props) => {
+    const global = React.useContext(AppContext);
     const boardListProps = props.props;
     const boardCate = props.props.cate;
     let board_title;
-  // console.log("boardpage props", boardCate);
-  const global = React.useContext(AppContext);
-    console.log("global", toJS(global.state));
 
   switch(boardCate) {
     case "free":
@@ -31,6 +29,15 @@ const BoardPage = (props) => {
     case "noti":
       board_title = "공지사항"
       break;
+    case "qna":
+      board_title = "Q&A"
+      break;
+    case "recruit":
+      board_title = "구인게시판"
+    break;
+    case "resumes":
+      board_title = "구직게시판"
+    break;
     case "secret":
       board_title = "비밀게시판"
       break;
