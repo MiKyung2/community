@@ -17,8 +17,11 @@ const WithDraw = () => {
         setTimeout(() => {
           removeCookie('token');
           removeCookie('id');
-          router.push('/');
-        }, 500);
+        }, 0);
+        setTimeout(() => {
+          router.reload();
+        }, 100);
+        router.push('/');
       }
     } catch (e) {
       return message.error(e.response.data.msg);

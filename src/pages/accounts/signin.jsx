@@ -42,7 +42,8 @@ const SignIn = (props) => {
           global.action.login(resAuth.data.body);
         }
       } catch (e) {
-        return message.error(e.response.data.msg);
+        message.error('아이디 혹은 비밀번호를 확인해주세요.');
+        return;
       }
     };
 
@@ -94,19 +95,13 @@ const SignIn = (props) => {
             {formItemMaker('userId')}
             {formItemMaker('password')}
             <Form.Item>
-              <Button
-                className='button'
-                type='primary'
-                htmlType='submit'
-                onClick={onLogin}
-              >
+              <Button className='button' type='primary' onClick={onLogin}>
                 로그인
               </Button>
             </Form.Item>
             <Form.Item>
               <Button
                 className='button'
-                htmlType='submit'
                 onClick={() => router.push('/accounts/signup')}
               >
                 회원가입
