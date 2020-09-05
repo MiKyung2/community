@@ -28,7 +28,7 @@ const dispatch = ($) => {
   const login = (data) => {
     $.state.user.token = data?.token;
     $.state.user.userId = data?.userId;
-    $.state.user.role = data?.role;
+    $.state.user.role = data?.Role;
   };
 
   const logout = () => {

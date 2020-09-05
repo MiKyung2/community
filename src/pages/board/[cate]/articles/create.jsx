@@ -19,8 +19,31 @@ const CreateBoard = (props) => {
 
         const router = useRouter();
         const boardCate = router.query.cate;
+        let boardType;
 
-        // console.log("create router", router.query.cate);
+        switch(boardCate) {
+            case "free":
+                boardType = "FREE"
+                break;
+            case "noti":
+                boardType = "NOTICE"
+                break;
+            case "qna":
+                boardType = "QNA"
+                break;
+            case "recruit":
+                boardType = "JOB_OFFER"
+                break;
+            case "resumes":
+                boardType = "JOB_SEARCH"
+                break;
+            case "secret":
+                boardType = "SECRET"
+                break;
+            default:
+        }
+
+        console.log("create router", router.query.cate, boardType);
 
         const state = useLocalStore(() => {
             return {
@@ -57,6 +80,7 @@ const CreateBoard = (props) => {
                 warning();
             } else {
                 const formData = {
+                    board_type: boardType,
                     writer: state.user.nickname ? state.user.nickname : "unknown",
                     // select: state.select,
                     title: state.title,
