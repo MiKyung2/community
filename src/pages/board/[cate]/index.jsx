@@ -291,11 +291,9 @@ BoardPage.getInitialProps = async(ctx) => {
     sort: "date"
   });
 
-  // console.log("boardListByDate 테스트!!", boardListByDate);
-  
   return {
     props: {
-      listByDate: boardListByDate?.body,
+      listByDate: boardListByDate.body,
       cate: ctx.query.cate,
     },
   };

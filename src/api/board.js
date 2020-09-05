@@ -6,9 +6,6 @@ import instance from "./axiosWrapper";
 const BoardAPI = {
   list: async (payload) => {
     try {
-      if (CONFIG.NODE_ENV == "test") {
-        return dummy;
-      } else {
       const {boardType, currentPage, gb, keyword, size, sort} = payload;
       const res = await instance.get(
         `board/page?boardType=${boardType}&currentPage=${currentPage}&gb=${gb}&keyword=${keyword}&size=${size}&sort=${sort}`
@@ -16,7 +13,6 @@ const BoardAPI = {
 
         console.log("board res:", res)
       return res.data
-      }
     } catch (error) {
       // throw error;
       console.error(error);
