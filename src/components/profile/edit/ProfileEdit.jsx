@@ -9,8 +9,6 @@ const EditProfile = ({ profile, id }) => {
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
 
-  console.log(profile);
-
   useEffect(() => {
     form.setFieldsValue({
       nickname: profile?.nickname,
@@ -59,14 +57,14 @@ const EditProfile = ({ profile, id }) => {
             <div>
               <Avatar
                 src={
-                  profile.profileImg ||
+                  profile?.profileImg ||
                   'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
                 }
                 style={{ height: 120, width: 120 }}
               />
             </div>
             <div style={{ margin: 'auto 40px' }}>
-              <h2>{profile.nickname}</h2>
+              <h2>{profile?.userId}</h2>
               <h3 style={{ margin: 0, border: 0, padding: 0 }}>
                 안녕하세요 :)
               </h3>

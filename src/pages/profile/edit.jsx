@@ -7,16 +7,16 @@ import ProfileEdit from '../../components/profile/edit/ProfileEdit';
 import SnsCard from '../../components/profile/edit/SNSConectCard';
 import PassAndDeleteUser from '../../components/profile/edit/PassAndDeleteUser';
 
-const EditProfile = ({ profile, id }) => {
+const EditProfile = ({ profile, userId }) => {
   return (
     <div style={{ marginTop: 35 }}>
       <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
         <Col flex='1 1 400px'>
-          <ProfileEdit id={id} profile={profile} />
+          <ProfileEdit id={userId} profile={profile} />
         </Col>
         <Col flex='1 1 400px'>
           <SnsCard />
-          <PassAndDeleteUser id={id} />
+          <PassAndDeleteUser id={userId} />
         </Col>
       </Row>
     </div>
@@ -27,12 +27,12 @@ EditProfile.getInitialProps = async (ctx) => {
   const ck = cookie.parse(
     (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
   );
-  const userId = ck.userId ?? '';
-  const profileRes = await UserAPI.get({ userId });
 
-  // const token = ck.token ?? '';
-  // const decodedToken = jwt.decode(token.replace('Bearer ', ''));
-  // const userId = decodedToken?.userId ?? '';
+  const token = ck.token ?? '';
+  const decodedToken = jwt.decode(token.replace('Bearer ', ''));
+  const userId = decodedToken?.userId ?? '';
+
+  const profileRes = await UserAPI.get({ userId });
 
   return {
     profile: profileRes.body,
