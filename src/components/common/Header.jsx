@@ -68,7 +68,6 @@ const LayoutHeader = (props) => {
 
     const handleClickLogout = async () => {
       removeCookie('token');
-      removeCookie('id');
       await global.action.logout();
     };
 
