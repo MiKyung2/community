@@ -28,18 +28,18 @@ const Board = (props) => {
 
     const state = useLocalStore(() => {
       return {
-        data: props.board.body,
+        // data: props.board.body,
         events: {
-          like: props.board.body.rowLike,
-          dislike: props.board.body.rowDisLike,
+          // like: props.board.body.rowLike,
+          // dislike: props.board.body.rowDisLike,
           action: '',
         },
-        comments: props.comments.body,
+        // comments: props.comments.body,
         modal: {
           delete: false,
           login: false
         },
-        writer: props.board.body.writer,
+        // writer: props.board.body.writer,
         user: '',
         isWriter: false,
         login: false

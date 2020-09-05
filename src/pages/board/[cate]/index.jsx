@@ -17,8 +17,24 @@ const { TabPane } = Tabs;
 const BoardPage = (props) => {
     const router = useRouter();
     const boardListProps = props.props;
+    const boardPath = props.props.asPath;
+    let boardName;
     // const queryId = router.query.id;
   // console.log("boardpage props", props);
+
+  switch(boardPath) {
+    case "/board/test":
+      boardName = "Test게시판"
+      break;
+    case "/board/noti":
+      boardName = "공지사항"
+      break;
+    case "/board/secret":
+      boardName = "비밀게시판"
+      break;
+    default:
+      console.log("board name error")
+  }
 
   return useObserver(() => {
     const router = useRouter();
@@ -37,7 +53,7 @@ const BoardPage = (props) => {
         modal: {
           login: false
         },
-        boardTitle: 'Test게시판'
+        boardTitle: boardName
       };
     });
 
@@ -100,7 +116,7 @@ const BoardPage = (props) => {
     }
 
     const moveToBoardPost = (boardId) => {
-      router.push('/board/test/[id]', `/board/test/${boardId}`);
+      router.push(`${boardPath}/[id]`, `${boardPath}/${boardId}`);
     }
 
     const moveToWriterProfile = () => {
@@ -213,12 +229,11 @@ BoardPage.getInitialProps = async(ctx) => {
     size: 20,
     sort: "date"
   });
-
-  console.log("board page ctxxxx", ctx.query)
   
   return {
     props: {
       listByDate: boardListByDate.body,
+      asPath: ctx.asPath
     },
   };
 
