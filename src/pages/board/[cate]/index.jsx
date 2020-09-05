@@ -19,12 +19,12 @@ const { TabPane } = Tabs;
 const BoardPage = (props) => {
     const global = React.useContext(AppContext);
     const userToken = global.state.user.token;
-    console.log("boardPage global-props:", toJS(global.props))
-    console.log("boardPage global-state:", toJS(global.state))
+
     const boardListProps = props.props;
-    console.log("boardpage data:", boardListProps)
     const boardCate = props.props.cate;
     let board_title;
+
+    // console.log("board lists:", boardListProps)
 
   switch(boardCate) {
     case "free":
