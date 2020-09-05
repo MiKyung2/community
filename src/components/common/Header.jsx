@@ -12,6 +12,8 @@ import styled from 'styled-components';
 import { AppContext } from '../App/context';
 import { toJS } from 'mobx';
 
+import AuthAPI from '../../api/auth';
+
 const theLatestDate = [
   {
     key: 1,
@@ -64,10 +66,10 @@ const LayoutHeader = (props) => {
       router.push('/accounts/signin');
     };
 
-    const handleClickLogout = () => {
+    const handleClickLogout = async () => {
       removeCookie('token');
       removeCookie('id');
-      global.action.logout();
+      await global.action.logout();
     };
 
     return (

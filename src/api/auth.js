@@ -31,9 +31,7 @@ const AuthAPI = {
   },
   logout: async (payload) => {
     try {
-      const res = await instance.get(
-        'board/page?gb=title&keyword=title&offset=10&pageNumber=1&pageSize=10&sort=title',
-      );
+      const res = await instance.post('user/logout');
       return res;
     } catch (error) {
       throw error;
