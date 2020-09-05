@@ -3,13 +3,15 @@ import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useCookies } from 'react-cookie';
-import { Form, Input, Button, Checkbox, Row, Col, message } from 'antd';
+import { Form, Input, Button, Checkbox, Row, Col, message, Card } from 'antd';
 import { OuterWrapper } from '../../styles/styles';
 import AuthAPI from '../../api/auth';
 import { AppContext } from '../../components/App/context';
 import { inputRules } from '../../components/accounts/validator';
 import { toJS } from 'mobx';
 import FindPassModal from '../../components/accounts/FindPassModal';
+
+import SocialMeiaLoginCard from '../../components/accounts/SociaLoginCard';
 
 const SignIn = (props) => {
   const global = React.useContext(AppContext);
@@ -40,7 +42,8 @@ const SignIn = (props) => {
           global.action.login(resAuth.data.body);
         }
       } catch (e) {
-        return message.error(e.response.data.msg);
+        message.error('아이디 혹은 비밀번호를 확인해주세요.');
+        return;
       }
     };
 
@@ -84,9 +87,6 @@ const SignIn = (props) => {
       <OuterWrapper className={props.className}>
         <Form
           name='basic'
-          initialValues={{
-            remember: true,
-          }}
           onFinish={() => {
             onLogin();
           }}
@@ -123,6 +123,7 @@ const SignIn = (props) => {
             </Col>
           </Row>
         </Form>
+        <SocialMeiaLoginCard />
       </OuterWrapper>
     );
   });
