@@ -5,6 +5,7 @@ import {useRouter} from 'next/router';
 import { Modal } from 'antd';
 import BoardAPI from "../../../../api/board";
 import WriteBoardForm from '../../../../components/Board/WriteBoardForm';
+import Modal_cancel from '../../../../components/Board/Modals/Modal_cancel';
 
 
 const EditBoard = (props) => {
@@ -98,13 +99,11 @@ const EditBoard = (props) => {
         />
 
         {/* 취소 확인 메세지 */}
-        <Modal 
-        visible={state.modal.visible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        >
-            <p>정말 게시글 수정을 취소하시겠습니까?</p>
-        </Modal>
+        <Modal_cancel 
+            isCancel={state.modal.visible}
+            handleOk={handleOk}
+            handleCancel={handleCancel} 
+        />
       </>
 
       );

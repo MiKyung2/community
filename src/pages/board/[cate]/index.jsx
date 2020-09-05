@@ -19,6 +19,7 @@ const { TabPane } = Tabs;
 const BoardPage = (props) => {
     const global = React.useContext(AppContext);
     const userToken = global.state.user.token;
+
     const boardListProps = props.props;
     const boardCate = props.props.cate;
     let board_title;
@@ -129,6 +130,7 @@ const BoardPage = (props) => {
       }
     }
 
+    // 각가 포스트로 이동
     const moveToBoardPost = (boardId) => {
       router.push(`/board/${boardCate}/[id]`, `/board/${boardCate}/${boardId}`);
     }

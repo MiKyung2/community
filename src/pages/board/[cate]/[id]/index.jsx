@@ -10,13 +10,12 @@ import ReactHtmlParser from 'react-html-parser';
 import styled from 'styled-components';
 
 import BoardAPI from "../../../../api/board";
-// import BoardAPI from "../../../../api/board";
 import UserAPI from "../../../../api/user";
 import CommentAPI from "../../../../api/comment";
 import Comments from "../../../../components/Board/Comment/Comments";
 import { formatDate } from '../../../../utils/dateFormatter';
 import { numFormatter } from '../../../../utils/numFormatter';
-import Modal_cancel from '../../../../components/Board/Modals/Modal_cancel';
+import Modal_delete from '../../../../components/Board/Modals/Modal_delete';
 
 const Board = (props) => {
   
@@ -179,10 +178,10 @@ const Board = (props) => {
         </div>
 
         {/* 삭제 확인 메세지 */}
-        <Modal_cancel
-          isCancel={state.modal.delete}
-          handleOk={handleOk_DeleteModal}
-          handleCancel={handleCancel_DeleteModal}
+        <Modal_delete 
+          isDelete={state.modal.delete} 
+          handleOk={handleOk_DeleteModal} 
+          handleCancel={handleCancel_DeleteModal} 
         />
       </div>
     );
