@@ -6,6 +6,7 @@ import AuthAPI from '../../api/auth';
 
 const WithDraw = () => {
   const router = useRouter();
+  // id to userId
   const { id } = router.query;
   const [_, __, removeCookie] = useCookies(['token', 'id']);
 
