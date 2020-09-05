@@ -1,5 +1,5 @@
 import instance from "./axiosWrapper";
-import CONFIG from '../utils/CONFIG';
+import CONFIG from '../utils/config';
 import {dummy} from '../data/dummy';
 
  // `board/page?gb=${gb}&keyword=${keyword}&offset=${offset}&pageNumber=${pageNumber}&pageSize=${pageSize}&sort=${sort}`

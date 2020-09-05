@@ -13,7 +13,7 @@ const FollowList = ({ loading, data }) => {
           <List.Item>
             <List.Item.Meta
               avatar={<Avatar src={item.image} />}
-              title={<a href={`/profile/${item.id}`}>{item.nickname}</a>}
+              title={<a href={`/profile/${item.userId}`}>{item.userId}</a>}
             />
             <Button>{strType[item.type]}</Button>
           </List.Item>

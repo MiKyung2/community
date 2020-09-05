@@ -6,7 +6,7 @@ import { useRouter, NextRouter } from "next/router";
 import { useLocalStore } from "mobx-react-lite";
 import { AppContext } from "../components/App/context";
 import { IBoardListProps } from "../components/Board/List";
-import CONFIG from '../utils/CONFIG';
+import CONFIG from '../utils/config';
 
 const initializer = (props) => {
   return {

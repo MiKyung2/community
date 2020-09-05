@@ -3,17 +3,21 @@ import { useLocalStore } from 'mobx-react-lite';
 import App from 'next/app';
 import Axios from "axios";
 import jwt from "jsonwebtoken";
-import CONFIG from '../utils/CONFIG';
+import CONFIG from '../utils/config';
 import instance from "../api/axiosWrapper";
 
 const initializer = (props) => {
   const state = {
     status: { loading: false },
     user: {
-      id: props.init?.user?.id,
       token: props.init?.user?.token,
       userId: props.init?.user?.userId,
     },
+    alarm: {
+      note: false,
+      board: false,
+      profile: false,
+    }
   };
   return state;
 };
@@ -22,7 +26,7 @@ const dispatch = ($) => {
   const login = (data) => {
     $.state.user.id = data?.userPkId;
     $.state.user.token = data?.token;
-    $.state.user.usreId = data?.userId;
+    $.state.user.userId = data?.userId;
   };
 
   const logout = () => {
