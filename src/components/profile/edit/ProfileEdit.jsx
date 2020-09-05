@@ -1,20 +1,6 @@
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD
-import {
-  Card,
-  Avatar,
-  Form,
-  Button,
-  Upload,
-  Input,
-  message,
-  Badge,
-} from 'antd';
-import { useObserver } from 'mobx-react';
-=======
 import { Card, Avatar, Form, Button, Input, message } from 'antd';
 
->>>>>>> edit sigin error
 import AuthAPI from '../../../api/auth';
 import ChangeImage from './ChangeImage';
 import { inputRules, regExp } from './validator';
@@ -22,6 +8,8 @@ import { inputRules, regExp } from './validator';
 const EditProfile = ({ profile, id }) => {
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
+
+  console.log(profile);
 
   useEffect(() => {
     form.setFieldsValue({

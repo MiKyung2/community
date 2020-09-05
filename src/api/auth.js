@@ -20,7 +20,7 @@ const AuthAPI = {
     return await instance.post(
       'user/login',
       {
-        id: payload.value.userId,
+        userId: payload.value.userId,
         password: payload.value.password,
       },
       {
