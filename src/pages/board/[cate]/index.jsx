@@ -21,6 +21,8 @@ const { TabPane } = Tabs;
 const BoardPage = (props) => {
     const global = React.useContext(AppContext);
 
+    console.log("게시판 global:", toJS(global.state))
+
     const boardListProps = props.props;
     const boardCate = props.props.cate;
     let board_title;
