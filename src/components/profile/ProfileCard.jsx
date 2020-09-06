@@ -113,13 +113,16 @@ const ProfileCard = (props) => {
                         placement='bottomRight'
                         title='팔로우를 취소하시겠습니까?'
                         onConfirm={() => {
-                          UserAPI.unfollow({
-                            data: {
-                              followed_id: userId,
-                              following_id: global.state.user.userId,
-                            },
-                          });
-                          // message.info("팔로우가 취소됬습니다.");
+                          (async () => {
+                            try {
+                              const res = await UserAPI.unfollow({
+                                followed_id: userId,
+                                following_id: global.state.user.userId,
+                              });
+
+                              props.onUpdate();
+                            } catch (err) { }
+                          })();
                         }}
                         okText='확인'
                         cancelText='취소'
@@ -133,13 +136,16 @@ const ProfileCard = (props) => {
                         type='primary'
                         style={{ marginRight: '8px' }}
                         onClick={() => {
-                          UserAPI.follow({
-                            data: {
-                              followed_id: userId,
-                              following_id: global.state.user.userId,
-                            },
-                          });
-                          props.onUpdate();
+                          (async () => {
+                            try {
+                              const res = await UserAPI.follow({
+                                followed_id: userId,
+                                following_id: global.state.user.userId,
+                              });
+
+                              props.onUpdate();
+                            } catch (err) { }
+                          })();
                         }}
                       >
                         팔로우하기
