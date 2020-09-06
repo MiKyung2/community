@@ -36,7 +36,6 @@ const AddComment = (props) => {
     const getUserInfo = async() => {
       if(!globalUserInfo.token) return;
       const userInfo = await UserAPI.get({userId: global.state.user.userId});  
-      console.log("add comment- data:", userInfo)
       state.user = userInfo.body; 
     };
     getUserInfo();

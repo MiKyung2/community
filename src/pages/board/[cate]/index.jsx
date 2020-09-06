@@ -20,9 +20,6 @@ const { TabPane } = Tabs;
 
 const BoardPage = (props) => {
     const global = React.useContext(AppContext);
-    console.log("boardList-global:", toJS(global.state));
-
-
 
     // const test_level = 'A';
     const test_level = 'Y';
@@ -31,8 +28,6 @@ const BoardPage = (props) => {
     const boardCate = props.props.cate;
     let board_title;
     let board_type;
-
-    console.log("boardList:", props)
 
   switch(boardCate) {
     case "free":
@@ -67,7 +62,6 @@ const BoardPage = (props) => {
     const state = useLocalStore(() => {
       return {
         dataSource: boardListProps?.listByDate?.content,
-        // dataSource: dummy,
         page: {
           currentPage: 1,
           gb: 'title',
@@ -76,17 +70,12 @@ const BoardPage = (props) => {
           sort: "date",
           tablePage: 1,
           total: boardListProps?.listByDate?.totalElements
-          // total: 20
         },
         modal: {
           login: false
         },
         boardTitle: board_title,
         boardType: board_type,
-        // auth: {
-        //   member: false,
-        //   admin: false
-        // }
       };
     });
 

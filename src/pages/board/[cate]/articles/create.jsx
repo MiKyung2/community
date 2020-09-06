@@ -50,8 +50,6 @@ const CreateBoard = (props) => {
             default:
         }
 
-        // console.log("create router", router.query.cate, boardType);
-
         const state = useLocalStore(() => {
             return {
                 select: '',
@@ -66,7 +64,6 @@ const CreateBoard = (props) => {
 
 
         // 글쓰는 유저 정보 가져오기
-        // const [cookies, _, removeCookie] = useCookies(['token', 'id']);
         const global = React.useContext(AppContext);
 
         useEffect(() => {

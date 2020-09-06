@@ -29,8 +29,6 @@ const Board = (props) => {
     const boardData = props.board.body;
     const boardCate = props.boardCate
     const boardId = props.boardId;
-
-    console.log("게시글 data:", props.comments.body)
     
     const state = useLocalStore(() => {
       return {
@@ -53,10 +51,8 @@ const Board = (props) => {
     });
 
 
-    // 유저 정보
-    // const [cookies, _, removeCookie] = useCookies(['token', 'id']);
-
     useEffect(() => {
+      // 유저 정보
       const getUserInfo = async() => {
         if(!global.state.user.token) return;
           const userInfo = await UserAPI.get({userId: global.state.user.userId}); 
