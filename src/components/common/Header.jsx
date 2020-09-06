@@ -8,7 +8,6 @@ import ProfileTabList from '../profile/ProfileList';
 import { MessageOutlined, BellOutlined, UserOutlined } from '@ant-design/icons';
 import useApp from '../../hooks/app';
 import routes from '../../routes';
-// import routes_test from '../Board/routes_test';
 import styled from 'styled-components';
 import { AppContext } from '../App/context';
 import { toJS } from 'mobx';
@@ -102,12 +101,12 @@ const LayoutHeader = (props) => {
     return (
       <Header className={props.className}>
 
+        {/* 로그인 모달 */}
         <Modal_login 
           isLogin={state.modal.login} 
           handleOk={handleOk} 
           handleCancel={handleCancel} 
         />
-
 
         <div className='logo' />
         <Menu
