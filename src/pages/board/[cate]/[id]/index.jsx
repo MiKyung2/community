@@ -26,6 +26,8 @@ const Board = (props) => {
     // const test_level = 'A';
     const test_level = 'Y';
 
+    console.log("게시글 - global:", toJS(global.state));
+
     const boardData = props.board.body;
     const boardCate = props.boardCate
     const boardId = props.boardId;

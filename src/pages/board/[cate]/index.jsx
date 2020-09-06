@@ -21,6 +21,9 @@ const { TabPane } = Tabs;
 const BoardPage = (props) => {
     const global = React.useContext(AppContext);
 
+    console.log("게시판 - global:", toJS(global.state));
+
+
     // const test_level = 'A';
     const test_level = 'Y';
 
