@@ -11,11 +11,34 @@ import Modal_cancel from '../../../../components/Board/Modals/Modal_cancel';
 const EditBoard = (props) => {
 
     return useObserver(() => {
+        const router = useRouter();
 
         const boardCate = props.props.boardCate;
         const boardId = props.props.boardId;
+        let boardName;
 
-        const router = useRouter();
+        switch(boardCate) {
+            case "free":
+                boardName = "자유게시판"
+                break;
+            case "noti":
+                boardName = "공지사항"
+                break;
+            case "qna":
+                boardName = "Q&A"
+                break;
+            case "recruit":
+                boardName = "구인게시판"
+                break;
+            case "resumes":
+                boardName = "구직게시판"
+                break;
+            case "secret":
+                boardName = "비밀게시판"
+                break;
+            default:
+        }
+
         const state = useLocalStore(() => {
             return {
                 data: props.props.board.body,
@@ -86,6 +109,7 @@ const EditBoard = (props) => {
       return (
         <>
         <WriteBoardForm 
+            boardName = {boardName}
             boardType="게시글 수정"
             // boardSelect={state.select}
             boardTitle={state.title}
