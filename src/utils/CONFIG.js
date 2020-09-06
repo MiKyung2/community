@@ -1,6 +1,6 @@
 import getConfig from 'next/config';
 
-const { publicRuntimeConfig } = getConfig();
+// const { publicRuntimeConfig } = getConfig();
 
 const CONFIG = (() => {
   let API_BASE_URL = ""
@@ -17,7 +17,7 @@ const CONFIG = (() => {
   let WARN = ConsoleFunction;
   let ERROR = ConsoleFunction;
 
-  switch (publicRuntimeConfig.env) {
+  switch ("production") {
     case 'development':
       NODE_ENV = 'development';
       break;
