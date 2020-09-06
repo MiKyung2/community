@@ -7,6 +7,9 @@ import {
 } from '@ant-design/icons';
 import { StyledSocialCard } from './account.styles';
 
+import Google from './social/google';
+// import Facebook from './social/facebook';
+
 const SocialLogin = () => {
   const socialLogin = async (type) => {
     const config = {
@@ -20,30 +23,35 @@ const SocialLogin = () => {
         null,
         config,
       );
-    } catch (err) {
-    }
+    } catch (err) {}
     // window.location.href = `https://toyproject.okky.kro.kr:8443/oauth2/authorization/${type}`;
   };
+
   return (
-    <StyledSocialCard>
-      <div className='social-wrapper'>
-        <FacebookOutlined
-          className='btn_social facebook'
-          onClick={() => socialLogin('facebook')}
-        />
-        <GoogleOutlined
-          className='btn_social google'
-          onClick={() => socialLogin('google')}
-        />
-        <GithubOutlined
-          className='btn_social github'
-          onClick={() => socialLogin('github')}
-        />
-        <span className='btn_social naver' onClick={() => socialLogin('naver')}>
-          N
-        </span>
-      </div>
-    </StyledSocialCard>
+    <>
+      <StyledSocialCard>
+        <div className='social-wrapper'>
+          <FacebookOutlined
+            className='btn_social facebook'
+            onClick={() => socialLogin('facebook')}
+          />
+          <GoogleOutlined
+            className='btn_social google'
+            onClick={() => socialLogin('google')}
+          />
+          <GithubOutlined
+            className='btn_social github'
+            onClick={() => socialLogin('github')}
+          />
+          <div
+            className='btn_social naver'
+            onClick={() => socialLogin('naver')}
+          >
+            N
+          </div>
+        </div>
+      </StyledSocialCard>
+    </>
   );
 };
 
