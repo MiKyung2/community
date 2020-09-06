@@ -17,29 +17,41 @@ import { AppContext } from '../../../components/App/context';
 const { TabPane } = Tabs;
 
 const BoardPage = (props) => {
-    const global = React.useContext(AppContext);
-    const userToken = global.state.user.token;
-    const boardListProps = props.props;
-    const boardCate = props.props.cate;
-    let board_title;
+  const global = React.useContext(AppContext);
+  const userToken = global.state.user.token;
+  const boardListProps = props.props;
+  const boardCate = props.props.cate;
+  let board_title;
 
-  switch(boardCate) {
-    case "free":
+  console.log(boardListProps);
+  if (!boardListProps.listByDate) {
+    return (
+      <div>
+        <h1>서버와 연결이 원할하지 않습니다.</h1>
+        <hr />
+        <p>[props]: {JSON.stringify(props)}</p>
+        <p>[boardListProps]: {JSON.stringify(boardListProps)}</p>
+      </div>
+    );
+  }
+
+  switch (boardCate) {
+    case "FREE":
       board_title = "자유게시판"
       break;
-    case "noti":
+    case "NOTICE":
       board_title = "공지사항"
       break;
-    case "qna":
+    case "QNA":
       board_title = "Q&A"
       break;
-    case "recruit":
+    case "JOB_OFFER":
       board_title = "구인게시판"
-    break;
-    case "resumes":
+      break;
+    case "JOB_SEARCH":
       board_title = "구직게시판"
-    break;
-    case "secret":
+      break;
+    case "SECRET":
       board_title = "비밀게시판"
       break;
     default:
@@ -57,7 +69,8 @@ const BoardPage = (props) => {
           size: 20,
           sort: "date",
           tablePage: 1,
-          total: boardListProps.listByDate.totalElements
+          total: boardListProps.listByDate.totalElements,
+          boardCate: boardCate
         },
         modal: {
           login: false
@@ -84,13 +97,14 @@ const BoardPage = (props) => {
 
 
     const fetchListData = async () => {
-      const { currentPage, keyword, gb, size, sort } = state.page;
+      const { currentPage, keyword, gb, size, sort, boardCate } = state.page;
       const nextData = await BoardAPI.list({
         currentPage,
         keyword,
         gb,
         size,
-        sort
+        sort,
+        boardType: boardCate || 'FREE'
       });
 
       state.dataSource = nextData.body.content;
@@ -116,7 +130,7 @@ const BoardPage = (props) => {
       return {
         onClick: (e) => {
           const target = e.target.id;
-          if(target === 'title') {
+          if (target === 'title') {
             moveToBoardPost(record.id);
           } else if (target === 'writer') {
             moveToWriterProfile();
@@ -145,7 +159,7 @@ const BoardPage = (props) => {
 
     // 필터&검색
     const onSearch = (searchTerm) => {
-      const {gb, keyword, sort} = searchTerm;
+      const { gb, keyword, sort } = searchTerm;
 
       state.page.currentPage = 1;
       state.page.tablePage = 1;
@@ -159,9 +173,9 @@ const BoardPage = (props) => {
 
     // 유저 확인 & 새글쓰기로 이동
     // const [cookies, _, removeCookie] = useCookies(['token', 'id']);
-    
+
     const onClickNewPostBtn = () => {
-      if(!userToken) {
+      if (!userToken) {
         state.modal.login = true;
       } else {
         router.push(`/board/${boardCate}/articles/create`);
@@ -191,10 +205,10 @@ const BoardPage = (props) => {
         </Row>
 
         {/* 로그인 메세지 */}
-        <Modal_login 
-            isLogin={state.modal.login} 
-            handleOk={handleOk_LoginModal} 
-            handleCancel={handleCancel_LoginModal} 
+        <Modal_login
+          isLogin={state.modal.login}
+          handleOk={handleOk_LoginModal}
+          handleCancel={handleCancel_LoginModal}
         />
 
         <Row align="top" justify="space-between" className="filter_container">
@@ -231,17 +245,22 @@ const BoardPage = (props) => {
 // 서버사이드 영역
 // ++++++++++++++++++++++++++++++++++++++++++++
 
-BoardPage.getInitialProps = async(ctx) => {
-  
+BoardPage.getInitialProps = async (ctx) => {
+
   // 최신순
-  const boardListByDate = await BoardAPI.list({
+  let boardListByDate = await BoardAPI.list({
     currentPage: 1,
     gb: "title",
     keyword: '',
     size: 20,
-    sort: "date"
+    sort: "date",
+    boardType: ctx.query.cate
   });
-  
+
+  if (!boardListByDate) {
+    boardListByDate = {};
+  }
+
   return {
     props: {
       listByDate: boardListByDate.body,

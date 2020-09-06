@@ -5,27 +5,27 @@ const routes = [
   },
   {
     name: "자유게시판",
-    url: "/board/free",
+    url: "/board/FREE",
   },
   {
     name: "공지사항",
-    url: "/board/noti",
+    url: "/board/NOTICE",
   },
   {
     name: "Q&A",
-    url: "/board/qna",
+    url: "/board/QNA",
   },
   {
     name: "구인",
-    url: "/board/recruit",
+    url: "/board/JOB_OFFER",
   },
   {
     name: "구직",
-    url: "/board/resumes",
+    url: "/board/JOB_SEARCH",
   },
   {
     name: "비밀게시판",
-    url: "/board/secret",
+    url: "/board/SECRET",
   },
   // {
   //   name: "로그인",

@@ -3,9 +3,11 @@ import { Title, StyledListFirstRow } from './home.styles';
 import { FlagOutlined } from '@ant-design/icons';
 import { List, Typography } from 'antd';
 import { data } from './dummy';
+import { useRouter } from "next/router";
 
-const Freeboard = () => {
-  const maxData5 = data.slice(0, 5);
+const Freeboard = ({ list }) => {
+  const router = useRouter();
+  const maxData5 = list.map(b => b.id + "=" + b.title);
   return (
     <>
       <Title>
@@ -15,11 +17,17 @@ const Freeboard = () => {
       <StyledListFirstRow
         bordered
         dataSource={maxData5}
-        renderItem={(item) => (
-          <List.Item className='list-item'>
-            <Typography.Text mark>[ITEM]</Typography.Text> {item}
-          </List.Item>
-        )}
+        renderItem={(item) => {
+          const onClick = (board) => {
+            const boardId = board.split("=")[0];
+            router.push(`/board/FREE/[id]`, `/board/FREE/${boardId}`);
+          }
+          return (
+            <List.Item className='list-item' onClick={e => onClick(item)} >
+              <Typography.Text mark>[ITEM]</Typography.Text> {item}
+            </List.Item>
+          )
+        }}
       />
     </>
   );

@@ -9,6 +9,8 @@ import NoticeBoard from '../components/home/NoticeBoard';
 import JobBoard from '../components/home/JobBoard';
 import QABoard from '../components/home/QABoard';
 
+import MainAPI from "../api/main";
+
 const Home = (props) => {
   return useObserver(() => {
     const global = React.useContext(AppContext);
@@ -22,18 +24,21 @@ const Home = (props) => {
             gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
           >
             <Col flex='1 1 400px'>
-              <Freeboard />
+              <Freeboard list={props.resp.free.content || { list: [] }} />
             </Col>
             <Col flex='1 1 400px'>
-              <NoticeBoard />
+              <NoticeBoard list={props.resp.notice.content || { list: [] }} />
             </Col>
           </Row>
           <Row
             className='home-card row'
             gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
           >
-            <Col flex='0 1 600px'>
-              <QABoard />
+            <Col flex='1 1 400px'>
+              <QABoard list={props.resp.qna.content || { list: [] }} />
+            </Col>
+            <Col flex='1 1 400px'>
+              <JobBoard list={props.resp.jobOffer.content || { list: [] }} />
             </Col>
             {/* <Col flex='1 1 400px'>
               <Card title='Weekly Best' />
@@ -43,9 +48,7 @@ const Home = (props) => {
             className='home-card row'
             gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
           >
-            <Col flex='0 1 600px'>
-              <JobBoard />
-            </Col>
+            {/* 90 */}
             {/* <Col flex='1 1 400px'>
               <Card title='Weekly Best' />
             </Col> */}
@@ -55,6 +58,39 @@ const Home = (props) => {
     );
   });
 };
+
+
+
+Home.getInitialProps = async (ctx) => {
+
+  // 최신순
+  let free = await MainAPI.list({
+    boardType: "FREE"
+  });
+
+  let notice = await MainAPI.list({
+    boardType: "NOTICE"
+  });
+
+  let qna = await MainAPI.list({
+    boardType: "QNA"
+  });
+
+  let jobOffer = await MainAPI.list({
+    boardType: "JOB_OFFER"
+  });
+
+  return {
+    resp: {
+      free: free.body,
+      notice: notice.body,
+      qna: qna.body,
+      jobOffer: jobOffer.body,
+      cate: ctx.query.cate,
+    },
+  };
+
+}
 
 export default styled(Home)`
   & {

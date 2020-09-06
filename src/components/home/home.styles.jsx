@@ -12,6 +12,7 @@ export const Title = styled.div`
 
 export const StyledListFirstRow = styled(List)`
   background: #fff;
+  overflow: scroll;
   .list-item {
     font-size: 14px;
     color: #0262b5;
