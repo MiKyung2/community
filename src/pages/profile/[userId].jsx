@@ -127,24 +127,7 @@ const ProfilePage = (props) => {
       state.tab.scrap.loading = true;
       try {
         const boardScrapBoardRes = await BoardScrapAPI.get({ userId: router.query.userId, data: { currentPage: state.tab.scrap.page, size: 10} });
-        // state.tab.scrap.list = boardScrapBoardRes.body.content;
-        state.tab.scrap.list = [
-          {
-            id: 2,
-            title: 'free-제목이에요1.',
-            contents: 'free-내용이에요1.',
-            writer: 'alice1',
-            viewCount: 0,
-            rowLike: 0,
-            rowDisLike: 0,
-            itemGb: '',
-            createdDate: '2020-09-05T16:49:02',
-            commentCnt: 0,
-            key: 2,
-            board_type: 'FREE',
-            profileImg: null
-          }
-        ];
+        state.tab.scrap.list = boardScrapBoardRes.body.content;
         state.tab.scrap.page = boardScrapBoardRes.body.totalElements 
         state.tab.scrap.max_page = boardScrapBoardRes.body.totalPages 
       } catch (e) {
