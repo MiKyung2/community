@@ -32,14 +32,14 @@ const ProfileList = (props) => {
             
             onClick={(e) => {
               e.preventDefault();
-              router.push(`/board/${item.board_type}/${item.id}`);
+              router.push("/board/[cate]/[id]", `/board/${item.board_type}/${item.id}`);
             }}
             actions={[
               <div
                 style={{}}
                 onClick={(e) => { 
                   e.preventDefault() ;
-                  router.push(`/profile/${item.writer}`); 
+                  router.push("/profile/[userId]", `/profile/${item.writer}`); 
                 }}
               >
                 {item.writer == global.state.user.userId ? null : (

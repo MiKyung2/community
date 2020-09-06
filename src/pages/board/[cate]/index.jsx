@@ -143,13 +143,13 @@ const BoardPage = (props) => {
 
     // 각가 포스트로 이동
     const moveToBoardPost = (boardId) => {
-      router.push(`/board/${boardCate}/[id]`, `/board/${boardCate}/${boardId}`);
+      router.push(`/board/[cate]/[id]`, `/board/${boardCate}/${boardId}`);
     }
 
     // 작성자 프로필로 이동
     const moveToWriterProfile = (e) => {
       const writer = e.target.dataset.name;
-      router.push(`/profile/${writer}`); 
+      router.push("/profile/[userId]", `/profile/${writer}`); 
     }
 
     // 페이지 변경
@@ -178,7 +178,7 @@ const BoardPage = (props) => {
       if(!global.state.user.token) {
         state.modal.login = true;
       } else {
-        router.push(`/board/${boardCate}/articles/create`);
+        router.push("/board/[cate]/articles/create", `/board/${boardCate}/articles/create`);
       }
     };
 
