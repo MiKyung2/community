@@ -15,6 +15,7 @@ import jwt from 'jsonwebtoken';
 import CONFIG from "../utils/CONFIG";
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import { useRouter } from 'next/router';
 
 observerBatching();
 
@@ -24,7 +25,8 @@ let stompClient = Stomp.over(sockJS);
 function App(props) {
   return useObserver(() => {
     const global = useApp(props);
-    
+    const router = useRouter();
+
     React.useEffect(() => {
       if (global.state.user.userId) {
         stompClient.connect({},()=>{
@@ -40,10 +42,11 @@ function App(props) {
             global.state.alarm.profile = true;
           });
         });
-      } else {
-        
       }
       
+      if (!(global.state.user.userId) && router.pathname === "/notes") {
+        router.replace("/accounts/signin");
+      }
     }, [global.state.user.userId]);
 
     return (

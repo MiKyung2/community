@@ -283,6 +283,8 @@ const Notes = (props) => {
 };
 
 Notes.getInitialProps = async (ctx) => {
+  if (!ctx.res) return;
+
   const ck = cookie.parse(
     (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
   );
@@ -290,13 +292,18 @@ Notes.getInitialProps = async (ctx) => {
   const decodedToken = jwt.decode(token.replace("Bearer ", ""));
   const user = decodedToken?.userId ?? "";
 
+  if (!token) {
+    ctx.res.writeHead(302, { Location: "/accounts/signin" });
+    ctx.res.end();
+  }
+
   try {
     const receive = await NoteAPI.receiveList({ userId: user, page: 1, pageSize: 5});
     return {
       receive,
     };
   } catch (error) {
-    console.error("error : ", error);
+    return { error: true };
   }
 };
 
