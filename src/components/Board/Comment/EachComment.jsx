@@ -3,6 +3,7 @@ import { Avatar, Comment, Modal, Tooltip } from 'antd';
 import { useLocalStore, useObserver } from 'mobx-react';
 import {toJS} from 'mobx';
 import { useCookies } from 'react-cookie';
+import { useRouter } from 'next/router';
 
 import moment from 'moment';
 import React, { useEffect } from 'react';
@@ -17,6 +18,7 @@ const EachComment = (props) => {
   const { data, updateComments } = props; 
   
   return useObserver(() => {
+    const router = useRouter();
     const global = React.useContext(AppContext);
     const { isAdmin } = props;
 
@@ -156,13 +158,22 @@ const EachComment = (props) => {
       return actions;
     }
 
+    // 작성자 프로필로 이동
+    const moveToWriterProfile = () => {
+      router.push(`/profile/${state.comment.writer}`);
+    }
+
+    const writer = <Tooltip title="프로필 이동">
+      <span className="hover" onClick={moveToWriterProfile}>{state.comment.writer}</span>
+      </Tooltip>
+
 
 
     return (
       <div>
         <Comment
           actions={checkAdmin()}
-          author={<a>{state.comment.writer}</a>}
+          author={writer}
           avatar={
             <Avatar
               src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
@@ -196,5 +207,11 @@ const EachComment = (props) => {
 
 export default styled(EachComment)`
   /* border: 1px solid green; */
-
+  & {
+    .hover {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
 `;

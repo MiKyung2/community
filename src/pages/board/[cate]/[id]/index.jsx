@@ -56,7 +56,7 @@ const Board = (props) => {
       const getUserInfo = async() => {
         if(!global.state.user.token) return;
           const userInfo = await UserAPI.get({userId: global.state.user.userId}); 
-          state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
+          state.user = userInfo?.body.userId ? userInfo.body.userId : '';
           state.login = true;
       };
       getUserInfo();
@@ -123,6 +123,7 @@ const Board = (props) => {
       router.push(`/profile/${state.data.writer}`);
     }
 
+    // 어드민 확인
     const checkAdmin = () => {
       const btn = <Row>
       <Button type="text" onClick={onClickEdit}>수정</Button>
