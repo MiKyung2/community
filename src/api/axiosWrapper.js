@@ -7,8 +7,8 @@ const instance = axios.create({
 });
 
 export const handleSuccess = (response) => {
-  CONFIG.INFO(`${response.data.code}: ${response.data.msg}`)
-  CONFIG.INFO(response.data.body);
+  // CONFIG.INFO(`${response.data.code}: ${response.data.msg}`)
+  // CONFIG.INFO(response.data.body);
   return response;
 };
 

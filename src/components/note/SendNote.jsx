@@ -93,8 +93,6 @@ const SendNote = (props) => {
             layout="horizontal" 
             fields={state.form} 
             onFieldsChange={(changedFields, allFields) => {
-            }}
-            onValuesChange={(changedValues, allValues) => {
               state.form = allFields;
             }}
           >
