@@ -106,51 +106,53 @@ const ProfileCard = (props) => {
                   </Button>
                 ) : (
                   <>
-                    {props.data?.followedList?.followed_users.find(
-                      (d) => d.userId === global.state.user.userId,
-                    ) ? (
-                      <Popconfirm
-                        placement='bottomRight'
-                        title='팔로우를 취소하시겠습니까?'
-                        onConfirm={() => {
-                          (async () => {
-                            try {
-                              const res = await UserAPI.unfollow({
-                                followed_id: userId,
-                                following_id: global.state.user.userId,
-                              });
-
-                              props.onUpdate();
-                            } catch (err) { }
-                          })();
-                        }}
-                        okText='확인'
-                        cancelText='취소'
-                      >
-                        <Button type='primary' style={{ marginRight: '8px' }}>
-                          팔로우
+                    {global.state.user.userId ? (
+                      props.data?.followedList?.followed_users.find(
+                        (d) => d.userId === global.state.user.userId,
+                      ) ? (
+                        <Popconfirm
+                          placement='bottomRight'
+                          title='팔로우를 취소하시겠습니까?'
+                          onConfirm={() => {
+                            (async () => {
+                              try {
+                                const res = await UserAPI.unfollow({
+                                  followed_id: userId,
+                                  following_id: global.state.user.userId,
+                                });
+  
+                                props.onUpdate();
+                              } catch (err) { }
+                            })();
+                          }}
+                          okText='확인'
+                          cancelText='취소'
+                        >
+                          <Button type='primary' style={{ marginRight: '8px' }}>
+                            팔로우
+                          </Button>
+                        </Popconfirm>
+                      ) : (
+                        <Button
+                          type='primary'
+                          style={{ marginRight: '8px' }}
+                          onClick={() => {
+                            (async () => {
+                              try {
+                                const res = await UserAPI.follow({
+                                  followed_id: userId,
+                                  following_id: global.state.user.userId,
+                                });
+  
+                                props.onUpdate();
+                              } catch (err) { }
+                            })();
+                          }}
+                        >
+                          팔로우하기
                         </Button>
-                      </Popconfirm>
-                    ) : (
-                      <Button
-                        type='primary'
-                        style={{ marginRight: '8px' }}
-                        onClick={() => {
-                          (async () => {
-                            try {
-                              const res = await UserAPI.follow({
-                                followed_id: userId,
-                                following_id: global.state.user.userId,
-                              });
-
-                              props.onUpdate();
-                            } catch (err) { }
-                          })();
-                        }}
-                      >
-                        팔로우하기
-                      </Button>
-                    )}
+                      )
+                    ) : null}
                     <Button onClick={props.onOpenNote}>쪽지 보내기</Button>
                   </>
                 )}
