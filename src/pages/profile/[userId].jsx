@@ -62,7 +62,7 @@ const ProfilePage = (props) => {
 
     const getProfile = async () => {
       try {
-        const profileRes = await UserAPI.get({ userId: router.query.userId });
+        const profileRes = await UserAPI.get({ userId: encodeURI(router.query.userId) });
         if (profileRes.code != 200) return;
         
         state.profile = profileRes.body;
@@ -227,7 +227,6 @@ const ProfilePage = (props) => {
 
         <SendNote
           receiveUser={{
-            id: state.profile.id,
             userId: state.profile.userId,
           }}
           visible={state.send.open}
@@ -241,8 +240,8 @@ const ProfilePage = (props) => {
 };
 
 ProfilePage.getInitialProps = async (ctx) => {
-  const profileRes = await UserAPI.get({ userId: ctx.query.userId });
-  const boardRecentRes = await BoardRecentAPI.get({ userId: ctx.query.userId });
+  const profileRes = await UserAPI.get({ userId: encodeURI(ctx.query.userId) });
+  const boardRecentRes = await BoardRecentAPI.get({ userId: encodeURI(ctx.query.userId) });
 
   return {
     profile: profileRes?.body,

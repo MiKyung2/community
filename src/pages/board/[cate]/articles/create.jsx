@@ -68,7 +68,7 @@ const CreateBoard = (props) => {
 
         useEffect(() => {
           const getUserInfo = async() => {
-            const userInfo = await UserAPI.get({userId: global.state.user.userId});   
+            const userInfo = await UserAPI.get({ userId: encodeURI(global.state.user.userId) });   
             state.user = userInfo.body;
           };
           getUserInfo();

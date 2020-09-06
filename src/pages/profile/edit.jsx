@@ -32,7 +32,7 @@ EditProfile.getInitialProps = async (ctx) => {
   const decodedToken = jwt.decode(token.replace('Bearer ', ''));
   const userId = decodedToken?.userId ?? '';
 
-  const profileRes = await UserAPI.get({ userId });
+  const profileRes = await UserAPI.get({ userId: encodeURI(userId) });
 
   return {
     profile: profileRes.body,
