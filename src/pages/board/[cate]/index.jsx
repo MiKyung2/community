@@ -21,12 +21,6 @@ const { TabPane } = Tabs;
 const BoardPage = (props) => {
     const global = React.useContext(AppContext);
 
-    console.log("게시판 - global:", toJS(global.state));
-
-
-    // const test_level = 'A';
-    const test_level = 'Y';
-
     const boardListProps = props.props;
     const boardCate = props.props.cate;
     let board_title;
@@ -198,7 +192,7 @@ const BoardPage = (props) => {
                   </Button>;
 
       if(boardCate === 'recruit' || boardCate === 'noti') {
-        if(test_level === 'A') {
+        if(global.state.user.role === 'A') {
           return btn;
         } else {
           return <div className="blank_post_btn"></div>;
