@@ -14,25 +14,36 @@ import { sortLists } from '../../../components/Board/SortLists';
 import { boardColumns } from '../../../components/Board/BoardColumns';
 import { AppContext } from '../../../components/App/context';
 
-import {dummy} from '../../../data/dummy'
+import { dummy } from '../../../data/dummy'
 
 const { TabPane } = Tabs;
 
 const BoardPage = (props) => {
-    const global = React.useContext(AppContext);
+  const global = React.useContext(AppContext);
 
-    console.log("게시판 - global:", toJS(global.state));
+  console.log("게시판 - global:", toJS(global.state));
 
 
-    // const test_level = 'A';
-    const test_level = 'Y';
+  // const test_level = 'A';
+  const test_level = 'Y';
 
-    const boardListProps = props.props;
-    const boardCate = props.props.cate;
-    let board_title;
-    let board_type;
+  const boardListProps = props.props;
+  const boardCate = props.props.cate;
+  let board_title;
+  let board_type;
 
-  switch(boardCate) {
+  if (!boardListProps.listByDate) {
+    return (
+      <div>
+        <h1>서버와 연결이 원할하지 않습니다.</h1>
+        <hr />
+        <p>[props]: {JSON.stringify(props)}</p>
+        <p>[boardListProps]: {JSON.stringify(boardListProps)}</p>
+      </div>
+    );
+  }
+
+  switch (boardCate) {
     case "free":
       board_title = "자유게시판"
       board_type = "FREE"
@@ -48,11 +59,11 @@ const BoardPage = (props) => {
     case "recruit":
       board_title = "구인게시판"
       board_type = "JOB_OFFER"
-    break;
+      break;
     case "resumes":
       board_title = "구직게시판"
       board_type = "JOB_SEARCH"
-    break;
+      break;
     case "secret":
       board_title = "비밀게시판"
       board_type = "SECRET"
@@ -72,7 +83,8 @@ const BoardPage = (props) => {
           size: 20,
           sort: "date",
           tablePage: 1,
-          total: boardListProps?.listByDate?.totalElements
+          total: boardListProps?.listByDate?.totalElements,
+          boardCate: boardCate
         },
         modal: {
           login: false
@@ -97,14 +109,15 @@ const BoardPage = (props) => {
 
 
     const fetchListData = async () => {
-      const { currentPage, keyword, gb, size, sort } = state.page;
+      const { currentPage, keyword, gb, size, sort, boardCate } = state.page;
       const nextData = await BoardAPI.list({
         boardType: state.boardType,
         currentPage,
         keyword,
         gb,
         size,
-        sort
+        sort,
+        boardType: boardCate || 'FREE'
       });
 
       state.dataSource = nextData.body.content;
@@ -130,7 +143,7 @@ const BoardPage = (props) => {
       return {
         onClick: (e) => {
           const target = e.target.id;
-          if(target === 'title') {
+          if (target === 'title') {
             moveToBoardPost(record.id);
           } else if (target === 'writer') {
             moveToWriterProfile(e);
@@ -149,7 +162,7 @@ const BoardPage = (props) => {
     // 작성자 프로필로 이동
     const moveToWriterProfile = (e) => {
       const writer = e.target.dataset.name;
-      router.push(`/profile/${writer}`); 
+      router.push(`/profile/${writer}`);
     }
 
     // 페이지 변경
@@ -161,7 +174,7 @@ const BoardPage = (props) => {
 
     // 필터&검색
     const onSearch = (searchTerm) => {
-      const {gb, keyword, sort} = searchTerm;
+      const { gb, keyword, sort } = searchTerm;
 
       state.page.currentPage = 1;
       state.page.tablePage = 1;
@@ -175,7 +188,7 @@ const BoardPage = (props) => {
 
     // 유저 확인 & 새글쓰기로 이동
     const onClickNewPostBtn = () => {
-      if(!global.state.user.token) {
+      if (!global.state.user.token) {
         state.modal.login = true;
       } else {
         router.push(`/board/${boardCate}/articles/create`);
@@ -193,12 +206,12 @@ const BoardPage = (props) => {
 
     const checkAdmin = () => {
       const btn = <Button className="new_post_btn" type="primary" onClick={onClickNewPostBtn}>
-                      <EditOutlined />
+        <EditOutlined />
                       새글쓰기
                   </Button>;
 
-      if(boardCate === 'recruit' || boardCate === 'noti') {
-        if(test_level === 'A') {
+      if (boardCate === 'recruit' || boardCate === 'noti') {
+        if (test_level === 'A') {
           return btn;
         } else {
           return <div className="blank_post_btn"></div>;
@@ -221,10 +234,10 @@ const BoardPage = (props) => {
         </Row>
 
         {/* 로그인 메세지 */}
-        <Modal_login 
-            isLogin={state.modal.login} 
-            handleOk={handleOk_LoginModal} 
-            handleCancel={handleCancel_LoginModal} 
+        <Modal_login
+          isLogin={state.modal.login}
+          handleOk={handleOk_LoginModal}
+          handleCancel={handleCancel_LoginModal}
         />
 
         <Row align="top" justify="space-between" className="filter_container">
@@ -261,12 +274,12 @@ const BoardPage = (props) => {
 // 서버사이드 영역
 // ++++++++++++++++++++++++++++++++++++++++++++
 
-BoardPage.getInitialProps = async(ctx) => {
+BoardPage.getInitialProps = async (ctx) => {
 
   const cate = ctx.query.cate;
   let board_type;
 
-  switch(cate) {
+  switch (cate) {
     case "free":
       board_type = "FREE"
       break;
@@ -278,15 +291,15 @@ BoardPage.getInitialProps = async(ctx) => {
       break;
     case "recruit":
       board_type = "JOB_OFFER"
-    break;
+      break;
     case "resumes":
       board_type = "JOB_SEARCH"
-    break;
+      break;
     case "secret":
       board_type = "SECRET"
       break;
   }
-  
+
   // 최신순
   const boardListByDate = await BoardAPI.list({
     boardType: board_type,
@@ -296,6 +309,10 @@ BoardPage.getInitialProps = async(ctx) => {
     size: 20,
     sort: "date"
   });
+
+  if (!boardListByDate) {
+    boardListByDate = {};
+  }
 
   return {
     props: {
