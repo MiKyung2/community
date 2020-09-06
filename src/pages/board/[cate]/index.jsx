@@ -4,6 +4,8 @@ import { useLocalStore, useObserver } from "mobx-react";
 import { toJS } from 'mobx';
 import { useRouter } from "next/router";
 import { useCookies } from 'react-cookie';
+import cookie from 'cookie';
+import jwt from "jsonwebtoken";
 
 import React, { useEffect } from "react";
 import styled from "styled-components";
@@ -13,51 +15,55 @@ import Modal_login from '../../../components/Board/Modals/Modal_login';
 import { sortLists } from '../../../components/Board/SortLists';
 import { boardColumns } from '../../../components/Board/BoardColumns';
 import { AppContext } from '../../../components/App/context';
+import {BOARD} from '../../../utils/enum';
 
 import {dummy} from '../../../data/dummy'
 
 const { TabPane } = Tabs;
 
 const BoardPage = (props) => {
+    
+  return useObserver(() => {
+    const router = useRouter();
+
     const global = React.useContext(AppContext);
 
     console.log("게시판 global:", toJS(global.state))
+    console.log("게시판 cate:", router.query)
 
     const boardListProps = props.props;
     const boardCate = props.props.cate;
     let board_title;
     let board_type;
 
-  switch(boardCate) {
-    case "free":
-      board_title = "자유게시판"
-      board_type = "FREE"
-      break;
-    case "noti":
-      board_title = "공지사항"
-      board_type = "NOTICE"
-      break;
-    case "qna":
-      board_title = "Q&A"
-      board_type = "QNA"
-      break;
-    case "recruit":
-      board_title = "구인게시판"
-      board_type = "JOB_OFFER"
-    break;
-    case "resumes":
-      board_title = "구직게시판"
-      board_type = "JOB_SEARCH"
-    break;
-    case "secret":
-      board_title = "비밀게시판"
-      board_type = "SECRET"
-      break;
-    default:
-  }
+    // switch(boardCate) {
+    //   case "free":
+    //     board_title = "자유게시판"
+    //     board_type = "FREE"
+    //     break;
+    //   case "noti":
+    //     board_title = "공지사항"
+    //     board_type = "NOTICE"
+    //     break;
+    //   case "qna":
+    //     board_title = "Q&A"
+    //     board_type = "QNA"
+    //     break;
+    //   case "recruit":
+    //     board_title = "구인게시판"
+    //     board_type = "JOB_OFFER"
+    //   break;
+    //   case "resumes":
+    //     board_title = "구직게시판"
+    //     board_type = "JOB_SEARCH"
+    //   break;
+    //   case "secret":
+    //     board_title = "비밀게시판"
+    //     board_type = "SECRET"
+    //     break;
+    //   default:
+    // }
 
-  return useObserver(() => {
-    const router = useRouter();
     const state = useLocalStore(() => {
       return {
         dataSource: boardListProps?.listByDate?.content,
@@ -79,17 +85,26 @@ const BoardPage = (props) => {
     });
 
     useEffect(() => {
-      const updateList = async () => await BoardAPI.list({
-        boardType: state.boardType,
-        currentPage: 1,
-        gb: "title",
-        keyword: '',
-        size: 20,
-        sort: "date"
-      });
+      // console.log("게시판 useEffect!")
+      const updateList = async () => {
+        try {
+          const newList = await BoardAPI.list({
+          // boardType: state.boardType,
+          boardType: BOARD[router.query.cate].board_type,
+          currentPage: 1,
+          gb: "title",
+          keyword: '',
+          size: 20,
+          sort: "date"
+          });
+        state.dataSource = newList?.body.content;
+        } catch(err) {
+          console.log(err);
+        }
+      };
       updateList();
 
-    }, []);
+    }, [router.query.cate]);
 
 
     const fetchListData = async () => {
@@ -208,7 +223,8 @@ const BoardPage = (props) => {
       <div className={props.className}>
 
         <Row justify="space-between">
-          <h1>{state.boardTitle}</h1>
+          {/* <h1>{state.boardTitle}</h1> */}
+          <h1>{BOARD[router.query.cate].board_title}</h1>
 
           {/* "새글쓰기" 버튼 */}
           {checkAdmin()}
@@ -256,6 +272,21 @@ const BoardPage = (props) => {
 // ++++++++++++++++++++++++++++++++++++++++++++
 
 BoardPage.getInitialProps = async(ctx) => {
+
+  const ck = cookie.parse(
+    (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
+  );
+  const token = ck.token ?? "";
+  const decodedToken = jwt.decode(token.replace("Bearer ", ""));
+  const user = decodedToken?.userId ?? "";
+  
+  console.log("user:", user)
+  
+  if (user === "" && ctx.res && ctx.query.cate !== "free") {
+    ctx.res.writeHead(302, { Location: "/accounts/signin" });
+    ctx.res.end();
+    return;
+  }
 
   const cate = ctx.query.cate;
   let board_type;
