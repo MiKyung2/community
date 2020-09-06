@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 import { useObserver } from 'mobx-react';
 import { AppContext } from "../App/context";
+import { toJS } from "mobx";
 
 const IconText = ({ icon, text }) => (
   <Space>
@@ -41,7 +42,7 @@ const ProfileList = (props) => {
                   router.push(`/profile/${item.writer}`); 
                 }}
               >
-                {item.writer === global.state.user.usreId ? null : (
+                {item.writer == global.state.user.userId ? null : (
                   <>
                     <Avatar 
                       style={{ borderRadius: "50%", border: "1px solid #d9d9d9", marginRight: "10px" }} 

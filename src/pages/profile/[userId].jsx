@@ -109,7 +109,7 @@ const ProfilePage = (props) => {
             id: 2,
             title: 'free-제목이에요1.',
             contents: 'free-내용이에요1.',
-            writer: 'alice1',
+            writer: '123jmk',
             viewCount: 0,
             rowLike: 0,
             rowDisLike: 0,
