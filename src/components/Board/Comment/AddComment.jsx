@@ -36,6 +36,7 @@ const AddComment = (props) => {
     const getUserInfo = async() => {
       if(!globalUserInfo.token) return;
       const userInfo = await UserAPI.get({userId: global.state.user.userId});  
+      console.log("add comment- data:", userInfo)
       state.user = userInfo.body; 
     };
     getUserInfo();
@@ -46,7 +47,7 @@ const AddComment = (props) => {
         boardId: queryId,
         title: 'title',
         content: state.content,
-        writer: state.user.nickname,
+        writer: state.user.userId,
         id: 0,
         itemGb: "string",
         rowDisLike: 0,

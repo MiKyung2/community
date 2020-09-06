@@ -23,11 +23,14 @@ const Board = (props) => {
     const router = useRouter();
 
     const global = React.useContext(AppContext);
+    // const test_level = 'A';
     const test_level = 'Y';
 
     const boardData = props.board.body;
     const boardCate = props.boardCate
     const boardId = props.boardId;
+
+    console.log("게시글 data:", props.comments.body)
     
     const state = useLocalStore(() => {
       return {
@@ -112,7 +115,7 @@ const Board = (props) => {
 
     const handleOk_DeleteModal = () => {
       const boardDeleteRes = async () => await BoardAPI.delete({
-        id: queryId
+        id: boardId
       });
       boardDeleteRes();
       router.push(`/board/${boardCate}`);

@@ -27,7 +27,7 @@ import CKEditor from 'ckeditor4-react';
 
 const WriteBoardForm = (props) => {
 
-    const { boardType, boardTitle, boardContents, submitBtn } = props;
+    const { boardName, boardType, boardTitle, boardContents, submitBtn } = props;
     const { onSubmitForm, onCancel, onChangeSelect, onChangeTitle, onChangeEditor } = props;
 
  
@@ -40,6 +40,7 @@ const WriteBoardForm = (props) => {
                 </header>
     
                 <section>
+                    <h3 className="board-name">[{boardName}]</h3>
                     <form onSubmit={onSubmitForm}>
                         {/* 게시판 선택 */}
                         {/* <Select defaultValue="default" className="select" onChange={onChangeSelect}>
@@ -85,6 +86,13 @@ export default styled(WriteBoardForm)`
         .container {
             /* border: 1px solid red; */
             width: 80%;
+        }
+        .board-name {
+            /* border: 1px solid red; */
+            margin-bottom: 15px;
+            font-size: 15px;
+            color: gray;
+            text-align: end;
         }
         .header {
             /* border: 1px solid red; */

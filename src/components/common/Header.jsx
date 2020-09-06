@@ -8,6 +8,7 @@ import ProfileTabList from '../profile/ProfileList';
 import { MessageOutlined, BellOutlined, UserOutlined } from '@ant-design/icons';
 import useApp from '../../hooks/app';
 import routes from '../../routes';
+// import routes_test from '../Board/routes_test';
 import styled from 'styled-components';
 import { AppContext } from '../App/context';
 import { toJS } from 'mobx';
@@ -90,6 +91,16 @@ const LayoutHeader = (props) => {
               {i.name}
             </Menu.Item>
           ))}
+          {/* {routes_test.map((i) => (
+            <Menu.Item
+              key={i.url}
+              onClick={() => {
+                router.push(i.url);
+              }}
+            >
+              {i.name}
+            </Menu.Item>
+          ))} */}
 
           {global?.state?.user?.token ? (
             <Menu.Item onClick={handleClickLogout}>로그아웃</Menu.Item>

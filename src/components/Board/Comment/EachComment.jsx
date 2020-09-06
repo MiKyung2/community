@@ -14,8 +14,8 @@ import { AppContext } from '../../App/context';
 
 const EachComment = (props) => {
 
-  const { data, updateComments } = props;  
-
+  const { data, updateComments } = props; 
+  
   return useObserver(() => {
     const global = React.useContext(AppContext);
     const { isAdmin } = props;
@@ -58,8 +58,8 @@ const EachComment = (props) => {
           state.login = false;
         } else {
           const userInfo = await UserAPI.get({userId: global.state.user.userId});    
-          state.userData = userInfo.body;      
-          state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
+          state.userData = userInfo.body;  
+          state.user = userInfo?.body.userId ? userInfo.body.userId : '';
           state.login = true;
         }
       };
@@ -155,24 +155,6 @@ const EachComment = (props) => {
 
       return actions;
     }
-
-
-    // const actions = [
-    //   <span key="comment-basic-like">
-    //     <Tooltip title={state.login ? "좋아요" : "로그인 해주세요"}>
-    //       <span onClick={onLike}>{state.action === 'liked' ? <LikeFilled /> : <LikeOutlined />}</span>
-    //     </Tooltip>
-    //     <span className="comment-action">{state.comment.likes}</span>
-    //   </span>,
-    //   <span key="comment-basic-dislike">
-    //     <Tooltip title={state.login ? "싫어요" : "로그인 해주세요"}>
-    //       <span onClick={onDislike}>{state.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />}</span>
-    //     </Tooltip>
-    //     <span className="comment-action">{state.comment.dislikes}</span>
-    //   </span>,
-    //   // <span key="comment-basic-reply-to">Reply to</span>,
-    //   state.isWriter ? <span key="comment-basic-delete-btn" onClick={onDelete}>삭제</span> : null
-    // ];
 
 
 

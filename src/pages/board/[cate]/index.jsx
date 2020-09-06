@@ -20,33 +20,44 @@ const { TabPane } = Tabs;
 
 const BoardPage = (props) => {
     const global = React.useContext(AppContext);
-    console.log("boardList-global:", toJS(global.state))
+    console.log("boardList-global:", toJS(global.state));
+
+
+
+    // const test_level = 'A';
     const test_level = 'Y';
 
     const boardListProps = props.props;
     const boardCate = props.props.cate;
     let board_title;
+    let board_type;
 
     console.log("boardList:", props)
 
   switch(boardCate) {
     case "free":
       board_title = "자유게시판"
+      board_type = "FREE"
       break;
     case "noti":
       board_title = "공지사항"
+      board_type = "NOTICE"
       break;
     case "qna":
       board_title = "Q&A"
+      board_type = "QNA"
       break;
     case "recruit":
       board_title = "구인게시판"
+      board_type = "JOB_OFFER"
     break;
     case "resumes":
       board_title = "구직게시판"
+      board_type = "JOB_SEARCH"
     break;
     case "secret":
       board_title = "비밀게시판"
+      board_type = "SECRET"
       break;
     default:
   }
@@ -71,15 +82,17 @@ const BoardPage = (props) => {
           login: false
         },
         boardTitle: board_title,
-        auth: {
-          member: false,
-          admin: false
-        }
+        boardType: board_type,
+        // auth: {
+        //   member: false,
+        //   admin: false
+        // }
       };
     });
 
     useEffect(() => {
       const updateList = async () => await BoardAPI.list({
+        boardType: state.boardType,
         currentPage: 1,
         gb: "title",
         keyword: '',
@@ -94,6 +107,7 @@ const BoardPage = (props) => {
     const fetchListData = async () => {
       const { currentPage, keyword, gb, size, sort } = state.page;
       const nextData = await BoardAPI.list({
+        boardType: state.boardType,
         currentPage,
         keyword,
         gb,
