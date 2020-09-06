@@ -113,11 +113,16 @@ const ProfileCard = (props) => {
                         placement='bottomRight'
                         title='팔로우를 취소하시겠습니까?'
                         onConfirm={() => {
-                          UserAPI.unfollow({
-                            followed_id: userId,
-                            following_id: global.state.user.userId,
-                          });
-                          props.onUpdate();
+                          (async () => {
+                            try {
+                              const res = await UserAPI.unfollow({
+                                followed_id: userId,
+                                following_id: global.state.user.userId,
+                              });
+
+                              props.onUpdate();
+                            } catch (err) { }
+                          })();
                         }}
                         okText='확인'
                         cancelText='취소'
@@ -131,19 +136,16 @@ const ProfileCard = (props) => {
                         type='primary'
                         style={{ marginRight: '8px' }}
                         onClick={() => {
-                          console.log("userId : ", toJS(userId));
-                          console.log("global : ", toJS(global.state.user.userId));
                           (async () => {
                             try {
                               const res = await UserAPI.follow({
                                 followed_id: userId,
                                 following_id: global.state.user.userId,
                               });
-                            } catch (err) {
 
-                            }
+                              props.onUpdate();
+                            } catch (err) { }
                           })();
-                          props.onUpdate();
                         }}
                       >
                         팔로우하기

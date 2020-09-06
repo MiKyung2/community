@@ -95,7 +95,6 @@ const SendNote = (props) => {
             onFieldsChange={(changedFields, allFields) => {
             }}
             onValuesChange={(changedValues, allValues) => {
-              console.log("onValuesChange : ", allValues);
               state.form = allFields;
             }}
           >

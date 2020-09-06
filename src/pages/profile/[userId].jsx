@@ -62,7 +62,7 @@ const ProfilePage = (props) => {
 
     const getProfile = async () => {
       try {
-        const profileRes = await UserAPI.get({ id: router.query.userId });
+        const profileRes = await UserAPI.get({ userId: router.query.userId });
         if (profileRes.code != 200) return;
         
         state.profile = profileRes.body;
