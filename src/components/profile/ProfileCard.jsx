@@ -114,12 +114,10 @@ const ProfileCard = (props) => {
                         title='팔로우를 취소하시겠습니까?'
                         onConfirm={() => {
                           UserAPI.unfollow({
-                            data: {
-                              followed_id: userId,
-                              following_id: global.state.user.userId,
-                            },
+                            followed_id: userId,
+                            following_id: global.state.user.userId,
                           });
-                          // message.info("팔로우가 취소됬습니다.");
+                          props.onUpdate();
                         }}
                         okText='확인'
                         cancelText='취소'
@@ -133,12 +131,18 @@ const ProfileCard = (props) => {
                         type='primary'
                         style={{ marginRight: '8px' }}
                         onClick={() => {
-                          UserAPI.follow({
-                            data: {
-                              followed_id: userId,
-                              following_id: global.state.user.userId,
-                            },
-                          });
+                          console.log("userId : ", toJS(userId));
+                          console.log("global : ", toJS(global.state.user.userId));
+                          (async () => {
+                            try {
+                              const res = await UserAPI.follow({
+                                followed_id: userId,
+                                following_id: global.state.user.userId,
+                              });
+                            } catch (err) {
+
+                            }
+                          })();
                           props.onUpdate();
                         }}
                       >

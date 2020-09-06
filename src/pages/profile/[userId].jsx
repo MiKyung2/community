@@ -103,24 +103,7 @@ const ProfilePage = (props) => {
       state.tab.recent.loading = true;
       try {
         const boardRecentRes = await BoardRecentAPI.get({ userId: router.query.userId });
-        // state.tab.recent.list = boardRecentRes.body;
-        state.tab.recent.list = [
-          {
-            id: 2,
-            title: 'free-제목이에요1.',
-            contents: 'free-내용이에요1.',
-            writer: '123jmk',
-            viewCount: 0,
-            rowLike: 0,
-            rowDisLike: 0,
-            itemGb: '',
-            createdDate: '2020-09-05T16:49:02',
-            commentCnt: 0,
-            key: 2,
-            board_type: 'FREE',
-            profileImg: null
-          }
-        ];
+        state.tab.recent.list = boardRecentRes.body;
       } catch (e) {
 
       } finally {
@@ -132,24 +115,7 @@ const ProfilePage = (props) => {
       state.tab.board.loading = true;
       try {
         const boardMyBoardRes = await MyBoardAPI.get({ userId: router.query.userId });
-        // state.tab.board.list = boardMyBoardRes.body;
-        state.tab.board.list = [
-          {
-            id: 2,
-            title: 'free-제목이에요1.',
-            contents: 'free-내용이에요1.',
-            writer: 'alice1',
-            viewCount: 0,
-            rowLike: 0,
-            rowDisLike: 0,
-            itemGb: '',
-            createdDate: '2020-09-05T16:49:02',
-            commentCnt: 0,
-            key: 2,
-            board_type: 'FREE',
-            profileImg: null
-          }
-        ];
+        state.tab.board.list = boardMyBoardRes.body;
       } catch (e) {
 
       } finally {
