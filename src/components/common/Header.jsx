@@ -81,26 +81,19 @@ const LayoutHeader = (props) => {
           mode='horizontal'
           defaultSelectedKeys={[router.asPath]}
         >
-          {routes.map((i) => (
-            <Menu.Item
-              key={i.as}
-              onClick={() => {
-                router.push(i.url, i.as);
-              }}
-            >
-              {i.name}
-            </Menu.Item>
-          ))}
-          {/* {routes_test.map((i) => (
-            <Menu.Item
-              key={i.url}
-              onClick={() => {
-                router.push(i.url);
-              }}
-            >
-              {i.name}
-            </Menu.Item>
-          ))} */}
+          {routes.map((i) => {
+            if (i.role === "A" && (global.state.user.role === "" || global.state.user.role === "Y")) return null;
+            return (
+              <Menu.Item
+                key={i.as}
+                onClick={() => {
+                  router.push(i.url, i.as);
+                }}
+              >
+                {i.name}
+              </Menu.Item>
+            );
+          })}
 
           {global?.state?.user?.token ? (
             <Menu.Item onClick={handleClickLogout}>로그아웃</Menu.Item>
