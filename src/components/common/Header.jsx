@@ -141,7 +141,7 @@ const LayoutHeader = (props) => {
             </Popover>
             <Button
               onClick={() => {
-                router.push(`/profile/${global.state.user.userId}`);
+                router.push("/profile/[userId]", `/profile/${global.state.user.userId}`);
               }}
             >
               <UserOutlined />

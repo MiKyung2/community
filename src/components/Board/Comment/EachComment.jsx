@@ -160,7 +160,7 @@ const EachComment = (props) => {
 
     // 작성자 프로필로 이동
     const moveToWriterProfile = () => {
-      router.push(`/profile/${state.comment.writer}`);
+      router.push("/profile/[userId]", `/profile/${state.comment.writer}`);
     }
 
     const writer = <Tooltip title="프로필 이동">

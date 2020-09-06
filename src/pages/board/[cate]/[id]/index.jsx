@@ -76,7 +76,7 @@ const Board = (props) => {
     setIsWriter();
 
     const onClickBackToList = () => {
-      router.push(`/board/${boardCate}`);
+      router.push("/board/[cate]", `/board/${boardCate}`);
     }
 
     const onClickLike = async () => {
@@ -100,7 +100,7 @@ const Board = (props) => {
     };
 
     const onClickEdit = () => {
-      router.push(`/board/${boardCate}/${boardId}/modify`);
+      router.push("/board/[cate]/[id]/modify", `/board/${boardCate}/${boardId}/modify`);
     }
 
     const onClickDelete = () => {
@@ -116,13 +116,13 @@ const Board = (props) => {
         id: boardId
       });
       boardDeleteRes();
-      router.push(`/board/${boardCate}`);
+      router.push("/board/[cate]", `/board/${boardCate}`);
       state.modal.delete = false;
     }
 
     // 작성자 프로필로 이동
     const moveToWriterProfile = () => {
-      router.push(`/profile/${state.data.writer}`);
+      router.push("/profile/[userId]", `/profile/${state.data.writer}`);
     }
 
     // 어드민 확인
