@@ -57,7 +57,7 @@ const Board = (props) => {
       // 유저 정보
       const getUserInfo = async() => {
         if(!global.state.user.token) return;
-          const userInfo = await UserAPI.get({userId: global.state.user.userId}); 
+          const userInfo = await UserAPI.get({ userId: encodeURI(global.state.user.userId) }); 
           state.user = userInfo?.body.userId ? userInfo.body.userId : '';
           state.login = true;
       };

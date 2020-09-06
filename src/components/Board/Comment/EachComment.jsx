@@ -59,7 +59,7 @@ const EachComment = (props) => {
         if(!global.state.user.token) {
           state.login = false;
         } else {
-          const userInfo = await UserAPI.get({userId: global.state.user.userId});    
+          const userInfo = await UserAPI.get({ userId: encodeURI(global.state.user.userId) });    
           state.userData = userInfo.body;  
           state.user = userInfo?.body.userId ? userInfo.body.userId : '';
           state.login = true;
