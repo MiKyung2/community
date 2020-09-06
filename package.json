@@ -20,6 +20,8 @@
     "react": "^16.13.1",
     "react-cookie": "^4.0.3",
     "react-dom": "^16.13.1",
+    "react-facebook-login": "^4.1.1",
+    "react-google-login": "^5.1.21",
     "react-html-parser": "^2.0.2",
     "react-markdown": "^4.3.1",
     "react-stomp": "^5.0.0",
