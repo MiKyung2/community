@@ -232,7 +232,6 @@ const ProfilePage = (props) => {
           }}
         >
           <TabPane tab='최근 활동' key='recent'>
-            {console.log("list : ", toJS(state.tab.scrap.list))}
             <ProfileTabList loading={state.tab.recent.loading} dataSource={state.tab.recent.list} />
           </TabPane>
           <TabPane tab='내가 쓴 게시물' key='board'>
