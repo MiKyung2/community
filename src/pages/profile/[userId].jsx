@@ -62,7 +62,7 @@ const ProfilePage = (props) => {
 
     const getProfile = async () => {
       try {
-        const profileRes = await UserAPI.get({ id: router.query.userId });
+        const profileRes = await UserAPI.get({ userId: router.query.userId });
         if (profileRes.code != 200) return;
         
         state.profile = profileRes.body;
@@ -114,7 +114,7 @@ const ProfilePage = (props) => {
     const getMyBoard = async () => {
       state.tab.board.loading = true;
       try {
-        const boardMyBoardRes = await BoardScrapAPI.get({ userId: router.query.userId });
+        const boardMyBoardRes = await MyBoardAPI.get({ userId: router.query.userId });
         state.tab.board.list = boardMyBoardRes.body;
       } catch (e) {
 
@@ -126,8 +126,27 @@ const ProfilePage = (props) => {
     const getScrap = async () => {
       state.tab.scrap.loading = true;
       try {
-        const boardMyBoardRes = await BoardScrapAPI.get({ userId: router.query.userId });
-        state.tab.scrap.list = boardMyBoardRes.body;
+        const boardScrapBoardRes = await BoardScrapAPI.get({ userId: router.query.userId, data: { currentPage: state.tab.scrap.page, size: 10} });
+        // state.tab.scrap.list = boardScrapBoardRes.body.content;
+        state.tab.scrap.list = [
+          {
+            id: 2,
+            title: 'free-제목이에요1.',
+            contents: 'free-내용이에요1.',
+            writer: 'alice1',
+            viewCount: 0,
+            rowLike: 0,
+            rowDisLike: 0,
+            itemGb: '',
+            createdDate: '2020-09-05T16:49:02',
+            commentCnt: 0,
+            key: 2,
+            board_type: 'FREE',
+            profileImg: null
+          }
+        ];
+        state.tab.scrap.page = boardScrapBoardRes.body.totalElements 
+        state.tab.scrap.max_page = boardScrapBoardRes.body.totalPages 
       } catch (e) {
 
       } finally {
@@ -213,6 +232,7 @@ const ProfilePage = (props) => {
           }}
         >
           <TabPane tab='최근 활동' key='recent'>
+            {console.log("list : ", toJS(state.tab.scrap.list))}
             <ProfileTabList loading={state.tab.recent.loading} dataSource={state.tab.recent.list} />
           </TabPane>
           <TabPane tab='내가 쓴 게시물' key='board'>
@@ -243,8 +263,8 @@ ProfilePage.getInitialProps = async (ctx) => {
   const boardRecentRes = await BoardRecentAPI.get({ userId: ctx.query.userId });
 
   return {
-    profile: profileRes.body,
-    theLatestDate: boardRecentRes.body,
+    profile: profileRes?.body,
+    theLatestDate: boardRecentRes?.body,
   };
 };
 
