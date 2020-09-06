@@ -1,4 +1,5 @@
 import 'antd/dist/antd.css';
+import 'react-virtualized/styles.css';
 import Head from 'next/head';
 import Layout from '../components/common/Layout';
 import styled from 'styled-components';

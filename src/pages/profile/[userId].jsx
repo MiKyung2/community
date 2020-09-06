@@ -103,7 +103,24 @@ const ProfilePage = (props) => {
       state.tab.recent.loading = true;
       try {
         const boardRecentRes = await BoardRecentAPI.get({ userId: router.query.userId });
-        state.tab.recent.list = boardRecentRes.body;
+        // state.tab.recent.list = boardRecentRes.body;
+        state.tab.recent.list = [
+          {
+            id: 2,
+            title: 'free-제목이에요1.',
+            contents: 'free-내용이에요1.',
+            writer: 'alice1',
+            viewCount: 0,
+            rowLike: 0,
+            rowDisLike: 0,
+            itemGb: '',
+            createdDate: '2020-09-05T16:49:02',
+            commentCnt: 0,
+            key: 2,
+            board_type: 'FREE',
+            profileImg: null
+          }
+        ];
       } catch (e) {
 
       } finally {
@@ -114,8 +131,25 @@ const ProfilePage = (props) => {
     const getMyBoard = async () => {
       state.tab.board.loading = true;
       try {
-        const boardMyBoardRes = await BoardScrapAPI.get({ userId: router.query.userId });
-        state.tab.board.list = boardMyBoardRes.body;
+        const boardMyBoardRes = await MyBoardAPI.get({ userId: router.query.userId });
+        // state.tab.board.list = boardMyBoardRes.body;
+        state.tab.board.list = [
+          {
+            id: 2,
+            title: 'free-제목이에요1.',
+            contents: 'free-내용이에요1.',
+            writer: 'alice1',
+            viewCount: 0,
+            rowLike: 0,
+            rowDisLike: 0,
+            itemGb: '',
+            createdDate: '2020-09-05T16:49:02',
+            commentCnt: 0,
+            key: 2,
+            board_type: 'FREE',
+            profileImg: null
+          }
+        ];
       } catch (e) {
 
       } finally {
@@ -126,8 +160,27 @@ const ProfilePage = (props) => {
     const getScrap = async () => {
       state.tab.scrap.loading = true;
       try {
-        const boardMyBoardRes = await BoardScrapAPI.get({ userId: router.query.userId });
-        state.tab.scrap.list = boardMyBoardRes.body;
+        const boardScrapBoardRes = await BoardScrapAPI.get({ userId: router.query.userId, data: { currentPage: state.tab.scrap.page, size: 10} });
+        // state.tab.scrap.list = boardScrapBoardRes.body.content;
+        state.tab.scrap.list = [
+          {
+            id: 2,
+            title: 'free-제목이에요1.',
+            contents: 'free-내용이에요1.',
+            writer: 'alice1',
+            viewCount: 0,
+            rowLike: 0,
+            rowDisLike: 0,
+            itemGb: '',
+            createdDate: '2020-09-05T16:49:02',
+            commentCnt: 0,
+            key: 2,
+            board_type: 'FREE',
+            profileImg: null
+          }
+        ];
+        state.tab.scrap.page = boardScrapBoardRes.body.totalElements 
+        state.tab.scrap.max_page = boardScrapBoardRes.body.totalPages 
       } catch (e) {
 
       } finally {
