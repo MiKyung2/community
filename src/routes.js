@@ -2,30 +2,37 @@ const routes = [
   {
     name: "Home",
     url: "/",
+    as: "/",
   },
   {
     name: "자유게시판",
-    url: "/board/free",
+    url: "/board/[cate]",
+    as: "/board/free",
   },
   {
     name: "공지사항",
-    url: "/board/noti",
+    url: "/board/[cate]",
+    as: "/board/noti",
   },
   {
     name: "Q&A",
-    url: "/board/qna",
+    url: "/board/[cate]",
+    as: "/board/qna",
   },
   {
     name: "구인",
-    url: "/board/recruit",
+    url: "/board/[cate]",
+    as: "/board/recruit",
   },
   {
     name: "구직",
-    url: "/board/resumes",
+    url: "/board/[cate]",
+    as: "/board/resumes",
   },
   {
     name: "비밀게시판",
-    url: "/board/secret",
+    url: "/board/[cate]",
+    as: "/board/secret",
   },
   // {
   //   name: "로그인",

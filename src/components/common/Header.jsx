@@ -54,7 +54,7 @@ const theLatestDate = [
 const LayoutHeader = (props) => {
   return useObserver(() => {
     const global = React.useContext(AppContext);
-    const [cookies, _, removeCookie] = useCookies(['token', 'id']);
+    const [cookies, _, removeCookie] = useCookies(['token']);
     const router = useRouter();
 
     const cnt = {
@@ -79,13 +79,13 @@ const LayoutHeader = (props) => {
           className='main-menu'
           theme='dark'
           mode='horizontal'
-          defaultSelectedKeys={['1']}
+          defaultSelectedKeys={[router.asPath]}
         >
           {routes.map((i) => (
             <Menu.Item
-              key={i.url}
+              key={i.as}
               onClick={() => {
-                router.push(i.url);
+                router.push(i.url, i.as);
               }}
             >
               {i.name}
