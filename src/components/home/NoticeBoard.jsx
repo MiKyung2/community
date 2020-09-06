@@ -3,9 +3,11 @@ import { Title, StyledListFirstRow } from './home.styles';
 import { NotificationOutlined } from '@ant-design/icons';
 import { List, Typography } from 'antd';
 import { data } from './dummy';
+import { useRouter } from "next/router";
 
-const NoticeBoard = () => {
-  const maxData5 = data.slice(0, 5);
+const NoticeBoard = ({ list }) => {
+  const router = useRouter();
+  const maxData5 = list.map(b => b.id + "=" + b.title);
   return (
     <>
       <Title>
@@ -15,14 +17,19 @@ const NoticeBoard = () => {
       <StyledListFirstRow
         bordered
         dataSource={maxData5}
-        renderItem={(item) => (
-          <List.Item className='list-item'>
-            <Typography.Text mark>[ITEM]</Typography.Text> {item}
-          </List.Item>
-        )}
+        renderItem={(item) => {
+          const onClick = (board) => {
+            const boardId = board.split("=")[0];
+            router.push(`/board/NOTICE/[id]`, `/board/NOTICE/${boardId}`);
+          }
+          return (
+            <List.Item className='list-item' onClick={e => onClick(item)} >
+              <Typography.Text mark>[ITEM]</Typography.Text> {item}
+            </List.Item>
+          )
+        }}
       />
     </>
   );
 };
-
 export default NoticeBoard;
