@@ -12,7 +12,7 @@ import { CookiesProvider, Cookies } from 'react-cookie';
 import NextApp, { AppContext as NextAppContext } from 'next/app';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
-import CONFIG from "../utils/CONFIG";
+import CONFIG from '../utils/CONFIG';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import { useRouter } from 'next/router';
@@ -29,18 +29,27 @@ function App(props) {
 
     React.useEffect(() => {
       if (global.state.user.userId) {
-        stompClient.connect({},()=>{
-          stompClient.subscribe('/socket/sub/note/' + global.state.user.userId, (data) => {
-            global.state.alarm.note = true;
-          });
+        stompClient.connect({}, () => {
+          stompClient.subscribe(
+            '/socket/sub/note/' + global.state.user.userId,
+            (data) => {
+              global.state.alarm.note = true;
+            },
+          );
 
-          stompClient.subscribe('/socket/sub/board/' + global.state.user.userId, (event) => {
-            global.state.alarm.board = true;
-          });
+          stompClient.subscribe(
+            '/socket/sub/board/' + global.state.user.userId,
+            (event) => {
+              global.state.alarm.board = true;
+            },
+          );
 
-          stompClient.subscribe('/socket/sub/profile/' + global.state.user.userId, (event) => {
-            global.state.alarm.profile = true;
-          });
+          stompClient.subscribe(
+            '/socket/sub/profile/' + global.state.user.userId,
+            (event) => {
+              global.state.alarm.profile = true;
+            },
+          );
         });
       }
       
@@ -76,6 +85,12 @@ function App(props) {
             name='twitter:image'
             content='https://www.daum.net///i1.daumcdn.net/svc/image/U03/common_icon/5587C4E4012FCD0001'
           />
+          {/* 네이버 */}
+          {/* <script
+            type='text/javascript'
+            src='https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js'
+            charset='utf-8'
+          ></script> */}
         </Head>
         <AppContext.Provider value={global}>
           <CookiesProvider>

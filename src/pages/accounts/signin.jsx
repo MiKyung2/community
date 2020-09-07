@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
@@ -8,10 +8,10 @@ import { OuterWrapper } from '../../styles/styles';
 import AuthAPI from '../../api/auth';
 import { AppContext } from '../../components/App/context';
 import { inputRules } from '../../components/accounts/validator';
-import { toJS } from 'mobx';
 import FindPassModal from '../../components/accounts/FindPassModal';
 
-import SocialMeiaLoginCard from '../../components/accounts/SociaLoginCard';
+import GoogleBtn from '../../components/accounts/social/google';
+// import SocialMeiaLoginCard from '../../components/accounts/SociaLoginCard';
 
 const SignIn = (props) => {
   const global = React.useContext(AppContext);
@@ -32,9 +32,6 @@ const SignIn = (props) => {
 
     const [_, setCookie] = useCookies(['token']);
 
-    // 사인 버튼 누르고 skeleton 추가
-    // 1.5 초 안에 반응 없을 때 잘 못 된 방식이라는 메시지 추가
-
     const onLogin = async () => {
       try {
         const resAuth = await AuthAPI.login(state);
@@ -44,6 +41,12 @@ const SignIn = (props) => {
       } catch (e) {
         message.error('아이디 혹은 비밀번호를 확인해주세요.');
         return;
+      }
+    };
+
+    const onKeyDown = (e) => {
+      if (e.keyCode === 13) {
+        onLogin();
       }
     };
 
@@ -78,6 +81,7 @@ const SignIn = (props) => {
               : (state.value.userId = e.target.value);
           }}
           autoComplete='off'
+          onKeyDown={onKeyDown}
         />
       </Form.Item>
     );
@@ -93,12 +97,15 @@ const SignIn = (props) => {
           <div className='wrapper'>
             {formItemMaker('userId')}
             {formItemMaker('password')}
-            <Form.Item>
+            <Form.Item className='form-item'>
               <Button className='button' type='primary' onClick={onLogin}>
                 로그인
               </Button>
             </Form.Item>
-            <Form.Item>
+            <Form.Item className='form-item'>
+              <GoogleBtn />
+            </Form.Item>
+            <Form.Item className='form-item'>
               <Button
                 className='button'
                 onClick={() => router.push('/accounts/signup')}
@@ -116,7 +123,7 @@ const SignIn = (props) => {
             </Col>
           </Row>
         </Form>
-        <SocialMeiaLoginCard />
+        {/* <SocialMeiaLoginCard /> */}
       </OuterWrapper>
     );
   });

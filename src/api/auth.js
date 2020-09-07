@@ -56,12 +56,7 @@ const AuthAPI = {
   find_email: async () => {},
   find_pass: async (payload) => {
     try {
-      const res = await instance.get(
-        `user/find/password?user_id=${payload}`,
-        // {
-        //   user_id: payload,
-        // },
-      );
+      const res = await instance.get(`user/find/password?userId=${payload}`);
       return res;
     } catch (error) {
       return '500';
