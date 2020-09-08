@@ -6,7 +6,7 @@ import AuthAPI from '../../api/auth';
 import { regExp, inputRules } from './validator';
 
 const FindPassModal = ({ visible, setVisible }) => {
-  const [email, setEmail] = React.useState('');
+  const [userId, setUserId] = React.useState('');
   const [loading, setLoading] = React.useState(false);
 
   const handleOk = () => {
@@ -18,10 +18,10 @@ const FindPassModal = ({ visible, setVisible }) => {
 
   const onFindPassword = async () => {
     setLoading(true);
-    const resAuth = (await AuthAPI.find_pass(email)) || 'aa';
+    const resAuth = await AuthAPI.find_pass(userId);
     if (resAuth.status === 200) {
       setLoading(false);
-      message.success(`이메일로 새 비밀번호를 발송했습니다.`);
+      message.success(`등록하신 이메일로 새 비밀번호를 발송했습니다.`);
       setVisible(false);
     }
     if (resAuth === '500') {
@@ -35,10 +35,10 @@ const FindPassModal = ({ visible, setVisible }) => {
 
   const showConfirmModal = (e) => {
     e.preventDefault();
-    if (email.match(regExp.checkEmail)) {
+    if (userId.match(regExp.checkUserId)) {
       return Modal.confirm({
         title: '입력하신 이메일로 새로운 비밀번호를 전송합니다',
-        content: `${email} 로 전송하시길 원하십니까?`,
+        content: `${userId} 로 전송하시길 원하십니까?`,
         onOk() {
           onFindPassword();
         },
@@ -83,19 +83,19 @@ const FindPassModal = ({ visible, setVisible }) => {
             margin: 0,
             textAlign: 'center',
           }}
-          name='email'
-          initialValues={email}
-          rules={inputRules.email}
+          name='userId'
+          initialValues={userId}
+          // rules={inputRules.userId}
         >
           <Input
             style={{ width: '280px' }}
-            name='email'
-            placeholder='이메일을 입력해주세요'
+            name='userId'
+            placeholder='유저 아이디를 입력해주세요'
             size='large'
             disabled={loading ? true : false}
             autoComplete='off'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
           />
         </Form.Item>
       </Form>

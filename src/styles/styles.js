@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const OuterWrapper = styled.div`
   & {
     height: 75vh;
+    margin-top: 50px;
     overflow: scroll;
     .title {
       font-size: 2.3rem;
@@ -16,6 +17,13 @@ export const OuterWrapper = styled.div`
         height: 40px;
       }
     }
+    .form-item {
+      margin: 12px 0;
+      :nth-child(5) {
+        margin-bottom: 30px;
+      }
+    }
+
     .button {
       width: 100%;
       height: 40px;
