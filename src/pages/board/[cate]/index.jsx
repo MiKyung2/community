@@ -1,9 +1,8 @@
 import { EditOutlined } from '@ant-design/icons';
-import { Button, Row, Table, Modal, Tabs, Tooltip } from "antd";
+import { Button, Row, Table, Tabs } from "antd";
 import { useLocalStore, useObserver } from "mobx-react";
 import { toJS } from 'mobx';
 import { useRouter } from "next/router";
-import { useCookies } from 'react-cookie';
 import cookie from 'cookie';
 import jwt from "jsonwebtoken";
 
@@ -15,9 +14,8 @@ import Modal_login from '../../../components/Board/Modals/Modal_login';
 import { sortLists } from '../../../components/Board/SortLists';
 import { boardColumns } from '../../../components/Board/BoardColumns';
 import { AppContext } from '../../../components/App/context';
-import {BOARD} from '../../../utils/enum';
+import { BOARD } from '../../../utils/enum';
 
-import {dummy} from '../../../data/dummy'
 
 const { TabPane } = Tabs;
 
@@ -45,8 +43,6 @@ const BoardPage = (props) => {
         modal: {
           login: false
         },
-        boardTitle: BOARD[router.query.cate].board_title,
-        boardType: BOARD[router.query.cate].board_type,
       };
     });
 
@@ -62,8 +58,9 @@ const BoardPage = (props) => {
           sort: "date"
           });
         state.dataSource = newList?.body.content;
+        state.page.sort = "date";
         } catch(err) {
-          console.log(err);
+          console.error(err);
         }
       };
       updateList();
@@ -74,7 +71,7 @@ const BoardPage = (props) => {
     const fetchListData = async () => {
       const { currentPage, keyword, gb, size, sort } = state.page;
       const nextData = await BoardAPI.list({
-        boardType: state.boardType,
+        boardType: BOARD[router.query.cate].board_type,
         currentPage,
         keyword,
         gb,
@@ -93,7 +90,6 @@ const BoardPage = (props) => {
 
     const onChangeSort = (selectedFilter) => {
       // if (selectedFilter !== "newest" || selectedFilter !== "like" || selectedFilter !== "commentCnt" || selectedFilter !== "viewCount") return;
-
       // 정미경의 코멘트 : sortLists id를 서버에 주는 값과 똑같이 쓰면 코드가 간단해집니다.
       state.page.sort = selectedFilter;
       moveToFirstPage();
@@ -187,7 +183,6 @@ const BoardPage = (props) => {
       <div className={props.className}>
 
         <Row justify="space-between">
-          {/* <h1>{state.boardTitle}</h1> */}
           <h1>{BOARD[router.query.cate].board_title}</h1>
 
           {/* "새글쓰기" 버튼 */}
@@ -203,7 +198,7 @@ const BoardPage = (props) => {
 
         <Row align="top" justify="space-between" className="filter_container">
           {/* 최신순 | 좋아요순 | 댓글순 | 조회수순 */}
-          <Tabs onChange={onChangeSort}>
+          <Tabs defaultActiveKey="date" activeKey={state.page.sort} onChange={onChangeSort}>
             {sortLists && sortLists.map(list => (
               <TabPane tab={list.name} key={list.id} />
             ))}

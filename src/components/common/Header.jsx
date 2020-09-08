@@ -94,9 +94,7 @@ const LayoutHeader = (props) => {
       if(!global.state.user.token && i.role === 'Y'){
         state.modal.login = true;
       } else {
-        // router.push(i.as);
         router.push(i.url, i.as); 
-        // 이렇게 했을 때, 새로고침 해야 새 페이지가 됨
       }
     }
 
@@ -123,7 +121,6 @@ const LayoutHeader = (props) => {
               key={i.as}
               onClick={() => 
                 router.push(i.url, i.as)
-                // router.push(i.as)
               }
             >
               {i.name}
