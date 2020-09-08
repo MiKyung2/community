@@ -307,5 +307,11 @@ export default styled(BoardPage)`
         color: #1890ff;
       }
     }
+    .list_title {
+      /* border: 1px solid red; */
+      max-width: 300px;
+      max-height: 20px;
+      overflow: hidden;
+    }
   }
 `;

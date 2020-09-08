@@ -238,7 +238,8 @@ export default styled(Board)`
     .header_top {
       margin-bottom: 60px;
       > h2 {
-        margin-bottom: 40px;
+        /* border: 1px solid red; */
+        max-width: 700px;
       }
     }
     .header_bottom {
