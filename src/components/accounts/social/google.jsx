@@ -2,8 +2,8 @@ import { Button } from 'antd';
 import GoogleLogin from 'react-google-login';
 import { GoogleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
+import { GOOGLE_CLIENT_ID } from './keys-sample';
 // import { GOOGLE_CLIENT_ID } from './keys';
-import { GOOGLE_CLIENT_ID } from './keys-samaple';
 
 const Google = () => {
   const sucessResponse = (response) => {
