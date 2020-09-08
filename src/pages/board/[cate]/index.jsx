@@ -104,7 +104,11 @@ const BoardPage = (props) => {
           if(target === 'title') {
             moveToBoardPost(record.id);
           } else if (target === 'writer') {
+          if(!global.state.user.token) {
+            state.modal.login = true;
+          } else {
             moveToWriterProfile(e);
+          }
           } else {
             return;
           }
