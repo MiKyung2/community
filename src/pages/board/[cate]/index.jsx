@@ -25,44 +25,10 @@ const BoardPage = (props) => {
     
   return useObserver(() => {
     const router = useRouter();
-
     const global = React.useContext(AppContext);
-
-    console.log("게시판 global:", toJS(global.state))
-    console.log("게시판 cate:", router.query)
 
     const boardListProps = props.props;
     const boardCate = props.props.cate;
-    let board_title;
-    let board_type;
-
-    // switch(boardCate) {
-    //   case "free":
-    //     board_title = "자유게시판"
-    //     board_type = "FREE"
-    //     break;
-    //   case "noti":
-    //     board_title = "공지사항"
-    //     board_type = "NOTICE"
-    //     break;
-    //   case "qna":
-    //     board_title = "Q&A"
-    //     board_type = "QNA"
-    //     break;
-    //   case "recruit":
-    //     board_title = "구인게시판"
-    //     board_type = "JOB_OFFER"
-    //   break;
-    //   case "resumes":
-    //     board_title = "구직게시판"
-    //     board_type = "JOB_SEARCH"
-    //   break;
-    //   case "secret":
-    //     board_title = "비밀게시판"
-    //     board_type = "SECRET"
-    //     break;
-    //   default:
-    // }
 
     const state = useLocalStore(() => {
       return {
@@ -79,17 +45,15 @@ const BoardPage = (props) => {
         modal: {
           login: false
         },
-        boardTitle: board_title,
-        boardType: board_type,
+        boardTitle: BOARD[router.query.cate].board_title,
+        boardType: BOARD[router.query.cate].board_type,
       };
     });
 
     useEffect(() => {
-      // console.log("게시판 useEffect!")
       const updateList = async () => {
         try {
           const newList = await BoardAPI.list({
-          // boardType: state.boardType,
           boardType: BOARD[router.query.cate].board_type,
           currentPage: 1,
           gb: "title",
