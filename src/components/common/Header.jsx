@@ -136,24 +136,6 @@ const LayoutHeader = (props) => {
             </Menu.Item>
           ))}
 
-          {/* {routes.map((i) => {
-            if (
-              i.role === 'A' &&
-              (global.state.user.role === '' || global.state.user.role === 'Y')
-            )
-              return null;
-            return (
-              <Menu.Item
-                key={i.as}
-                onClick={() => {
-                  router.push(i.url, i.as);
-                }}
-              >
-                {i.name}
-              </Menu.Item>
-            );
-          })} */}
-
           {global?.state?.user?.token ? (
             <Menu.Item onClick={handleClickLogout}>로그아웃</Menu.Item>
           ) : (
