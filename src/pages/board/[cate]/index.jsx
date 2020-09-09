@@ -145,7 +145,17 @@ const BoardPage = (props) => {
       state.page.sort = sort ? sort : state.page.sort;
 
       fetchListData();
+      saveToLocal(keyword);
 
+    }
+
+
+    // 검색어 local storage에 저장
+    const saveToLocal = (keyword) => {
+      const getHistory = localStorage.getItem("history") === null ? [] : JSON.parse(localStorage.getItem("history")); 
+      const addHistory = [keyword, ...getHistory];
+      const newHistory = addHistory.slice(0, 3);
+      localStorage.setItem("history", JSON.stringify(newHistory));
     }
 
     // 유저 확인 & 새글쓰기로 이동

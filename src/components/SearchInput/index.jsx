@@ -29,6 +29,7 @@ const SearchInput = (props) => {
         keyword: searchKeyword
       }
       onSearch(searchTerm);
+      // history();
     }
 
     const onClickMenu = (e) => {
@@ -86,25 +87,22 @@ const SearchInput = (props) => {
       </Menu>
     );
 
-    const searchHistory = (
-      <Menu>
-        <Menu.Item>
-          <a target="_blank" data-name="속보" onClick={onClickSearchHistory}>
-            속보
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" data-name="title" onClick={onClickSearchHistory}>
-            title
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" data-name="alice" onClick={onClickSearchHistory}>
-            alice
-          </a>
-        </Menu.Item>
-      </Menu>
-    )
+    // local storage에서 최근 검색어 3개 가져오기
+    const searchHistory = () => {
+
+      const getHistory = localStorage.getItem("history") === null ? [] : JSON.parse(localStorage.getItem("history")); 
+
+      const menu = getHistory.map(keyword => (
+          <Menu.Item>
+            <a target="_blank" data-name={keyword} onClick={onClickSearchHistory}>
+              {keyword}
+            </a>
+          </Menu.Item>
+      ))
+
+      return <Menu>{menu}</Menu>;
+            
+    }
 
     return (
       <div className={props.className}>
@@ -114,7 +112,7 @@ const SearchInput = (props) => {
             <DownOutlined />
           </a>
         </Dropdown>
-        <Dropdown overlay={searchHistory} trigger={['click']} className="dropdown">
+        <Dropdown overlay={searchHistory()} trigger={['click']} className="dropdown">
           <div>
             <Search 
               placeholder="검색어를 입력하세요." 
