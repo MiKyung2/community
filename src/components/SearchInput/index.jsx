@@ -96,15 +96,16 @@ const SearchInput = (props) => {
 
     // local storage에서 최근 검색어 3개 가져오기
     const searchHistory = () => {
-      const getHistory = localStorage.getItem("history") === null ? [] : JSON.parse(localStorage.getItem("history")); 
-      const menu = getHistory.map(keyword => (
-          <Menu.Item>
-            <a target="_blank" data-name={keyword} onClick={onClickSearchHistory}>
-              {keyword}
-            </a>
-          </Menu.Item>
-      ))
-      return <Menu>{menu}</Menu>;      
+      if(typeof window === 'undefined') return;
+        const getHistory = localStorage.getItem("history") === null ? [] : JSON.parse(localStorage.getItem("history")); 
+        const menu = getHistory.map(keyword => (
+            <Menu.Item>
+              <a target="_blank" data-name={keyword} onClick={onClickSearchHistory}>
+                {keyword}
+              </a>
+            </Menu.Item>
+        ))
+        return <Menu>{menu}</Menu>;      
     }
 
     return (

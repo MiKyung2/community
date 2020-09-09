@@ -152,6 +152,7 @@ const BoardPage = (props) => {
 
     // 검색어 local storage에 저장
     const saveToLocal = (keyword) => {
+      if(typeof window === 'undefined') return;
       const getHistory = localStorage.getItem("history") === null ? [] : JSON.parse(localStorage.getItem("history")); 
       const addHistory = [keyword, ...getHistory];
       const removeOverlap = Array.from(new Set(addHistory));
