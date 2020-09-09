@@ -3,11 +3,13 @@ import { useObserver, useLocalStore } from 'mobx-react';
 
 import { Input, Menu, Dropdown } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
+import { AppContext } from '../App/context';
 const { Search } = Input;
 
 
 
 const SearchInput = (props) => {
+  const global = React.useContext(AppContext);
 
   const { onSearch } = props;
 
@@ -97,16 +99,55 @@ const SearchInput = (props) => {
     // local storage에서 최근 검색어 3개 가져오기
     const searchHistory = () => {
       if(typeof window === 'undefined') return;
-        const getHistory = localStorage.getItem("history") === null ? [] : JSON.parse(localStorage.getItem("history")); 
-        const menu = getHistory.map(keyword => (
-            <Menu.Item>
-              <a target="_blank" data-name={keyword} onClick={onClickSearchHistory}>
-                {keyword}
-              </a>
-            </Menu.Item>
-        ))
-        return <Menu>{menu}</Menu>;      
+      const getHistory = localStorage.getItem("history") === null ? [] : JSON.parse(localStorage.getItem("history")); 
+      const menu = getHistory.map(keyword => (
+          <Menu.Item>
+            <a target="_blank" data-name={keyword} onClick={onClickSearchHistory}>
+              {keyword}
+            </a>
+          </Menu.Item>
+      ))
+      return <Menu>
+            {menu}
+          </Menu>;      
     }
+
+    const dropDown_searchBar = () => {
+      if(global.state.user.token) {
+        return (
+              <Dropdown overlay={searchHistory()} className="dropdown">
+                <div>
+                  <Search 
+                    placeholder="검색어를 입력하세요." 
+                    onSearch={() => onSubmit(state.input.value)} 
+                    value={state.input.value}
+                    onChange={(e) => onChangeInputValue(e.target)}
+                    onClick={() => state.input.value=""}
+                    enterButton 
+                    maxLength="255"
+                    className="input"
+                  />
+                </div>
+              </Dropdown>
+            )
+      } else {
+        return (
+              <div>
+                <Search 
+                  placeholder="검색어를 입력하세요." 
+                  onSearch={() => onSubmit(state.input.value)} 
+                  value={state.input.value}
+                  onChange={(e) => onChangeInputValue(e.target)}
+                  onClick={() => state.input.value=""}
+                  enterButton 
+                  maxLength="255"
+                  className="input"
+                />
+              </div>
+            )
+      }
+    }
+
 
     return (
       <div className={props.className}>
@@ -116,20 +157,8 @@ const SearchInput = (props) => {
             <DownOutlined />
           </a>
         </Dropdown>
-        <Dropdown overlay={searchHistory()} className="dropdown">
-          <div>
-            <Search 
-              placeholder="검색어를 입력하세요." 
-              onSearch={() => onSubmit(state.input.value)} 
-              value={state.input.value}
-              onChange={(e) => onChangeInputValue(e.target)}
-              onClick={() => state.input.value=""}
-              enterButton 
-              maxLength="255"
-              className="input"
-            />
-          </div>
-       </Dropdown>
+
+        {dropDown_searchBar()}
 
       </div>
     );
