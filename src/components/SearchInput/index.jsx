@@ -17,9 +17,16 @@ const SearchInput = (props) => {
       return {
         filter: null,
         menu: '',
-        keyword: ''
+        keyword: '',
+        input: {
+          value: ''
+        }
       }
     });
+
+    const onChangeInputValue = (target) => {
+      state.input.value = target.value;
+    }
 
     const onSubmit = (searchKeyword) => {
 
@@ -28,8 +35,8 @@ const SearchInput = (props) => {
         sort: "date",
         keyword: searchKeyword
       }
+      state.input.value = searchKeyword;
       onSearch(searchTerm);
-      // history();
     }
 
     const onClickMenu = (e) => {
@@ -89,9 +96,7 @@ const SearchInput = (props) => {
 
     // local storage에서 최근 검색어 3개 가져오기
     const searchHistory = () => {
-
       const getHistory = localStorage.getItem("history") === null ? [] : JSON.parse(localStorage.getItem("history")); 
-
       const menu = getHistory.map(keyword => (
           <Menu.Item>
             <a target="_blank" data-name={keyword} onClick={onClickSearchHistory}>
@@ -99,9 +104,7 @@ const SearchInput = (props) => {
             </a>
           </Menu.Item>
       ))
-
-      return <Menu>{menu}</Menu>;
-            
+      return <Menu>{menu}</Menu>;      
     }
 
     return (
@@ -112,12 +115,14 @@ const SearchInput = (props) => {
             <DownOutlined />
           </a>
         </Dropdown>
-        <Dropdown overlay={searchHistory()} trigger={['click']} className="dropdown">
+        <Dropdown overlay={searchHistory()} className="dropdown">
           <div>
             <Search 
               placeholder="검색어를 입력하세요." 
-              onSearch={onSubmit} 
-              onClick={(e) => e.target.value=""}
+              onSearch={() => onSubmit(state.input.value)} 
+              value={state.input.value}
+              onChange={(e) => onChangeInputValue(e.target)}
+              onClick={() => state.input.value=""}
               enterButton 
               maxLength="255"
               className="input"

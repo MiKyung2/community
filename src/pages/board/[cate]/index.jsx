@@ -154,7 +154,8 @@ const BoardPage = (props) => {
     const saveToLocal = (keyword) => {
       const getHistory = localStorage.getItem("history") === null ? [] : JSON.parse(localStorage.getItem("history")); 
       const addHistory = [keyword, ...getHistory];
-      const newHistory = addHistory.slice(0, 3);
+      const removeOverlap = Array.from(new Set(addHistory));
+      const newHistory = removeOverlap.slice(0, 3);
       localStorage.setItem("history", JSON.stringify(newHistory));
     }
 
