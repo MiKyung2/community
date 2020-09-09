@@ -3,43 +3,43 @@ const routes = [
     name: "Home",
     url: "/",
     as: "/",
-    role: "",
+    role: ''
   },
   {
     name: "자유게시판",
     url: "/board/[cate]",
     as: "/board/free",
-    role: "",
+    role: ''
   },
   {
     name: "공지사항",
     url: "/board/[cate]",
     as: "/board/noti",
-    role: "",
+    role: 'Y'
   },
   {
     name: "Q&A",
     url: "/board/[cate]",
     as: "/board/qna",
-    role: "",
+    role: 'Y'
   },
   {
     name: "구인",
     url: "/board/[cate]",
     as: "/board/recruit",
-    role: "",
+    role: 'Y'
   },
   {
     name: "구직",
     url: "/board/[cate]",
     as: "/board/resumes",
-    role: "",
+    role: 'Y'
   },
   {
     name: "비밀게시판",
     url: "/board/[cate]",
     as: "/board/secret",
-    role: "A",
+    role: 'A'
   },
   // {
   //   name: "로그인",

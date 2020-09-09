@@ -2,7 +2,6 @@ import { DislikeFilled, DislikeOutlined, LikeFilled, LikeOutlined } from '@ant-d
 import { Avatar, Comment, Modal, Tooltip } from 'antd';
 import { useLocalStore, useObserver } from 'mobx-react';
 import {toJS} from 'mobx';
-import { useCookies } from 'react-cookie';
 import { useRouter } from 'next/router';
 
 import moment from 'moment';
@@ -31,6 +30,7 @@ const EachComment = (props) => {
           writer: '',
           contents: '',
           createdDate: '',
+          img: '',
           likes: 0,
           dislikes: 0
         },
@@ -45,11 +45,10 @@ const EachComment = (props) => {
       };
     });
 
-    const [cookies, _, removeCookie] = useCookies(['token', 'id']);
-
     useEffect(() => {
       state.comment.writer = data.writer;
       state.comment.contents = data.title;
+      state.comment.img = data.profileImg;
       state.comment.createdDate = data.createdDate;
       state.comment.likes = data.rowLike;
       state.comment.dislikes = data.rowDisLike;
@@ -176,8 +175,8 @@ const EachComment = (props) => {
           author={writer}
           avatar={
             <Avatar
-              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-              alt="Han Solo"
+              src={state.comment.img}
+              alt="profile img"
             />
           }
           content={

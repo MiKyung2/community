@@ -8,12 +8,12 @@ import ProfileTabList from '../profile/ProfileList';
 import { MessageOutlined, BellOutlined, UserOutlined } from '@ant-design/icons';
 import useApp from '../../hooks/app';
 import routes from '../../routes';
-// import routes_test from '../Board/routes_test';
 import styled from 'styled-components';
 import { AppContext } from '../App/context';
 import { toJS } from 'mobx';
 
 import AuthAPI from '../../api/auth';
+import Modal_login from '../Board/Modals/Modal_login';
 
 const theLatestDate = [
   {
@@ -57,6 +57,14 @@ const LayoutHeader = (props) => {
     const [cookies, _, removeCookie] = useCookies(['token']);
     const router = useRouter();
 
+    const state = useLocalStore(() => {
+      return {
+        modal: {
+          login: false
+        },
+      };
+    });
+
     const cnt = {
       commentNotReadCnt: true,
       boardNotReadCnt: true,
@@ -73,8 +81,34 @@ const LayoutHeader = (props) => {
       await global.action.logout();
     };
 
+    // 모달창 handle
+    const handleCancel = () => {
+      state.modal.login = false;
+    }
+
+    const handleOk = () => {
+      router.push('/accounts/signin');
+      state.modal.login = false;
+    }
+
+    const handleClickMenu = (i) => {
+      if(!global.state.user.token && i.role === 'Y'){
+        state.modal.login = true;
+      } else {
+        router.push(i.url, i.as); 
+      }
+    }
+
     return (
       <Header className={props.className}>
+
+        {/* 로그인 모달 */}
+        <Modal_login 
+          isLogin={state.modal.login} 
+          handleOk={handleOk} 
+          handleCancel={handleCancel} 
+        />
+
         <div className='logo' />
         <Menu
           className='main-menu'
@@ -82,23 +116,25 @@ const LayoutHeader = (props) => {
           mode='horizontal'
           defaultSelectedKeys={[router.asPath]}
         >
-          {routes.map((i) => {
-            if (
-              i.role === 'A' &&
-              (global.state.user.role === '' || global.state.user.role === 'Y')
-            )
-              return null;
-            return (
-              <Menu.Item
-                key={i.as}
-                onClick={() => {
-                  router.push(i.url, i.as);
-                }}
-              >
-                {i.name}
-              </Menu.Item>
-            );
-          })}
+          {routes.map((i) => (
+            global.state.user.role === 'A' ?
+            <Menu.Item
+              key={i.as}
+              onClick={() => 
+                router.push(i.url, i.as)
+              }
+            >
+              {i.name}
+            </Menu.Item>
+            :
+            i.role === 'A' ? null :
+            <Menu.Item
+              key={i.as}
+              onClick={() => handleClickMenu(i)}
+            >
+              {i.name}
+            </Menu.Item>
+          ))}
 
           {global?.state?.user?.token ? (
             <Menu.Item onClick={handleClickLogout}>로그아웃</Menu.Item>
