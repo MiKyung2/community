@@ -169,26 +169,4 @@ const CreateBoard = (props) => {
     })
 };
 
-// CreateBoard.getInitialProps = async(ctx) => {
-
-//     const ck = cookie.parse(
-//       (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
-//     );
-//     const token = ck.token ?? "";
-//     const decodedToken = jwt.decode(token.replace("Bearer ", ""));
-//     const user = decodedToken?.userId ?? "";
-    
-//     console.log("user:", user)
-    
-//     if (user === "" && ctx.res && ctx.query.cate !== "free") {
-//       ctx.res.writeHead(302, { Location: "/accounts/signin" });
-//       ctx.res.end();
-//       return;
-//     }
-
-//     return {
-        
-//     }
-// }
-
 export default CreateBoard;
