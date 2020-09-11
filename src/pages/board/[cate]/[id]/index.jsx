@@ -24,8 +24,6 @@ const Board = (props) => {
     const router = useRouter();
     const global = React.useContext(AppContext);
 
-    console.log("게시글 global-al:", toJS(global.state))
-
     const boardData = props.board.body;
     const boardCate = props.boardCate
     const boardId = props.boardId;
@@ -36,7 +34,11 @@ const Board = (props) => {
         events: {
           like: boardData.rowLike,
           dislike: boardData.rowDisLike,
-          action: '',
+          // action: '',
+          action: {
+            liked: false,
+            disliked: false
+          }
         },
         comments: props.comments.body,
         modal: {
@@ -78,23 +80,37 @@ const Board = (props) => {
     }
 
     const onClickLike = async () => {
-      if (state.login) {
-        await BoardAPI.event({ id: queryId, itemGb: "L" });
-        state.events.action = "liked";
-        state.events.like = state.events.like + 1;
-      } else {
-        return;
-      }
+      // if (state.login) {
+        const payload = {
+          // clickUserId: encodeURI(global.state.user.userId),
+          clickUserId: "alice2",
+          id: router.query.id,
+          itemGb: "L"
+        }
+        await BoardAPI.event(payload);
+        state.events.action.liked = !state.events.action.liked;
+        console.log("liked?", state.events.action.liked)
+        // state.events.like = !state.events.action.liked ? state.events.like + 1 : state.events.like - 1;
+        // state.events.like = state.events.like + 1;
+      // } else {
+        // return;
+      // }
     };
 
     const onClickDislike = async () => {
-      if (state.login) {
-        await BoardAPI.event({ id: queryId, itemGb: "D" });
-        state.events.action = "disliked";
-        state.events.dislike = state.events.dislike + 1;
-      } else {
-        return;
-      }
+      // if (state.login) {
+        const payload = {
+          // clickUserId: encodeURI(global.state.user.userId),
+          clickUserId: "alice2",
+          id: router.query.id,
+          itemGb: "D"
+        }
+        await BoardAPI.event(payload);
+        state.events.action.disliked = !state.events.action.disliked;
+        // state.events.dislike = state.events.dislike + 1;
+      // } else {
+      //   return;
+      // }
     };
 
     const onClickEdit = () => {
@@ -176,10 +192,12 @@ const Board = (props) => {
             <Row>
               <span className="main_container_top_left "><EyeOutlined /> {numFormatter(state.data.viewCount)}</span>
               <Tooltip title={state.login ? "좋아요" : "로그인 해주세요"}>
-                <span className="main_container_top_left event" onClick={onClickLike}>{state.events.action === 'liked' ? <LikeFilled /> : <LikeOutlined />} {numFormatter(state.events.like)}</span>
+                {/* <span className="main_container_top_left event" onClick={onClickLike}>{state.events.action === 'liked' ? <LikeFilled /> : <LikeOutlined />} {numFormatter(state.events.like)}</span> */}
+                <span className="main_container_top_left event" onClick={onClickLike}>{state.events.action.liked ? <LikeFilled /> : <LikeOutlined />} {numFormatter(state.events.like)}</span>
               </Tooltip>
               <Tooltip title={state.login ? "싫어요" : "로그인 해주세요"}>
-                <span className="main_container_top_left event" onClick={onClickDislike}>{state.events.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />} {numFormatter(state.events.dislike)}</span>
+                {/* <span className="main_container_top_left event" onClick={onClickDislike}>{state.events.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />} {numFormatter(state.events.dislike)}</span> */}
+                <span className="main_container_top_left event" onClick={onClickDislike}>{state.events.action.disliked ? <DislikeFilled /> : <DislikeOutlined />} {numFormatter(state.events.dislike)}</span>
               </Tooltip>
               {/* <span className="main_container_top_left "><CommentOutlined /> {state.data.commentCnt}</span> */}
             </Row>

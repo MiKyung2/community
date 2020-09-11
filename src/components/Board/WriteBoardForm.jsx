@@ -7,7 +7,6 @@ const WriteBoardForm = (props) => {
 
     const { boardName, boardType, boardTitle, boardContents, submitBtn } = props;
     const { onSubmitForm, onCancel, onChangeSelect, onChangeTitle, onChangeEditor } = props;
-
  
       return (
         <div className={props.className}>
@@ -32,6 +31,21 @@ const WriteBoardForm = (props) => {
                         {/* 게시판 내용 */}
                         <CKEditor
                             type="classic"
+                            // config={[
+                            //     {name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat']}
+                            // ]}
+                            // {
+                            //     {
+                            //         ckfinder: {
+                            //             uploadUrl: '/upload/images'
+                            //         }
+                            //     }
+                            // }
+                            // events={{
+                            //     "blur": onBlur,
+                            //     "afterPaste": afterPaste,
+                            //     "change": onChangeEditor
+                            // }}
                             data={boardContents}
                             onChange={onChangeEditor}
                         />
