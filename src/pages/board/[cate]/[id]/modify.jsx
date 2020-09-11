@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useObserver, useLocalStore } from 'mobx-react';
 import {useRouter} from 'next/router';
 // import {CONFIG} from '../../../utils/CONFIG';
@@ -52,6 +52,15 @@ const EditBoard = (props) => {
                 }
             }
         });
+
+        useEffect(() => {
+  
+            window.onpopstate = () => {
+                  state.modal.cancel = true;
+                  history.go(1);
+              };
+            
+        }, []);
 
         const onSubmitForm = (e) => {
             e.preventDefault();
