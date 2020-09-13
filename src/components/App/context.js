@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 export const AppContext = React.createContext({
   status: { loading: false },
@@ -7,6 +7,8 @@ export const AppContext = React.createContext({
     email: '',
     name: '',
     token: '',
+    access_token: '',
+    refresh_token: '',
     level: '',
   },
 });

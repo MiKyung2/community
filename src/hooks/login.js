@@ -14,6 +14,8 @@ const initializer = (props) => {
       nickname: '',
       userId: '',
       email: '',
+      access_token: '',
+      refresh_token: '',
       password: '',
       password2: '',
     },
