@@ -37,9 +37,9 @@ const SignIn = (props) => {
         const resAuth = await AuthAPI.login(state);
         if (resAuth.data.code == 200) {
           const { access_token, refresh_token } = resAuth.data.body;
-          state.value.access_token = access_token;
           setCookie('access_token', access_token);
           setCookie('refresh_token', refresh_token);
+          global.action.login(resAuth.data.body);
         }
       } catch (e) {
         message.error('아이디 혹은 비밀번호를 확인해주세요.');
