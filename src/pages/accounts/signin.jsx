@@ -24,19 +24,24 @@ const SignIn = (props) => {
         value: {
           userId: '',
           password: '',
+          access_token: '',
+          refresh_token: '',
         },
       };
     });
 
     const [visible, setVisible] = React.useState(false);
 
-    const [_, setCookie] = useCookies(['token']);
+    const [_, setCookie] = useCookies(['access_token', 'refresh_token']);
 
     const onLogin = async () => {
       try {
         const resAuth = await AuthAPI.login(state);
         if (resAuth.data.code == 200) {
-          global.action.login(resAuth.data.body);
+          const { access_token, refresh_token } = resAuth.data.body;
+          state.value.access_token = access_token;
+          setCookie('access_token', access_token);
+          setCookie('refresh_token', refresh_token);
         }
       } catch (e) {
         message.error('아이디 혹은 비밀번호를 확인해주세요.');
@@ -51,11 +56,10 @@ const SignIn = (props) => {
     };
 
     useEffect(() => {
-      if (global.state.user?.token) {
+      if (state.value?.access_token) {
         Router.push('/');
-        setCookie('token', global.state.user?.token);
       }
-    }, [global.state.user?.token]);
+    }, [state.value?.access_token]);
 
     const formItemMaker = (name) => (
       <Form.Item
