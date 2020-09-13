@@ -24,15 +24,13 @@ const SignIn = (props) => {
         value: {
           userId: '',
           password: '',
-          access_token: '',
-          refresh_token: '',
         },
       };
     });
 
     const [visible, setVisible] = React.useState(false);
 
-    const [_, setCookie] = useCookies(['access_token', 'refresh_token']);
+    const [cookies, setCookie] = useCookies(['access_token', 'refresh_token']);
 
     const onLogin = async () => {
       try {
@@ -56,10 +54,10 @@ const SignIn = (props) => {
     };
 
     useEffect(() => {
-      if (state.value?.access_token) {
+      if (cookies.access_token) {
         Router.push('/');
       }
-    }, [state.value?.access_token]);
+    }, [cookies.access_token]);
 
     const formItemMaker = (name) => (
       <Form.Item
@@ -91,44 +89,48 @@ const SignIn = (props) => {
     );
 
     return (
-      <OuterWrapper className={props.className}>
-        <Form
-          name='basic'
-          onFinish={() => {
-            onLogin();
-          }}
-        >
-          <div className='wrapper'>
-            {formItemMaker('userId')}
-            {formItemMaker('password')}
-            <Form.Item className='form-item'>
-              <Button className='button' type='primary' onClick={onLogin}>
-                로그인
-              </Button>
-            </Form.Item>
-            <Form.Item className='form-item'>
-              <GoogleBtn />
-            </Form.Item>
-            <Form.Item className='form-item'>
-              <Button
-                className='button'
-                onClick={() => router.push('/accounts/signup')}
-              >
-                회원가입
-              </Button>
-            </Form.Item>
-          </div>
-          <Row className='right lost_info_wrapper'>
-            <Col>
-              <p className='find_pass' onClick={() => setVisible(true)}>
-                비밀번호 찾기
-              </p>
-              <FindPassModal visible={visible} setVisible={setVisible} />
-            </Col>
-          </Row>
-        </Form>
-        {/* <SocialMeiaLoginCard /> */}
-      </OuterWrapper>
+      <>
+        {!cookies.access_token ? (
+          <OuterWrapper className={props.className}>
+            <Form
+              name='basic'
+              onFinish={() => {
+                onLogin();
+              }}
+            >
+              <div className='wrapper'>
+                {formItemMaker('userId')}
+                {formItemMaker('password')}
+                <Form.Item className='form-item'>
+                  <Button className='button' type='primary' onClick={onLogin}>
+                    로그인
+                  </Button>
+                </Form.Item>
+                <Form.Item className='form-item'>
+                  <GoogleBtn />
+                </Form.Item>
+                <Form.Item className='form-item'>
+                  <Button
+                    className='button'
+                    onClick={() => router.push('/accounts/signup')}
+                  >
+                    회원가입
+                  </Button>
+                </Form.Item>
+              </div>
+              <Row className='right lost_info_wrapper'>
+                <Col>
+                  <p className='find_pass' onClick={() => setVisible(true)}>
+                    비밀번호 찾기
+                  </p>
+                  <FindPassModal visible={visible} setVisible={setVisible} />
+                </Col>
+              </Row>
+            </Form>
+            {/* <SocialMeiaLoginCard /> */}
+          </OuterWrapper>
+        ) : null}
+      </>
     );
   });
 };
