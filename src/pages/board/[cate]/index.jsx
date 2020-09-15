@@ -25,6 +25,8 @@ const BoardPage = (props) => {
     const router = useRouter();
     const global = React.useContext(AppContext);
 
+    console.log("cate global:", toJS(global.state.user))
+
     const boardListProps = props.props;
     const boardCate = props.props.cate;
 
@@ -163,11 +165,11 @@ const BoardPage = (props) => {
 
     // 유저 확인 & 새글쓰기로 이동
     const onClickNewPostBtn = () => {
-      // if(!global.state.user.token) {
-      //   state.modal.login = true;
-      // } else {
+      if(!global.state.user.token) {
+        state.modal.login = true;
+      } else {
         router.push("/board/[cate]/articles/create", `/board/${boardCate}/articles/create`);
-      // }
+      }
     };
 
     // Hadle Modal - 로그인 메세지

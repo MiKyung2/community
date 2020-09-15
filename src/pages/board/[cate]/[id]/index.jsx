@@ -58,7 +58,8 @@ const Board = (props) => {
     useEffect(() => {
       // 유저 정보
       const getUserInfo = async() => {
-        if(!global.state.user.token) return;
+        // token이 계속 undefined임
+        // if(!global.state.user.token) return;
           const userInfo = await UserAPI.get({ userId: encodeURI(global.state.user.userId) }); 
           state.user = userInfo?.body.userId ? userInfo.body.userId : '';
           state.login = true;
@@ -82,37 +83,36 @@ const Board = (props) => {
     }
 
     const onClickLike = async () => {
-      // if (state.login) {
+      if (state.login) {
         const payload = {
-          // clickUserId: encodeURI(global.state.user.userId),
-          clickUserId: "alice2",
+          clickUserId: encodeURI(global.state.user.userId),
+          // clickUserId: "alice2",
           id: router.query.id,
           itemGb: "L"
         }
         await BoardAPI.event(payload);
         state.events.action.liked = !state.events.action.liked;
-        console.log("liked?", state.events.action.liked)
         // state.events.like = !state.events.action.liked ? state.events.like + 1 : state.events.like - 1;
         // state.events.like = state.events.like + 1;
-      // } else {
-        // return;
-      // }
+      } else {
+        return;
+      }
     };
 
     const onClickDislike = async () => {
-      // if (state.login) {
+      if (state.login) {
         const payload = {
-          // clickUserId: encodeURI(global.state.user.userId),
-          clickUserId: "alice2",
+          clickUserId: encodeURI(global.state.user.userId),
+          // clickUserId: "alice2",
           id: router.query.id,
           itemGb: "D"
         }
         await BoardAPI.event(payload);
         state.events.action.disliked = !state.events.action.disliked;
         // state.events.dislike = state.events.dislike + 1;
-      // } else {
-      //   return;
-      // }
+      } else {
+        return;
+      }
     };
 
     const onClickEdit = () => {
