@@ -53,18 +53,6 @@ const EditBoard = (props) => {
             }
         });
 
-        // useEffect(() => {
-  
-        //     console.log("수정 페이지")
-
-        //         window.onpopstate = () => {
-        //             alert("나가?")
-        //             //   state.modal.cancel = true;
-        //               history.go(1);
-        //           };
-            
-        // }, []);
-
         const onSubmitForm = (e) => {
             e.preventDefault();
 
