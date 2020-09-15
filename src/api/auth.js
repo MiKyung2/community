@@ -29,9 +29,9 @@ const AuthAPI = {
       },
     );
   },
-  logout: async (payload) => {
+  logout: async (userId) => {
     try {
-      const res = await instance.post('user/logout');
+      const res = await instance.post(`user/logout?userId=${userId}`);
       return res;
     } catch (error) {
       throw error;

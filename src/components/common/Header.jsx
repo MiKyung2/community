@@ -54,13 +54,16 @@ const theLatestDate = [
 const LayoutHeader = (props) => {
   return useObserver(() => {
     const global = React.useContext(AppContext);
-    const [cookies, _, removeCookie] = useCookies(['token']);
+    const [cookies, _, removeCookie] = useCookies([
+      'access_token',
+      'refresh_token',
+    ]);
     const router = useRouter();
 
     const state = useLocalStore(() => {
       return {
         modal: {
-          login: false
+          login: false,
         },
       };
     });
@@ -77,36 +80,36 @@ const LayoutHeader = (props) => {
 
     const handleClickLogout = async () => {
       router.push('/accounts/signin');
-      removeCookie('token');
+      removeCookie('access_token');
+      removeCookie('refresh_token');
       await global.action.logout();
     };
 
     // 모달창 handle
     const handleCancel = () => {
       state.modal.login = false;
-    }
+    };
 
     const handleOk = () => {
       router.push('/accounts/signin');
       state.modal.login = false;
-    }
+    };
 
     const handleClickMenu = (i) => {
-      if(!global.state.user.token && i.role === 'Y'){
+      if (!cookies.access_token && i.role === 'Y') {
         state.modal.login = true;
       } else {
-        router.push(i.url, i.as); 
+        router.push(i.url, i.as);
       }
-    }
+    };
 
     return (
       <Header className={props.className}>
-
         {/* 로그인 모달 */}
-        <Modal_login 
-          isLogin={state.modal.login} 
-          handleOk={handleOk} 
-          handleCancel={handleCancel} 
+        <Modal_login
+          isLogin={state.modal.login}
+          handleOk={handleOk}
+          handleCancel={handleCancel}
         />
 
         <div className='logo' />
@@ -116,34 +119,26 @@ const LayoutHeader = (props) => {
           mode='horizontal'
           defaultSelectedKeys={[router.asPath]}
         >
-          {routes.map((i) => (
-            global.state.user.role === 'A' ?
-            <Menu.Item
-              key={i.as}
-              onClick={() => 
-                router.push(i.url, i.as)
-              }
-            >
-              {i.name}
-            </Menu.Item>
-            :
-            i.role === 'A' ? null :
-            <Menu.Item
-              key={i.as}
-              onClick={() => handleClickMenu(i)}
-            >
-              {i.name}
-            </Menu.Item>
-          ))}
+          {routes.map((i) =>
+            global.state.user.role === 'A' ? (
+              <Menu.Item key={i.as} onClick={() => router.push(i.url, i.as)}>
+                {i.name}
+              </Menu.Item>
+            ) : i.role === 'A' ? null : (
+              <Menu.Item key={i.as} onClick={() => handleClickMenu(i)}>
+                {i.name}
+              </Menu.Item>
+            ),
+          )}
 
-          {global?.state?.user?.token ? (
+          {cookies.access_token ? (
             <Menu.Item onClick={handleClickLogout}>로그아웃</Menu.Item>
           ) : (
             <Menu.Item onClick={handleClickLogin}>로그인</Menu.Item>
           )}
         </Menu>
 
-        {global?.state?.user?.token ? (
+        {cookies.access_token ? (
           <div className='alert-menu'>
             <Button
               onClick={() => {
