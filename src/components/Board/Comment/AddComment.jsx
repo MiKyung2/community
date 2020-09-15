@@ -34,7 +34,7 @@ const AddComment = (props) => {
 
   useEffect(() => {
     const getUserInfo = async() => {
-      if(!globalUserInfo.token) return;
+      if(!globalUserInfo.userId) return;
       const userInfo = await UserAPI.get({userId: encodeURI(global.state.user.userId)});  
       state.user = userInfo.body; 
     };
@@ -70,7 +70,7 @@ const AddComment = (props) => {
     const onSubmitComment = (e) => {
       e.preventDefault();
       
-      if (!globalUserInfo.token) {
+      if (!globalUserInfo.userId) {
         state.modal.login = true;
       } else {
         if (state.content.trim() == '') {

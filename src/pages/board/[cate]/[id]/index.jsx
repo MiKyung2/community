@@ -60,6 +60,7 @@ const Board = (props) => {
       const getUserInfo = async() => {
         // token이 계속 undefined임
         // if(!global.state.user.token) return;
+        if(!global.state.user.userId) return;
           const userInfo = await UserAPI.get({ userId: encodeURI(global.state.user.userId) }); 
           state.user = userInfo?.body.userId ? userInfo.body.userId : '';
           state.login = true;

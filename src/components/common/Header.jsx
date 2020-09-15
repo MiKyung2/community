@@ -103,9 +103,6 @@ const LayoutHeader = (props) => {
       }
     };
 
-    console.log("header:", router.asPath)
-    console.log("header-router:", router)
-
     return (
       <Header className={props.className}>
         {/* 로그인 모달 */}

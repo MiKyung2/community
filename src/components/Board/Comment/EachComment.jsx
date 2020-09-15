@@ -55,7 +55,7 @@ const EachComment = (props) => {
 
       // 유저 정보
       const getUserInfo = async() => {
-        if(!global.state.user.token) {
+        if(!global.state.user.userId) {
           state.login = false;
         } else {
           const userInfo = await UserAPI.get({ userId: encodeURI(global.state.user.userId) });    

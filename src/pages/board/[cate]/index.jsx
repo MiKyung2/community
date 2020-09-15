@@ -106,7 +106,8 @@ const BoardPage = (props) => {
           if(target === 'title') {
             moveToBoardPost(record.id);
           } else if (target === 'writer') {
-          if(!global.state.user.token) {
+          // if(!global.state.user.token) {
+          if(!global.state.user.userId) {
             state.modal.login = true;
           } else {
             moveToWriterProfile(e);
@@ -155,7 +156,8 @@ const BoardPage = (props) => {
     // 검색어 local storage에 저장
     const saveToLocal = (keyword) => {
       if(typeof window === 'undefined') return;
-      if(!global.state.user.token) return;
+      // if(!global.state.user.token) return;
+      if(!global.state.user.userId) return;
       const getHistory = localStorage.getItem("history") === null ? [] : JSON.parse(localStorage.getItem("history")); 
       const addHistory = [keyword, ...getHistory];
       const removeOverlap = Array.from(new Set(addHistory));
@@ -165,7 +167,7 @@ const BoardPage = (props) => {
 
     // 유저 확인 & 새글쓰기로 이동
     const onClickNewPostBtn = () => {
-      if(!global.state.user.token) {
+      if(!global.state.user.userId) {
         state.modal.login = true;
       } else {
         router.push("/board/[cate]/articles/create", `/board/${boardCate}/articles/create`);

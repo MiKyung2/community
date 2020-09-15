@@ -113,7 +113,8 @@ const SearchInput = (props) => {
     }
 
     const dropDown_searchBar = () => {
-      if(global.state.user.token) {
+      // if(global.state.user.token) {
+      if(global.state.user.userId) {
         return (
               <Dropdown overlay={searchHistory()} className="dropdown">
                 <div>
