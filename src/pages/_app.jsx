@@ -48,6 +48,7 @@ function App(props) {
 
     return (
       <>
+      {console.log("props : ", props)}
         <GlobalStyle />
         <Head>
           <title>개발자들의 커뮤니티</title>

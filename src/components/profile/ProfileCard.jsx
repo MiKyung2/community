@@ -151,7 +151,7 @@ const ProfileCard = (props) => {
                         팔로우하기
                       </Button>
                     )}
-                    <Button onClick={props.onOpenNote}>쪽지 보내기</Button>
+                    {global.state.user.userId ? <Button onClick={props.onOpenNote}>쪽지 보내기</Button> : null}=
                   </>
                 )}
               </div>

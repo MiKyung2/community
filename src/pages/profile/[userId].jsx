@@ -39,20 +39,16 @@ const ProfilePage = (props) => {
         tab: {
           active: 'recent',
           recent: {
-            page: 1,
-            max_page: 1,
             list: props.theLatestDate,
             loading: false,
           },
           board: {
-            page: 1,
-            max_page: 1,
             list: [],
             loading: false,
           },
           scrap: {
             page: 1,
-            max_page: 1,
+            totalPages: 1,
             list: [],
             loading: false,
           },
@@ -123,30 +119,13 @@ const ProfilePage = (props) => {
       }
     };
 
-    const getScrap = async () => {
+    const getScrap = async (page) => {
       state.tab.scrap.loading = true;
       try {
-        const boardScrapBoardRes = await BoardScrapAPI.get({ userId: router.query.userId, data: { currentPage: state.tab.scrap.page, size: 10} });
-        // state.tab.scrap.list = boardScrapBoardRes.body.content;
-        state.tab.scrap.list = [
-          {
-            id: 2,
-            title: 'free-제목이에요1.',
-            contents: 'free-내용이에요1.',
-            writer: 'alice1',
-            viewCount: 0,
-            rowLike: 0,
-            rowDisLike: 0,
-            itemGb: '',
-            createdDate: '2020-09-05T16:49:02',
-            commentCnt: 0,
-            key: 2,
-            board_type: 'FREE',
-            profileImg: null
-          }
-        ];
-        state.tab.scrap.page = boardScrapBoardRes.body.totalElements 
-        state.tab.scrap.max_page = boardScrapBoardRes.body.totalPages 
+        const boardScrapBoardRes = await BoardScrapAPI.get({ userId: router.query.userId, data: { currentPage: page, size: 10} });
+        state.tab.scrap.list = boardScrapBoardRes.body.content;
+        state.tab.scrap.page = boardScrapBoardRes.body.totalPages === 0 ? 1 : boardScrapBoardRes.body.totalPages; 
+        state.tab.scrap.totalPages = boardScrapBoardRes.body.totalElements; 
       } catch (e) {
 
       } finally {
@@ -175,7 +154,7 @@ const ProfilePage = (props) => {
           return;
 
         case "scrap":
-          getScrap();
+          getScrap(state.tab.scrap.page);
           return;
       }
     }, [state.tab.active]);
@@ -185,6 +164,10 @@ const ProfilePage = (props) => {
 
       getProfile();
     }, []);
+
+    const onChangePage = () => {
+
+    };
 
     return (
       <div className={props.className}>
@@ -232,14 +215,30 @@ const ProfilePage = (props) => {
           }}
         >
           <TabPane tab='최근 활동' key='recent'>
-            {console.log("list : ", toJS(state.tab.scrap.list))}
-            <ProfileTabList loading={state.tab.recent.loading} dataSource={state.tab.recent.list} />
+            <ProfileTabList 
+              loading={state.tab.recent.loading} 
+              dataSource={state.tab.recent.list} 
+              pagination={false}
+            />
           </TabPane>
           <TabPane tab='내가 쓴 게시물' key='board'>
-            <ProfileTabList loading={state.tab.board.loading} dataSource={state.tab.board.list} />
+            <ProfileTabList 
+              loading={state.tab.board.loading} 
+              dataSource={state.tab.board.list} 
+              pagination={false}
+            />
           </TabPane>
           <TabPane tab='스크랩' key='scrap'>
-            <ProfileTabList loading={state.tab.scrap.loading} dataSource={state.tab.scrap.list} />
+            <ProfileTabList 
+              loading={state.tab.scrap.loading} 
+              dataSource={state.tab.scrap.list} 
+              pagination={{
+                pageSize: 10,
+                total: state.tab.scrap.totalPages,
+                onChange: getScrap,
+                current: state.tab.scrap.page,
+              }}
+            />
           </TabPane>
         </Tabs>
 

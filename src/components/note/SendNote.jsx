@@ -11,6 +11,7 @@ const SendNote = (props) => {
       return {
         confirmLoading: false,
         error: "",
+        revId: "",
         form: [
           { 
             name: "revId", 
@@ -50,9 +51,7 @@ const SendNote = (props) => {
       })();
     };
 
-    // console.log(toJS(props));
-    // console.log(toJS(state.form));
-
+    const revEmail = state.form[state.form.findIndex((d) => d.name === "revId")].value.split(" ");
     return (
       <div className={props.className}>
         <Modal
@@ -98,6 +97,13 @@ const SendNote = (props) => {
               state.form = allFields;
             }}
           >
+            {revId.map((d) => (
+              <textarea
+                className="" 
+                value={d}
+                onChange={(e) => { revId = e.target.value;  }}
+              >{d}</textarea>
+            ))}
             <Form.Item name="revId">
               <Input
                 style={{

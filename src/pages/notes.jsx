@@ -291,7 +291,7 @@ Notes.getInitialProps = async (ctx) => {
   const user = decodedToken?.userId ?? "";
 
   try {
-    const receive = await NoteAPI.receiveList({ userId: user, page: 1, pageSize: 5});
+    const receive = await NoteAPI.receiveList({ userId: encodeURI(user), page: 1, pageSize: 5});
     return {
       receive,
     };
