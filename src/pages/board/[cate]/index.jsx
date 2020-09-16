@@ -333,6 +333,8 @@ export default styled(BoardPage)`
       max-width: 300px;
       max-height: 20px;
       overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 `;
