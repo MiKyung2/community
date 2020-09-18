@@ -58,14 +58,21 @@ const Board = (props) => {
     useEffect(() => {
       // 유저 정보
       const getUserInfo = async() => {
-        // token이 계속 undefined임
-        // if(!global.state.user.token) return;
         if(!global.state.user.userId) return;
           const userInfo = await UserAPI.get({ userId: encodeURI(global.state.user.userId) }); 
           state.user = userInfo?.body.userId ? userInfo.body.userId : '';
           state.login = true;
       };
       getUserInfo();
+
+      // 게시글 업데이트
+      const getBoardDetail = async() => {
+        const boardDetailRes = await BoardAPI.detail({
+          id: router.query.id
+        });
+        state.data = boardDetailRes.body
+      };
+      getBoardDetail();
 
     }, []);
 

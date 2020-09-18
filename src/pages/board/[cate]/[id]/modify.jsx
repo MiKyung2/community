@@ -39,6 +39,7 @@ const EditBoard = (props) => {
             default:
         }
 
+
         const state = useLocalStore(() => {
             return {
                 data: props.props.board.body,
