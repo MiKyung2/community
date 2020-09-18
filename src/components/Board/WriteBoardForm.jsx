@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Select, Input, Button } from 'antd';
+import { Input, Button } from 'antd';
 import CKEditor from 'ckeditor4-react';
 
 const WriteBoardForm = (props) => {
 
     const { boardName, boardType, boardTitle, boardContents, submitBtn } = props;
-    const { onSubmitForm, onCancel, onChangeSelect, onChangeTitle, onChangeEditor } = props;
+    const { onSubmitForm, onCancel, onChangeTitle, onChangeEditor } = props;
  
       return (
         <div className={props.className}>

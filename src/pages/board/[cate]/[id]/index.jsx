@@ -16,7 +16,6 @@ import CommentAPI from "../../../../api/comment";
 import Comments from "../../../../components/Board/Comment/Comments";
 import { formatDate } from '../../../../utils/dateFormatter';
 import { numFormatter } from '../../../../utils/numFormatter';
-// import { checkAdmin_writer } from '../../../../components/Board/checkAdmin_writer';
 import Modal_delete from '../../../../components/Board/Modals/Modal_delete';
 
 
@@ -36,7 +35,6 @@ const Board = (props) => {
         events: {
           like: boardData.rowLike,
           dislike: boardData.rowDisLike,
-          // action: '',
           action: {
             liked: false,
             disliked: false
@@ -94,7 +92,6 @@ const Board = (props) => {
       if (state.login) {
         const payload = {
           clickUserId: encodeURI(global.state.user.userId),
-          // clickUserId: "alice2",
           id: router.query.id,
           itemGb: "L"
         }
@@ -111,7 +108,6 @@ const Board = (props) => {
       if (state.login) {
         const payload = {
           clickUserId: encodeURI(global.state.user.userId),
-          // clickUserId: "alice2",
           id: router.query.id,
           itemGb: "D"
         }
@@ -176,8 +172,6 @@ const Board = (props) => {
       }
       return title;
     }
-
-    console.log("태그?", state.data.contents);
     
     return (
       <>

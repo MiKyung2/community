@@ -25,8 +25,6 @@ const BoardPage = (props) => {
     const router = useRouter();
     const global = React.useContext(AppContext);
 
-    console.log("cate global:", toJS(global.state.user))
-
     const boardListProps = props.props;
     const boardCate = props.props.cate;
 
@@ -156,7 +154,6 @@ const BoardPage = (props) => {
     // 검색어 local storage에 저장
     const saveToLocal = (keyword) => {
       if(typeof window === 'undefined') return;
-      // if(!global.state.user.token) return;
       if(!global.state.user.userId) return;
       const getHistory = localStorage.getItem("history") === null ? [] : JSON.parse(localStorage.getItem("history")); 
       const addHistory = [keyword, ...getHistory];
@@ -259,9 +256,7 @@ BoardPage.getInitialProps = async(ctx) => {
   const token = ck.token ?? "";
   const decodedToken = jwt.decode(token.replace("Bearer ", ""));
   const user = decodedToken?.userId ?? "";
-  
-  console.log("user:", user)
-  
+    
   if (user === "" && ctx.res && ctx.query.cate !== "free") {
     ctx.res.writeHead(302, { Location: "/accounts/signin" });
     ctx.res.end();

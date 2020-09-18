@@ -3,7 +3,6 @@ import Axios from 'axios';
 import { useObserver, useLocalStore } from 'mobx-react';
 import {toJS} from 'mobx';
 import {useRouter} from 'next/router';
-// import {CONFIG} from '../../../utils/CONFIG';
 import BoardAPI from "../../../../api/board";
 import UserAPI from "../../../../api/user";
 import { Modal } from 'antd';
@@ -92,11 +91,9 @@ const CreateBoard = (props) => {
                 const formData = {
                     board_type: boardType,
                     writer: state.user.userId ? state.user.userId : "unknown",
-                    // select: state.select,
                     title: state.title,
                     contents: state.contents,
                 }
-                console.log("글쓰기 제출:", formData)
                 await BoardAPI.write(formData);
                 router.push('/board/[cate]', `/board/${boardCate}`);
             }
@@ -145,7 +142,6 @@ const CreateBoard = (props) => {
         <WriteBoardForm 
             boardName={boardName}
             boardType="새 글 작성"
-            // boardSelect={state.select}
             boardTitle={state.title}
             boardContents={state.contents}
             submitBtn="등록"

@@ -1,7 +1,5 @@
 import { useLocalStore, useObserver } from 'mobx-react';
-import {toJS} from 'mobx';
 import React from 'react';
-// import {comment_dummy} from '../comment_dummy';
 import EachComment from './EachComment';
 
 

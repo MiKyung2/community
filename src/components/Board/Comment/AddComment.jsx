@@ -7,7 +7,6 @@ import CommentAPI from '../../../api/comment';
 import UserAPI from "../../../api/user";
 import { AppContext } from '../../App/context';
 import Modal_login from '../Modals/Modal_login';
-// import { useCookies } from 'react-cookie';
 
 
 const AddComment = (props) => {

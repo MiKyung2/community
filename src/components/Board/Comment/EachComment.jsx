@@ -1,7 +1,6 @@
 import { DislikeFilled, DislikeOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons';
 import { Avatar, Comment, Modal, Tooltip } from 'antd';
 import { useLocalStore, useObserver } from 'mobx-react';
-import {toJS} from 'mobx';
 import { useRouter } from 'next/router';
 
 import moment from 'moment';
@@ -10,6 +9,7 @@ import styled from 'styled-components';
 import CommentAPI from '../../../api/comment';
 import UserAPI from '../../../api/user';
 import { AppContext } from '../../App/context';
+import Modal_delete from '../Modals/Modal_delete';
 
 
 const EachComment = (props) => {
@@ -132,7 +132,6 @@ const EachComment = (props) => {
             </Tooltip>
             <span className="comment-action">{state.comment.dislikes}</span>
           </span>,
-          // <span key="comment-basic-reply-to">Reply to</span>,
           <span key="comment-basic-delete-btn" onClick={onDelete}>삭제</span>
         ];
       } else {
@@ -149,7 +148,6 @@ const EachComment = (props) => {
             </Tooltip>
             <span className="comment-action">{state.comment.dislikes}</span>
           </span>,
-          // <span key="comment-basic-reply-to">Reply to</span>,
           state.isWriter ? <span key="comment-basic-delete-btn" onClick={onDelete}>삭제</span> : null
         ];
       }
@@ -206,13 +204,12 @@ const EachComment = (props) => {
         />
 
         {/* 삭제 확인 메세지 */}
-        <Modal
-          visible={state.modal.delete}
-          onOk={handleOk_delete}
-          onCancel={handleCancel_delete}
-        >
-          <p>정말 이 댓글을 삭제하시겠습니까?</p>
-        </Modal>
+        <Modal_delete
+          isDelete={state.modal.delete}
+          handleOk={handleOk_delete}
+          handleCancel={handleCancel_delete}
+        />
+
       </div>
     )
   });
