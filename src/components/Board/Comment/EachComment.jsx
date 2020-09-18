@@ -1,7 +1,6 @@
 import { DislikeFilled, DislikeOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons';
 import { Avatar, Comment, Modal, Tooltip } from 'antd';
 import { useLocalStore, useObserver } from 'mobx-react';
-import {toJS} from 'mobx';
 import { useRouter } from 'next/router';
 
 import moment from 'moment';
@@ -10,6 +9,7 @@ import styled from 'styled-components';
 import CommentAPI from '../../../api/comment';
 import UserAPI from '../../../api/user';
 import { AppContext } from '../../App/context';
+import Modal_delete from '../Modals/Modal_delete';
 
 
 const EachComment = (props) => {
@@ -55,7 +55,7 @@ const EachComment = (props) => {
 
       // 유저 정보
       const getUserInfo = async() => {
-        if(!global.state.user.token) {
+        if(!global.state.user.userId) {
           state.login = false;
         } else {
           const userInfo = await UserAPI.get({ userId: encodeURI(global.state.user.userId) });    
@@ -132,7 +132,6 @@ const EachComment = (props) => {
             </Tooltip>
             <span className="comment-action">{state.comment.dislikes}</span>
           </span>,
-          // <span key="comment-basic-reply-to">Reply to</span>,
           <span key="comment-basic-delete-btn" onClick={onDelete}>삭제</span>
         ];
       } else {
@@ -149,7 +148,6 @@ const EachComment = (props) => {
             </Tooltip>
             <span className="comment-action">{state.comment.dislikes}</span>
           </span>,
-          // <span key="comment-basic-reply-to">Reply to</span>,
           state.isWriter ? <span key="comment-basic-delete-btn" onClick={onDelete}>삭제</span> : null
         ];
       }
@@ -159,12 +157,26 @@ const EachComment = (props) => {
 
     // 작성자 프로필로 이동
     const moveToWriterProfile = () => {
-      router.push("/profile/[userId]", `/profile/${state.comment.writer}`);
+      if (global.state.user.role === 'A' || state.login) {
+        router.push("/profile/[userId]", `/profile/${state.comment.writer}`);
+      } else {
+        return;
+      }
     }
 
-    const writer = <Tooltip title="프로필 이동">
+    const writer = () => {
+      let title;
+      if(global.state.user.role === 'A' || state.login) {
+        title = "프로필 이동"
+      } else {
+        title = "로그인 해 주세요";
+      }
+    
+    return <Tooltip title={title}>
       <span className="hover" onClick={moveToWriterProfile}>{state.comment.writer}</span>
-      </Tooltip>
+    </Tooltip>
+
+    }
 
 
 
@@ -172,7 +184,7 @@ const EachComment = (props) => {
       <div>
         <Comment
           actions={checkAdmin()}
-          author={writer}
+          author={writer()}
           avatar={
             <Avatar
               src={state.comment.img}
@@ -192,13 +204,12 @@ const EachComment = (props) => {
         />
 
         {/* 삭제 확인 메세지 */}
-        <Modal
-          visible={state.modal.delete}
-          onOk={handleOk_delete}
-          onCancel={handleCancel_delete}
-        >
-          <p>정말 이 댓글을 삭제하시겠습니까?</p>
-        </Modal>
+        <Modal_delete
+          isDelete={state.modal.delete}
+          handleOk={handleOk_delete}
+          handleCancel={handleCancel_delete}
+        />
+
       </div>
     )
   });

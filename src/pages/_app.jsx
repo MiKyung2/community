@@ -17,6 +17,8 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import { useRouter } from 'next/router';
 
+
+
 observerBatching();
 
 let sockJS = new SockJS(`https://toyproject.okky.kro.kr:8443/ws-stomp`);
@@ -60,7 +62,8 @@ function App(props) {
 
     return (
       <>
-        <GlobalStyle />
+  {router.route !== "/board/[cate]/[id]" && <GlobalStyle /> }
+      {/* <GlobalStyle /> */}
         <Head>
           <title>개발자들의 커뮤니티</title>
           <meta

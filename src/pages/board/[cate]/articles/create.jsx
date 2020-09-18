@@ -3,11 +3,12 @@ import Axios from 'axios';
 import { useObserver, useLocalStore } from 'mobx-react';
 import {toJS} from 'mobx';
 import {useRouter} from 'next/router';
-// import {CONFIG} from '../../../utils/CONFIG';
 import BoardAPI from "../../../../api/board";
 import UserAPI from "../../../../api/user";
 import { Modal } from 'antd';
 import { useCookies } from 'react-cookie';
+// import cookie from 'cookie';
+// import jwt from "jsonwebtoken";
 
 
 import WriteBoardForm from '../../../../components/Board/WriteBoardForm';
@@ -72,9 +73,13 @@ const CreateBoard = (props) => {
             state.user = userInfo.body;
           };
           getUserInfo();
-          
-        }, [])
 
+          window.onpopstate = () => {
+                state.modal.cancel = true;
+                history.go(1);
+            };
+          
+        }, []);
 
 
         const onSubmitForm = async(e) => {
@@ -86,7 +91,6 @@ const CreateBoard = (props) => {
                 const formData = {
                     board_type: boardType,
                     writer: state.user.userId ? state.user.userId : "unknown",
-                    // select: state.select,
                     title: state.title,
                     contents: state.contents,
                 }
@@ -138,7 +142,6 @@ const CreateBoard = (props) => {
         <WriteBoardForm 
             boardName={boardName}
             boardType="새 글 작성"
-            // boardSelect={state.select}
             boardTitle={state.title}
             boardContents={state.contents}
             submitBtn="등록"
@@ -161,5 +164,30 @@ const CreateBoard = (props) => {
       );
     })
 };
+
+// CreateBoard.getInitialProps = async(ctx) => {
+
+//     const ck = cookie.parse(
+//       (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
+//     );
+//     const token = ck.token ?? "";
+//     const decodedToken = jwt.decode(token.replace("Bearer ", ""));
+//     const user = decodedToken?.userId ?? "";
+    
+//     console.log("user:", user)
+    
+//     if (user === "" && ctx.res && ctx.query.cate !== "free") {
+//       ctx.res.writeHead(302, { Location: "/accounts/signin" });
+//       ctx.res.end();
+//       return;
+//     }
+
+//     const userInfo = await UserAPI.get({ userId: encodeURI(global.state.user.userId) });   
+    
+//     return {
+
+//     }
+// }
+
 
 export default CreateBoard;

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useObserver, useLocalStore } from 'mobx-react';
 import {useRouter} from 'next/router';
-// import {CONFIG} from '../../../utils/CONFIG';
 import { Modal } from 'antd';
 import BoardAPI from "../../../../api/board";
 import WriteBoardForm from '../../../../components/Board/WriteBoardForm';
@@ -39,12 +38,12 @@ const EditBoard = (props) => {
             default:
         }
 
+
         const state = useLocalStore(() => {
             return {
                 data: props.props.board.body,
                 id: props.props.board.body.id,
                 writer: props.props.board.body.writer,
-                // select: props.board.body.select,
                 title: props.props.board.body.title,
                 contents: props.props.board.body.contents,
                 modal: {
@@ -111,7 +110,6 @@ const EditBoard = (props) => {
         <WriteBoardForm 
             boardName = {boardName}
             boardType="게시글 수정"
-            // boardSelect={state.select}
             boardTitle={state.title}
             boardContents={state.contents}
             submitBtn="수정"

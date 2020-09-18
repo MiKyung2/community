@@ -117,7 +117,7 @@ const LayoutHeader = (props) => {
           className='main-menu'
           theme='dark'
           mode='horizontal'
-          defaultSelectedKeys={[router.asPath]}
+          selectedKeys={[router.asPath]}
         >
           {routes.map((i) =>
             global.state.user.role === 'A' ? (
@@ -134,7 +134,7 @@ const LayoutHeader = (props) => {
           {cookies.access_token ? (
             <Menu.Item onClick={handleClickLogout}>로그아웃</Menu.Item>
           ) : (
-            <Menu.Item onClick={handleClickLogin}>로그인</Menu.Item>
+            <Menu.Item key="/accounts/signin" onClick={handleClickLogin}>로그인</Menu.Item>
           )}
         </Menu>
 

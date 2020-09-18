@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { useObserver, useLocalStore } from 'mobx-react';
-import { Modal } from 'antd';
+import { Modal, Button } from 'antd';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import CommentAPI from '../../../api/comment';
 import UserAPI from "../../../api/user";
 import { AppContext } from '../../App/context';
 import Modal_login from '../Modals/Modal_login';
-// import { useCookies } from 'react-cookie';
 
 
 const AddComment = (props) => {
@@ -34,7 +33,7 @@ const AddComment = (props) => {
 
   useEffect(() => {
     const getUserInfo = async() => {
-      if(!globalUserInfo.token) return;
+      if(!globalUserInfo.userId) return;
       const userInfo = await UserAPI.get({userId: encodeURI(global.state.user.userId)});  
       state.user = userInfo.body; 
     };
@@ -70,7 +69,7 @@ const AddComment = (props) => {
     const onSubmitComment = (e) => {
       e.preventDefault();
       
-      if (!globalUserInfo.token) {
+      if (!globalUserInfo.userId) {
         state.modal.login = true;
       } else {
         if (state.content.trim() == '') {
@@ -96,7 +95,7 @@ const AddComment = (props) => {
       <div className={props.className}>
         <form>
           <textarea className="text-area" value={state.content} onChange={onChangeTextArea} />
-          <button type="submit" className="submit-btn" onClick={onSubmitComment}>등록</button>
+          <Button type="primary" onClick={onSubmitComment}>등록</Button>
         </form>
       </div>
 
@@ -121,14 +120,6 @@ export default styled(AddComment)`
       height: 100px;
       border-radius: 5px;
       padding: 20px;
-    }
-    .submit-btn {
-      cursor: pointer;
-      border-radius: 5px;
-      background-color: #1890FF;
-      color: #fff;
-      padding: 10px 20px;
-       margin-top: 5px;
     }
   }
 `;

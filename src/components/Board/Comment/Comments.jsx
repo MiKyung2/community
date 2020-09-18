@@ -25,7 +25,6 @@ const Comments = (props) => {
 
         return (
             <>
-                {/* <CommentList data={state.comments} /> */}
                 <CommentList comments={state.comments} deleteComment={deleteComment} isAdmin={isAdmin} />
                 <AddComment queryId={state.queryId} comments={state.comments} isAdmin={isAdmin} />
             </>

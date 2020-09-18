@@ -104,7 +104,8 @@ const BoardPage = (props) => {
           if(target === 'title') {
             moveToBoardPost(record.id);
           } else if (target === 'writer') {
-          if(!global.state.user.token) {
+          // if(!global.state.user.token) {
+          if(!global.state.user.userId) {
             state.modal.login = true;
           } else {
             moveToWriterProfile(e);
@@ -145,12 +146,25 @@ const BoardPage = (props) => {
       state.page.sort = sort ? sort : state.page.sort;
 
       fetchListData();
+      saveToLocal(keyword);
 
+    }
+
+
+    // 검색어 local storage에 저장
+    const saveToLocal = (keyword) => {
+      if(typeof window === 'undefined') return;
+      if(!global.state.user.userId) return;
+      const getHistory = localStorage.getItem("history") === null ? [] : JSON.parse(localStorage.getItem("history")); 
+      const addHistory = [keyword, ...getHistory];
+      const removeOverlap = Array.from(new Set(addHistory));
+      const newHistory = removeOverlap.slice(0, 3);
+      localStorage.setItem("history", JSON.stringify(newHistory));
     }
 
     // 유저 확인 & 새글쓰기로 이동
     const onClickNewPostBtn = () => {
-      if(!global.state.user.token) {
+      if(!global.state.user.userId) {
         state.modal.login = true;
       } else {
         router.push("/board/[cate]/articles/create", `/board/${boardCate}/articles/create`);
@@ -242,9 +256,7 @@ BoardPage.getInitialProps = async(ctx) => {
   const token = ck.token ?? "";
   const decodedToken = jwt.decode(token.replace("Bearer ", ""));
   const user = decodedToken?.userId ?? "";
-  
-  console.log("user:", user)
-  
+    
   if (user === "" && ctx.res && ctx.query.cate !== "free") {
     ctx.res.writeHead(302, { Location: "/accounts/signin" });
     ctx.res.end();
@@ -313,9 +325,11 @@ export default styled(BoardPage)`
     }
     .list_title {
       /* border: 1px solid red; */
-      max-width: 300px;
+      width: 300px;
       max-height: 20px;
       overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 `;

@@ -22,7 +22,6 @@ const CommentAPI = {
   },
   event: async (payload) => {
     try {
-        // const { id, itemGb } = payload
       const res = await instance.post('comment/event/like', payload);
       return res;
     } catch (error) {
