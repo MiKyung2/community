@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useObserver, useLocalStore } from 'mobx-react';
-import { Modal } from 'antd';
+import { Modal, Button } from 'antd';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import CommentAPI from '../../../api/comment';
@@ -96,7 +96,7 @@ const AddComment = (props) => {
       <div className={props.className}>
         <form>
           <textarea className="text-area" value={state.content} onChange={onChangeTextArea} />
-          <button type="submit" className="submit-btn" onClick={onSubmitComment}>등록</button>
+          <Button type="primary" onClick={onSubmitComment}>등록</Button>
         </form>
       </div>
 
@@ -121,14 +121,6 @@ export default styled(AddComment)`
       height: 100px;
       border-radius: 5px;
       padding: 20px;
-    }
-    .submit-btn {
-      cursor: pointer;
-      border-radius: 5px;
-      background-color: #1890FF;
-      color: #fff;
-      padding: 10px 20px;
-       margin-top: 5px;
     }
   }
 `;

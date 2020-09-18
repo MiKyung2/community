@@ -62,8 +62,8 @@ function App(props) {
 
     return (
       <>
-  {/* {router.route !== "/board/[cate]/[id]" && <GlobalStyle /> } */}
-      <GlobalStyle />
+  {router.route !== "/board/[cate]/[id]" && <GlobalStyle /> }
+      {/* <GlobalStyle /> */}
         <Head>
           <title>개발자들의 커뮤니티</title>
           <meta

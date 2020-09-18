@@ -66,9 +66,6 @@ export default styled(WriteBoardForm)`
         }
         .header {
             /* border: 1px solid red; */
-            /* display: flex;
-            justify-content: space-between; 
-            align-items: center; */
             margin-bottom: 40px;
         }
         .select {

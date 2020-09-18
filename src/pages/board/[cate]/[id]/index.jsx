@@ -222,7 +222,6 @@ const Board = (props) => {
         {/* 댓글 */}
         <div className="comment-section">
           <h3>댓글</h3>
-          {/* <Comments queryId={boardId} data={props.comments.body} isAdmin={test_level} /> */}
           <Comments queryId={boardId} data={props.comments.body} isAdmin={global.state.user.role} />
         </div>
 
@@ -399,7 +398,17 @@ hr
 	border-top: 1px solid #ccc;
 }
 
-img.right
+img {
+  /* border: 1px solid blue; */
+}
+
+p > a > img {
+  /* border: 1px solid red; */
+  width: 300px;
+  height: 300px;
+}
+
+/* img.right
 {
 	border: 1px solid #ccc;
 	float: right;
@@ -413,7 +422,7 @@ img.left
 	float: left;
 	margin-right: 15px;
 	padding: 5px;
-}
+} */
 
 pre
 {
