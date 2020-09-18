@@ -159,12 +159,26 @@ const EachComment = (props) => {
 
     // 작성자 프로필로 이동
     const moveToWriterProfile = () => {
-      router.push("/profile/[userId]", `/profile/${state.comment.writer}`);
+      if (global.state.user.role === 'A' || state.login) {
+        router.push("/profile/[userId]", `/profile/${state.comment.writer}`);
+      } else {
+        return;
+      }
     }
 
-    const writer = <Tooltip title="프로필 이동">
+    const writer = () => {
+      let title;
+      if(global.state.user.role === 'A' || state.login) {
+        title = "프로필 이동"
+      } else {
+        title = "로그인 해 주세요";
+      }
+    
+    return <Tooltip title={title}>
       <span className="hover" onClick={moveToWriterProfile}>{state.comment.writer}</span>
-      </Tooltip>
+    </Tooltip>
+
+    }
 
 
 
@@ -172,7 +186,7 @@ const EachComment = (props) => {
       <div>
         <Comment
           actions={checkAdmin()}
-          author={writer}
+          author={writer()}
           avatar={
             <Avatar
               src={state.comment.img}
