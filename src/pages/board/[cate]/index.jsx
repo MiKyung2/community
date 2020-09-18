@@ -325,7 +325,7 @@ export default styled(BoardPage)`
     }
     .list_title {
       /* border: 1px solid red; */
-      max-width: 300px;
+      width: 300px;
       max-height: 20px;
       overflow: hidden;
       text-overflow: ellipsis;
