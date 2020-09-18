@@ -132,8 +132,10 @@ const CreateBoard = (props) => {
         }
 
         const onChangeEditor = (e) => {
+            // console.log("onChangeEditor:", e.getData())
             const dataFromEditor =  e.editor.getData();
             state.contents = dataFromEditor;
+            
         }
     
        			      

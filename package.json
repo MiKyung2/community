@@ -5,6 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
+    "@ckeditor/ckeditor5-build-classic": "^22.0.0",
+    "@ckeditor/ckeditor5-react": "^2.1.0",
     "antd": "^4.6.3",
     "axios": "^0.19.2",
     "ckeditor4-react": "^1.2.0",

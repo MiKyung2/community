@@ -1,13 +1,29 @@
-import React from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import styled from 'styled-components';
 import { Select, Input, Button } from 'antd';
 import CKEditor from 'ckeditor4-react';
+// import CKEditor from '@ckeditor/ckeditor5-react';
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 
 const WriteBoardForm = (props) => {
 
     const { boardName, boardType, boardTitle, boardContents, submitBtn } = props;
     const { onSubmitForm, onCancel, onChangeSelect, onChangeTitle, onChangeEditor } = props;
- 
+
+    // const editorRef = useRef()
+    // const [editorLoaded, setEditorLoaded] = useState(false)
+    // const { CKEditor, ClassicEditor } = editorRef.current || {}
+
+    // useEffect(() => {
+    //     editorRef.current = {
+    //         CKEditor: require('@ckeditor/ckeditor5-react'),
+    //         ClassicEditor: require('@ckeditor/ckeditor5-build-classic')
+    //       }
+    //       setEditorLoaded(true)
+    // }, []);
+
+
       return (
         <div className={props.className}>
             <div className="container">
@@ -31,9 +47,16 @@ const WriteBoardForm = (props) => {
                         {/* 게시판 내용 */}
                         <CKEditor
                             type="classic"
+                            // editor={ClassicEditor}
                             data={boardContents}
+                            // onInit={ editor => {
+                            //     // You can store the "editor" and use when it is needed.
+                            //     console.log( 'Editor is ready to use!', editor );
+                            // } }
                             onChange={onChangeEditor}
                         />
+
+
     
                         {/* 버튼 - 등록||수정 & 취소 */}
                         <div className="buttons">
@@ -45,6 +68,9 @@ const WriteBoardForm = (props) => {
             </div>
         </div>
       );
+    //   : (
+    //     <div>Editor loading</div>
+    //   )
 };
 
 export default styled(WriteBoardForm)`
