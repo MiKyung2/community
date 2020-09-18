@@ -41,10 +41,6 @@ const routes = [
     as: "/board/secret",
     role: 'A'
   },
-  // {
-  //   name: "로그인",
-  //   url: "/accounts/signin",
-  // },
 ];
 
 export default routes;

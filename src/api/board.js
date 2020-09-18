@@ -1,8 +1,5 @@
 import instance from "./axiosWrapper";
 
- // `board/page?gb=${gb}&keyword=${keyword}&offset=${offset}&pageNumber=${pageNumber}&pageSize=${pageSize}&sort=${sort}`
-
-
 const BoardAPI = {
   list: async (payload) => {
     try {
@@ -10,8 +7,6 @@ const BoardAPI = {
       const res = await instance.get(
         `board/page?boardType=${boardType}&currentPage=${currentPage}&gb=${gb}&keyword=${keyword}&size=${size}&sort=${sort}`
         );
-
-        console.log("board res:", res)
       return res.data
     } catch (error) {
       // throw error;
