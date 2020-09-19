@@ -409,6 +409,23 @@ p > a > img {
   height: 300px;
 }
 
+figure > img {
+  /* border: 1px solid red; */
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+figure {
+  &.easyimage-side {
+    float: right;
+    max-width: 50%;
+    min-width: 10em;
+    margin-left: 1.5em;
+  }
+}
+
 /* img.right
 {
 	border: 1px solid #ccc;

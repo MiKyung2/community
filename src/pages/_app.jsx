@@ -62,8 +62,7 @@ function App(props) {
 
     return (
       <>
-  {router.route !== "/board/[cate]/[id]" && <GlobalStyle /> }
-      {/* <GlobalStyle /> */}
+        {router.route !== "/board/[cate]/[id]" && <GlobalStyle /> }
         <Head>
           <title>개발자들의 커뮤니티</title>
           <meta
@@ -94,6 +93,7 @@ function App(props) {
             src='https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js'
             charset='utf-8'
           ></script> */}
+          <script src="https://cdn.ckeditor.com/4.15.0/standard-all/ckeditor.js"></script>
         </Head>
         <AppContext.Provider value={global}>
           <CookiesProvider>
