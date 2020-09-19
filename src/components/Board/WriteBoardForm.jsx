@@ -38,7 +38,7 @@ const WriteBoardForm = (props) => {
                                 extraPlugins: 'easyimage',
                                 removePlugins: 'image',
                                 cloudServices_tokenUrl: 'https://74862.cke-cs.com/token/dev/bcd15493d7b31dc608b2c38d3170023373fce3089371bf94004c0b882701',
-                                cloudServices_uploadUrl: 'https://74862.cke-cs.com/easyimage/upload/'
+                                cloudServices_uploadUrl: 'https://74862.cke-cs.com/easyimage/upload/',
                             }}
                         />
     
