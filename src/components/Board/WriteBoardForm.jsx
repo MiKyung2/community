@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components';
 import { Input, Button } from 'antd';
 import CKEditor from 'ckeditor4-react';
+
 
 const WriteBoardForm = (props) => {
 
@@ -33,6 +34,12 @@ const WriteBoardForm = (props) => {
                             type="classic"
                             data={boardContents}
                             onChange={onChangeEditor}
+                            config={{
+                                extraPlugins: 'easyimage',
+                                removePlugins: 'image',
+                                cloudServices_tokenUrl: 'https://74862.cke-cs.com/token/dev/bcd15493d7b31dc608b2c38d3170023373fce3089371bf94004c0b882701',
+                                cloudServices_uploadUrl: 'https://74862.cke-cs.com/easyimage/upload/',
+                            }}
                         />
     
                         {/* 버튼 - 등록||수정 & 취소 */}

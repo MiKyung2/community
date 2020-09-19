@@ -7,8 +7,8 @@ import BoardAPI from "../../../../api/board";
 import UserAPI from "../../../../api/user";
 import { Modal } from 'antd';
 import { useCookies } from 'react-cookie';
-// import cookie from 'cookie';
-// import jwt from "jsonwebtoken";
+import cookie from 'cookie';
+import jwt from "jsonwebtoken";
 
 
 import WriteBoardForm from '../../../../components/Board/WriteBoardForm';
@@ -165,29 +165,27 @@ const CreateBoard = (props) => {
     })
 };
 
-// CreateBoard.getInitialProps = async(ctx) => {
+CreateBoard.getInitialProps = async(ctx) => {
 
-//     const ck = cookie.parse(
-//       (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
-//     );
-//     const token = ck.token ?? "";
-//     const decodedToken = jwt.decode(token.replace("Bearer ", ""));
-//     const user = decodedToken?.userId ?? "";
+    const ck = cookie.parse(
+      (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
+    );
+    const token = ck.token ?? "";
+    const decodedToken = jwt.decode(token.replace("Bearer ", ""));
+    const user = decodedToken?.userId ?? "";
+        
+    if (user === "" && ctx.res) {
+      ctx.res.writeHead(302, { Location: "/accounts/signin" });
+      ctx.res.end();
+      return;
+    }
     
-//     console.log("user:", user)
-    
-//     if (user === "" && ctx.res && ctx.query.cate !== "free") {
-//       ctx.res.writeHead(302, { Location: "/accounts/signin" });
-//       ctx.res.end();
-//       return;
-//     }
-
-//     const userInfo = await UserAPI.get({ userId: encodeURI(global.state.user.userId) });   
-    
-//     return {
-
-//     }
-// }
+    return {
+        props: {
+            user
+        }
+    }
+}
 
 
 export default CreateBoard;

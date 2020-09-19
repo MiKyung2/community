@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useObserver, useLocalStore } from 'mobx-react';
 import {useRouter} from 'next/router';
 import { Modal } from 'antd';
 import BoardAPI from "../../../../api/board";
 import WriteBoardForm from '../../../../components/Board/WriteBoardForm';
 import Modal_cancel from '../../../../components/Board/Modals/Modal_cancel';
+import cookie from 'cookie';
+import jwt from "jsonwebtoken";
 
 
 const EditBoard = (props) => {
@@ -51,6 +53,19 @@ const EditBoard = (props) => {
                 }
             }
         });
+
+
+
+        useEffect(() => {
+
+            window.onpopstate = () => {
+                  state.modal.visible = true;
+                  history.go(1);
+              };
+            
+          }, []);
+
+
 
         const onSubmitForm = (e) => {
             e.preventDefault();
@@ -134,8 +149,20 @@ const EditBoard = (props) => {
 
 EditBoard.getInitialProps = async(ctx) => {
 
-    const query = ctx.query
+    const ck = cookie.parse(
+        (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
+    );
+    const token = ck.token ?? "";
+    const decodedToken = jwt.decode(token.replace("Bearer ", ""));
+    const user = decodedToken?.userId ?? "";
+        
+    if (user === "" && ctx.res) {
+    ctx.res.writeHead(302, { Location: "/accounts/signin" });
+    ctx.res.end();
+    return;
+    }
 
+    const query = ctx.query
     const boardDetailRes = await BoardAPI.detail({ 
         id: query.id
     });
