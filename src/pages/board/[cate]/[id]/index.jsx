@@ -97,8 +97,7 @@ const Board = (props) => {
         }
         await BoardAPI.event(payload);
         state.events.action.liked = !state.events.action.liked;
-        // state.events.like = !state.events.action.liked ? state.events.like + 1 : state.events.like - 1;
-        // state.events.like = state.events.like + 1;
+        state.events.like = state.events.like === 0 ? state.events.like + 1 : state.events.like - 1;
       } else {
         return;
       }
@@ -113,7 +112,7 @@ const Board = (props) => {
         }
         await BoardAPI.event(payload);
         state.events.action.disliked = !state.events.action.disliked;
-        // state.events.dislike = state.events.dislike + 1;
+        state.events.dislike = state.events.dislike === 0 ? state.events.dislike + 1 : state.events.dislike - 1;
       } else {
         return;
       }
@@ -199,14 +198,11 @@ const Board = (props) => {
             <Row>
               <span className="main_container_top_left "><EyeOutlined /> {numFormatter(state.data.viewCount)}</span>
               <Tooltip title={state.login ? "좋아요" : "로그인 해주세요"}>
-                {/* <span className="main_container_top_left event" onClick={onClickLike}>{state.events.action === 'liked' ? <LikeFilled /> : <LikeOutlined />} {numFormatter(state.events.like)}</span> */}
-                <span className="main_container_top_left event" onClick={onClickLike}>{state.events.action.liked ? <LikeFilled /> : <LikeOutlined />} {numFormatter(state.events.like)}</span>
+                <span className="main_container_top_left event" onClick={onClickLike}><LikeOutlined /> {numFormatter(state.events.like)}</span>
               </Tooltip>
               <Tooltip title={state.login ? "싫어요" : "로그인 해주세요"}>
-                {/* <span className="main_container_top_left event" onClick={onClickDislike}>{state.events.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />} {numFormatter(state.events.dislike)}</span> */}
-                <span className="main_container_top_left event" onClick={onClickDislike}>{state.events.action.disliked ? <DislikeFilled /> : <DislikeOutlined />} {numFormatter(state.events.dislike)}</span>
+                <span className="main_container_top_left event" onClick={onClickDislike}><DislikeOutlined /> {numFormatter(state.events.dislike)}</span>
               </Tooltip>
-              {/* <span className="main_container_top_left "><CommentOutlined /> {state.data.commentCnt}</span> */}
             </Row>
 
             {/* 수정 & 삭제 */}
