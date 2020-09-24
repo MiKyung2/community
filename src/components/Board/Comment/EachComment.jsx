@@ -81,7 +81,6 @@ const EachComment = (props) => {
         await CommentAPI.event({ id: data.id, itemGb: "L" });
         state.action = 'liked'
         state.comment.likes = state.comment.likes + 1;
-        // state.comment.dislikes = state.comment.dislikes - 1;
       } else {
         return;
       }
@@ -92,7 +91,6 @@ const EachComment = (props) => {
         await CommentAPI.event({ id: data.id, itemGb: "D" });
         state.action = 'disliked'
         state.comment.dislikes = state.comment.dislikes + 1;
-        // state.comment.likes = state.comment.likes - 1;
       } else {
         return;
       }
