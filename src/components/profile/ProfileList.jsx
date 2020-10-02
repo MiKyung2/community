@@ -4,6 +4,9 @@ import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 import { useObserver } from 'mobx-react';
 import { AppContext } from "../App/context";
 import { toJS } from "mobx";
+import { BOARDE_TYPE } from "../../utils/enum";
+import ReactHtmlParser from 'react-html-parser';
+import styled from 'styled-components';
 
 const IconText = ({ icon, text }) => (
   <Space>
@@ -11,10 +14,6 @@ const IconText = ({ icon, text }) => (
     {text}
   </Space>
 );
-
-const BOARDE_TYPE = {
-  FREE: "자유게시판",
-};
 
 const ProfileList = (props) => {
   return useObserver(() => {
@@ -80,4 +79,13 @@ const ProfileList = (props) => {
   });
 };
 
-export default ProfileList;
+export default styled(ProfileList)`
+  .ant-list-item-meta-description {
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: pre-wrap;
+    max-height: 41px;
+  }
+`;

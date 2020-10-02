@@ -107,7 +107,7 @@ const BoardPage = (props) => {
           if(target === 'title') {
             moveToBoardPost(record.id);
           } else if (target === 'writer') {
-            moveToWriterProfile();
+            moveToWriterProfile(record.writer);
           } else {
             return;
           }
@@ -119,9 +119,9 @@ const BoardPage = (props) => {
       router.push('/board/[id]', `/board/${boardId}`);
     }
 
-    const moveToWriterProfile = () => {
+    const moveToWriterProfile = (userId) => {
       // 작성자 아이디로 변수처리 필요!!
-      router.push(`/profile/20`);
+      router.push("/profile/[userId]", `/profile/${userId}`);
     }
 
     const boardColumns = [

@@ -15,7 +15,7 @@ const AddComment = (props) => {
   return useObserver(() => {
     const global = React.useContext(AppContext);
     const globalUserInfo = global.state.user;
-    const userToken = globalUserInfo.token;
+    const { isAdmin } = props;
 
     const { queryId, comments } = props;
     const router = useRouter();
@@ -31,12 +31,11 @@ const AddComment = (props) => {
   });
 
   // 유저 정보
-  // const [cookies, _, removeCookie] = useCookies(['token', 'id']);
 
   useEffect(() => {
     const getUserInfo = async() => {
-      if(!userToken) return;
-      const userInfo = await UserAPI.get({userId: global.state.user.userId});  
+      if(!globalUserInfo.token) return;
+      const userInfo = await UserAPI.get({userId: encodeURI(global.state.user.userId)});  
       state.user = userInfo.body; 
     };
     getUserInfo();
@@ -47,7 +46,7 @@ const AddComment = (props) => {
         boardId: queryId,
         title: 'title',
         content: state.content,
-        writer: state.user.nickname,
+        writer: state.user.userId,
         id: 0,
         itemGb: "string",
         rowDisLike: 0,
@@ -71,7 +70,7 @@ const AddComment = (props) => {
     const onSubmitComment = (e) => {
       e.preventDefault();
       
-      if (!userToken) {
+      if (!globalUserInfo.token) {
         state.modal.login = true;
       } else {
         if (state.content.trim() == '') {

@@ -7,7 +7,7 @@ import EachComment from './EachComment';
 
 const CommentList = (props) => {
 
-  const { comments, deleteComment } = props;
+  const { comments, deleteComment, isAdmin } = props;
 
 
   return useObserver(() => {
@@ -28,7 +28,7 @@ const CommentList = (props) => {
     return (
       <>
         {state.comments && state.comments.map(comment => (
-          <EachComment key={comment.id} data={comment} updateComments={updateComments} />
+          <EachComment key={comment.id} data={comment} updateComments={updateComments} isAdmin={isAdmin} />
         ))}
       </>
     )

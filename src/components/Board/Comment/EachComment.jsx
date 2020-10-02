@@ -2,7 +2,7 @@ import { DislikeFilled, DislikeOutlined, LikeFilled, LikeOutlined } from '@ant-d
 import { Avatar, Comment, Modal, Tooltip } from 'antd';
 import { useLocalStore, useObserver } from 'mobx-react';
 import {toJS} from 'mobx';
-import { useCookies } from 'react-cookie';
+import { useRouter } from 'next/router';
 
 import moment from 'moment';
 import React, { useEffect } from 'react';
@@ -14,11 +14,12 @@ import { AppContext } from '../../App/context';
 
 const EachComment = (props) => {
 
-  const { data, updateComments } = props;  
-
+  const { data, updateComments } = props; 
+  
   return useObserver(() => {
+    const router = useRouter();
     const global = React.useContext(AppContext);
-    const userToken = global.state.user.token;
+    const { isAdmin } = props;
 
     const state = useLocalStore(() => {
       return {
@@ -29,6 +30,7 @@ const EachComment = (props) => {
           writer: '',
           contents: '',
           createdDate: '',
+          img: '',
           likes: 0,
           dislikes: 0
         },
@@ -43,22 +45,24 @@ const EachComment = (props) => {
       };
     });
 
-    const [cookies, _, removeCookie] = useCookies(['token', 'id']);
-
     useEffect(() => {
       state.comment.writer = data.writer;
       state.comment.contents = data.title;
+      state.comment.img = data.profileImg;
       state.comment.createdDate = data.createdDate;
       state.comment.likes = data.rowLike;
       state.comment.dislikes = data.rowDisLike;
 
       // 유저 정보
       const getUserInfo = async() => {
-        if(!userToken) return;
-        const userInfo = await UserAPI.get({userId: global.state.user.userId});    
-        state.userData = userInfo.body;      
-        state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
-        state.login = true;
+        if(!global.state.user.token) {
+          state.login = false;
+        } else {
+          const userInfo = await UserAPI.get({ userId: encodeURI(global.state.user.userId) });    
+          state.userData = userInfo.body;  
+          state.user = userInfo?.body.userId ? userInfo.body.userId : '';
+          state.login = true;
+        }
       };
       getUserInfo();
     }, []);
@@ -110,35 +114,69 @@ const EachComment = (props) => {
       state.modal.delete = false;
     }
 
+    const checkAdmin = () => {
 
-    const actions = [
-      <span key="comment-basic-like">
-        <Tooltip title={state.login ? "좋아요" : "로그인 해주세요"}>
-          <span onClick={onLike}>{state.action === 'liked' ? <LikeFilled /> : <LikeOutlined />}</span>
-        </Tooltip>
-        <span className="comment-action">{state.comment.likes}</span>
-      </span>,
-      <span key="comment-basic-dislike">
-        <Tooltip title={state.login ? "싫어요" : "로그인 해주세요"}>
-          <span onClick={onDislike}>{state.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />}</span>
-        </Tooltip>
-        <span className="comment-action">{state.comment.dislikes}</span>
-      </span>,
-      // <span key="comment-basic-reply-to">Reply to</span>,
-      state.isWriter ? <span key="comment-basic-delete-btn" onClick={onDelete}>삭제</span> : null
-    ];
+      let actions;
+
+      if (isAdmin === 'A') {
+         actions = [
+          <span key="comment-basic-like">
+            <Tooltip title={"좋아요"}>
+              <span onClick={onLike}>{state.action === 'liked' ? <LikeFilled /> : <LikeOutlined />}</span>
+            </Tooltip>
+            <span className="comment-action">{state.comment.likes}</span>
+          </span>,
+          <span key="comment-basic-dislike">
+            <Tooltip title={"로그인 해주세요"}>
+              <span onClick={onDislike}>{state.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />}</span>
+            </Tooltip>
+            <span className="comment-action">{state.comment.dislikes}</span>
+          </span>,
+          // <span key="comment-basic-reply-to">Reply to</span>,
+          <span key="comment-basic-delete-btn" onClick={onDelete}>삭제</span>
+        ];
+      } else {
+        actions = [
+          <span key="comment-basic-like">
+            <Tooltip title={state.login ? "좋아요" : "로그인 해주세요"}>
+              <span onClick={onLike}>{state.action === 'liked' ? <LikeFilled /> : <LikeOutlined />}</span>
+            </Tooltip>
+            <span className="comment-action">{state.comment.likes}</span>
+          </span>,
+          <span key="comment-basic-dislike">
+            <Tooltip title={state.login ? "싫어요" : "로그인 해주세요"}>
+              <span onClick={onDislike}>{state.action === 'disliked' ? <DislikeFilled /> : <DislikeOutlined />}</span>
+            </Tooltip>
+            <span className="comment-action">{state.comment.dislikes}</span>
+          </span>,
+          // <span key="comment-basic-reply-to">Reply to</span>,
+          state.isWriter ? <span key="comment-basic-delete-btn" onClick={onDelete}>삭제</span> : null
+        ];
+      }
+
+      return actions;
+    }
+
+    // 작성자 프로필로 이동
+    const moveToWriterProfile = () => {
+      router.push("/profile/[userId]", `/profile/${state.comment.writer}`);
+    }
+
+    const writer = <Tooltip title="프로필 이동">
+      <span className="hover" onClick={moveToWriterProfile}>{state.comment.writer}</span>
+      </Tooltip>
 
 
 
     return (
       <div>
         <Comment
-          actions={actions}
-          author={<a>{state.comment.writer}</a>}
+          actions={checkAdmin()}
+          author={writer}
           avatar={
             <Avatar
-              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-              alt="Han Solo"
+              src={state.comment.img}
+              alt="profile img"
             />
           }
           content={
@@ -168,5 +206,11 @@ const EachComment = (props) => {
 
 export default styled(EachComment)`
   /* border: 1px solid green; */
-
+  & {
+    .hover {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
 `;

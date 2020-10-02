@@ -6,6 +6,9 @@ import CommentList from './CommentList';
 
 
 const Comments = (props) => {
+
+    const { isAdmin } = props;
+
     return useObserver(() => {
         const state = useLocalStore(() => {
             return {
@@ -23,8 +26,8 @@ const Comments = (props) => {
         return (
             <>
                 {/* <CommentList data={state.comments} /> */}
-                <CommentList comments={state.comments} deleteComment={deleteComment} />
-                <AddComment queryId={state.queryId} comments={state.comments} />
+                <CommentList comments={state.comments} deleteComment={deleteComment} isAdmin={isAdmin} />
+                <AddComment queryId={state.queryId} comments={state.comments} isAdmin={isAdmin} />
             </>
         )
     });

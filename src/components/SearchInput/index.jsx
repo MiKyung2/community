@@ -40,7 +40,9 @@ const SearchInput = (props) => {
 
     }
 
-    const onClickSearchHistory = () => {
+    const onClickSearchHistory = (e) => {
+      const searchValue = e.target.dataset.name;
+      onSubmit(searchValue);
     }
 
     const filterName = () => {
@@ -87,18 +89,18 @@ const SearchInput = (props) => {
     const searchHistory = (
       <Menu>
         <Menu.Item>
-          <a target="_blank" onClick={onClickSearchHistory}>
-            Search 1
+          <a target="_blank" data-name="속보" onClick={onClickSearchHistory}>
+            속보
           </a>
         </Menu.Item>
         <Menu.Item>
-          <a target="_blank" onClick={onClickSearchHistory}>
-            Search 2
+          <a target="_blank" data-name="title" onClick={onClickSearchHistory}>
+            title
           </a>
         </Menu.Item>
         <Menu.Item>
-          <a target="_blank" onClick={onClickSearchHistory}>
-            Search 3
+          <a target="_blank" data-name="alice" onClick={onClickSearchHistory}>
+            alice
           </a>
         </Menu.Item>
       </Menu>

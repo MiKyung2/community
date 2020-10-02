@@ -6,10 +6,12 @@ import instance from "./axiosWrapper";
 const BoardAPI = {
   list: async (payload) => {
     try {
-      const {currentPage, gb, keyword, size, sort} = payload;
+      const {boardType, currentPage, gb, keyword, size, sort} = payload;
       const res = await instance.get(
-        `board/page?currentPage=${currentPage}&gb=${gb}&keyword=${keyword}&size=${size}&sort=${sort}`
+        `board/page?boardType=${boardType}&currentPage=${currentPage}&gb=${gb}&keyword=${keyword}&size=${size}&sort=${sort}`
         );
+
+        console.log("board res:", res)
       return res.data
     } catch (error) {
       // throw error;

@@ -1,33 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Select, Input, Button, Avatar } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { Select, Input, Button } from 'antd';
 import CKEditor from 'ckeditor4-react';
-// import {CONFIG} from '../../utils/config';
-
-// const { Option } = Select;
-// const options = [
-//     {
-//         value: 'default',
-//         text: '게시판을 선택해주세요.'
-//     },
-//     {
-//         value: 'option1',
-//         text: 'Option1'
-//     },
-//     {
-//         value: 'option2',
-//         text: 'Option2'
-//     },
-//     {
-//         value: 'option3',
-//         text: 'Option3'
-//     }
-// ];
 
 const WriteBoardForm = (props) => {
 
-    const { boardType, boardTitle, boardContents, submitBtn } = props;
+    const { boardName, boardType, boardTitle, boardContents, submitBtn } = props;
     const { onSubmitForm, onCancel, onChangeSelect, onChangeTitle, onChangeEditor } = props;
 
  
@@ -36,17 +14,11 @@ const WriteBoardForm = (props) => {
             <div className="container">
                 <header className="header">
 					<h2>{boardType}</h2>
-					{/* <Avatar size="large" icon={<UserOutlined />} /> */}
                 </header>
     
                 <section>
+                    <h3 className="board-name">[{boardName}]</h3>
                     <form onSubmit={onSubmitForm}>
-                        {/* 게시판 선택 */}
-                        {/* <Select defaultValue="default" className="select" onChange={onChangeSelect}>
-                            {options && options.map((option, index) => (
-                                <Option key={index} value={option.value}>{option.text}</Option>
-                            ))}
-                        </Select> */}
                         
                         {/* 게시판 제목 */}
                         <Input 
@@ -54,7 +26,7 @@ const WriteBoardForm = (props) => {
                             onChange={onChangeTitle} 
                             className="input" 
                             placeholder="제목을 입력해주세요." 
-                            maxLength="255"
+                            maxLength="50"
                         />
                         
                         {/* 게시판 내용 */}
@@ -85,6 +57,13 @@ export default styled(WriteBoardForm)`
         .container {
             /* border: 1px solid red; */
             width: 80%;
+        }
+        .board-name {
+            /* border: 1px solid red; */
+            margin-bottom: 15px;
+            font-size: 15px;
+            color: gray;
+            text-align: end;
         }
         .header {
             /* border: 1px solid red; */

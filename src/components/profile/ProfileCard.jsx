@@ -106,10 +106,9 @@ const ProfileCard = (props) => {
                   </Button>
                 ) : (
                   <>
-                    {props.data?.followedList?.followed_users.find(
-                      (d) => d.userId === global.state.user.userId,
-                    ) ? (
-                      <Popconfirm
+                    {global.state.user.userId ? (
+                      props.data?.followedList?.followed_users.find((d) => d.userId === global.state.user.userId) 
+                        ? <Popconfirm
                         placement='bottomRight'
                         title='팔로우를 취소하시겠습니까?'
                         onConfirm={() => {
@@ -119,7 +118,7 @@ const ProfileCard = (props) => {
                                 followed_id: userId,
                                 following_id: global.state.user.userId,
                               });
-
+                    
                               props.onUpdate();
                             } catch (err) { }
                           })();
@@ -130,8 +129,7 @@ const ProfileCard = (props) => {
                         <Button type='primary' style={{ marginRight: '8px' }}>
                           팔로우
                         </Button>
-                      </Popconfirm>
-                    ) : (
+                    </Popconfirm> : (
                       <Button
                         type='primary'
                         style={{ marginRight: '8px' }}
@@ -150,10 +148,11 @@ const ProfileCard = (props) => {
                       >
                         팔로우하기
                       </Button>
-                    )}
-                    {global.state.user.userId ? <Button onClick={props.onOpenNote}>쪽지 보내기</Button> : null}=
+                      )
+                    ) : null}
                   </>
                 )}
+                {global.state.user.userId ? <Button onClick={props.onOpenNote}>쪽지 보내기</Button> : null}
               </div>
             </div>
           </Skeleton>

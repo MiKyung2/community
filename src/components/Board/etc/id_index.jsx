@@ -95,7 +95,7 @@ const Board = (props) => {
     };
 
     const onClickEdit = () => {
-      router.push(`/board/${queryId}/modify`);
+      router.push("/board/[id]/modify", `/board/${queryId}/modify`);
     }
 
     const onClickDelete = () => {
@@ -115,9 +115,9 @@ const Board = (props) => {
       state.modal.delete = false;
     }
 
-    const moveToWriterProfile = () => {
+    const moveToWriterProfile = (userId) => {
       // 작성자 아이디로 변수처리 필요!!
-      router.push(`/profile/20`);
+      router.push("profile/[userId]", `/profile/${userId}`);
     }
     
     return (
@@ -132,7 +132,7 @@ const Board = (props) => {
             <p>
               <strong>작성자: </strong> 
               <Tooltip title="프로필 이동">
-                <span className="hover" onClick={moveToWriterProfile}>{state.data.writer}</span>
+                <span className="hover" onClick={() => moveToWriterProfile(state.data.writer)}>{state.data.writer}</span>
               </Tooltip>
             </p>
         </div>

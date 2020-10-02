@@ -3,7 +3,7 @@ import { useLocalStore } from 'mobx-react-lite';
 import App from 'next/app';
 import Axios from "axios";
 import jwt from "jsonwebtoken";
-import CONFIG from '../utils/config';
+import CONFIG from '../utils/CONFIG';
 import instance from "../api/axiosWrapper";
 import { toJS } from "mobx";
 
@@ -28,7 +28,7 @@ const dispatch = ($) => {
   const login = (data) => {
     $.state.user.token = data?.token;
     $.state.user.userId = data?.userId;
-    $.state.user.role = data?.role;
+    $.state.user.role = data?.Role;
   };
 
   const logout = () => {

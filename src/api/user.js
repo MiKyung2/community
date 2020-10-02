@@ -1,5 +1,5 @@
-import instance from "./axiosWrapper";
-import CONFIG from "../utils/config";
+import instance from './axiosWrapper';
+import CONFIG from '../utils/CONFIG';
 
 const UserAPI = {
   get: async (payload) => {
@@ -12,7 +12,7 @@ const UserAPI = {
   },
   put: async (payload) => {
     try {
-      const res = await instance.put("user");
+      const res = await instance.put('user');
       return res;
     } catch (error) {
       CONFIG.ERROR(error);
@@ -20,7 +20,7 @@ const UserAPI = {
   },
   putPassword: async (data) => {
     try {
-      const res = await instance.put("user/password", data);
+      const res = await instance.put('user/password', data);
       return res;
     } catch (error) {
       CONFIG.ERROR(error);
@@ -29,7 +29,7 @@ const UserAPI = {
   followingList: async (payload) => {
     try {
       const res = await instance.get(
-        `user/following?following_id=${payload.userId}`
+        `user/following?following_id=${payload.userId}`,
       );
       return res.data.body.followingList;
     } catch (error) {
@@ -39,7 +39,7 @@ const UserAPI = {
   followerList: async (payload) => {
     try {
       const res = await instance.get(
-        `user/follower?followed_id=${payload.userId}`
+        `user/follower?followed_id=${payload.userId}`,
       );
       return res.data.body.followedList;
     } catch (error) {
@@ -48,7 +48,7 @@ const UserAPI = {
   },
   follow: async (data) => {
     try {
-      const res = await instance.post("user/follow", data);
+      const res = await instance.post('user/follow', data);
       return res;
     } catch (error) {
       CONFIG.ERROR(error);
@@ -56,12 +56,12 @@ const UserAPI = {
   },
   unfollow: async (data) => {
     try {
-      const res = await instance.put("user/unfollow", data);
+      const res = await instance.put('user/unfollow', data);
       return res;
     } catch (error) {
       CONFIG.ERROR(error);
     }
-  }
+  },
 };
 
 export default UserAPI;

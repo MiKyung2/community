@@ -19,8 +19,36 @@ const CreateBoard = (props) => {
 
         const router = useRouter();
         const boardCate = router.query.cate;
+        let boardType;
+        let boardName;
 
-        // console.log("create router", router.query.cate);
+        switch(boardCate) {
+            case "free":
+                boardType = "FREE"
+                boardName = "자유게시판"
+                break;
+            case "noti":
+                boardType = "NOTICE"
+                boardName = "공지사항"
+                break;
+            case "qna":
+                boardType = "QNA"
+                boardName = "Q&A"
+                break;
+            case "recruit":
+                boardType = "JOB_OFFER"
+                boardName = "구인게시판"
+                break;
+            case "resumes":
+                boardType = "JOB_SEARCH"
+                boardName = "구직게시판"
+                break;
+            case "secret":
+                boardType = "SECRET"
+                boardName = "비밀게시판"
+                break;
+            default:
+        }
 
         const state = useLocalStore(() => {
             return {
@@ -36,12 +64,11 @@ const CreateBoard = (props) => {
 
 
         // 글쓰는 유저 정보 가져오기
-        // const [cookies, _, removeCookie] = useCookies(['token', 'id']);
         const global = React.useContext(AppContext);
 
         useEffect(() => {
           const getUserInfo = async() => {
-            const userInfo = await UserAPI.get({id: global.state.user.userId});   
+            const userInfo = await UserAPI.get({ userId: encodeURI(global.state.user.userId) });   
             state.user = userInfo.body;
           };
           getUserInfo();
@@ -57,7 +84,8 @@ const CreateBoard = (props) => {
                 warning();
             } else {
                 const formData = {
-                    writer: state.user.nickname ? state.user.nickname : "unknown",
+                    board_type: boardType,
+                    writer: state.user.userId ? state.user.userId : "unknown",
                     // select: state.select,
                     title: state.title,
                     contents: state.contents,
@@ -108,6 +136,7 @@ const CreateBoard = (props) => {
         <>
 
         <WriteBoardForm 
+            boardName={boardName}
             boardType="새 글 작성"
             // boardSelect={state.select}
             boardTitle={state.title}

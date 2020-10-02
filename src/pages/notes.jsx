@@ -7,7 +7,7 @@ import cookie from 'cookie';
 import jwt from "jsonwebtoken";
 import { toJS } from "mobx";
 import { AppContext } from "../components/App/context";
-import CONFIG from '../utils/config';
+import CONFIG from '../utils/CONFIG';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -197,6 +197,7 @@ const Notes = (props) => {
               </Button>
             </Popconfirm>
           </div>
+          
           {/* <Input.Group compact style={{ width: "40%"}}>
             <Select defaultValue="title" style={{ width: '35%' }}>
               <Option value="title">제목</Option>
@@ -223,7 +224,7 @@ const Notes = (props) => {
               columns={receiveColumns}
               dataSource={state.receive.list}
               expandable={{
-                expandedRowRender: record => <p style={{ marginLeft: "110px" }}>{record.contents}</p>,
+                expandedRowRender: record => <p style={{ whiteSpace: "pre-line", marginLeft: "110px" }}>{record.contents}</p>,
                 expandRowByClick: true,
               }}
               onRow={(record, rowIndex) => {
@@ -289,6 +290,12 @@ Notes.getInitialProps = async (ctx) => {
   const token = ck.token ?? "";
   const decodedToken = jwt.decode(token.replace("Bearer ", ""));
   const user = decodedToken?.userId ?? "";
+  console.log("user : ", decodedToken);
+  // if (user === "") {
+  //   ctx.res.writeHead(302, { Location: "/accounts/signin" });
+  //   ctx.res.end();
+  //   return;
+  // }
 
   try {
     const receive = await NoteAPI.receiveList({ userId: encodeURI(user), page: 1, pageSize: 5});
@@ -296,7 +303,7 @@ Notes.getInitialProps = async (ctx) => {
       receive,
     };
   } catch (error) {
-    console.error("error : ", error);
+    return { error: true };
   }
 };
 

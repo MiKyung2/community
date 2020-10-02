@@ -7,14 +7,14 @@ export const boardColumns = [
       title: "제목",
       dataIndex: "title",
       key: "title",
-      render: title => <span id="title" className="hover">{title}</span>
+      render: title => <p id="title" className="hover list_title">{title}</p>
     }, {
       title: "작성자",
       dataIndex: "writer",
       key: "writer",
       render: writer => (
         <Tooltip title="프로필 이동">
-          <span id="writer" className="hover">{writer}</span>
+          <span id="writer" data-name={writer} className="hover">{writer}</span>
         </Tooltip>)
     }, {
       title: "좋아요",

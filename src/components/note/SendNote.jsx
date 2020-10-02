@@ -3,6 +3,9 @@ import { useObserver, useLocalStore } from "mobx-react";
 import NoteAPI from "../../api/note";
 import { AppContext } from "../App/context";
 import { toJS } from "mobx";
+import MultiInput from "../MultiInput/index";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import styled from "styled-components";
 
 const SendNote = (props) => {
   return useObserver(() => {
@@ -18,6 +21,9 @@ const SendNote = (props) => {
             value: props?.receiveUser?.userId || "" 
           },
         ],
+        follow: {
+          list: false,
+        }
       };
     });
 
@@ -51,7 +57,6 @@ const SendNote = (props) => {
       })();
     };
 
-    const revEmail = state.form[state.form.findIndex((d) => d.name === "revId")].value.split(" ");
     return (
       <div className={props.className}>
         <Modal
@@ -92,30 +97,22 @@ const SendNote = (props) => {
             layout="horizontal" 
             fields={state.form} 
             onFieldsChange={(changedFields, allFields) => {
-            }}
-            onValuesChange={(changedValues, allValues) => {
               state.form = allFields;
             }}
           >
-            {revId.map((d) => (
-              <textarea
-                className="" 
-                value={d}
-                onChange={(e) => { revId = e.target.value;  }}
-              >{d}</textarea>
-            ))}
-            <Form.Item name="revId">
-              <Input
-                style={{
-                  borderRadius: 0,
-                  borderTop: 0,
-                  borderRight: 0,
-                  borderLeft: 0,
-                }}
-                placeholder="받는 사람"
-              />
-            </Form.Item>
-
+            <div className="rev-wrap" style={{ position: "relative" }}>
+              {state.follow.list ? <div style={{ position: "absolute", left: "-92px", top: "0", background: "#fff", padding: "10px" }}>
+                <ul style={{ listStyle: "none", padding: "0" }}>
+                  <li style={{ cursor: "pointer" }} onClick={() => { state.follow.list = false; }}>리스트</li>
+                  <li>리스트</li>
+                  <li>리스트</li>
+                  <li>리스트</li>
+                </ul>
+              </div> : null}
+              <PlusCircleOutlined style={{ position: "absolute", left: "-15px", top: "4px", fontSize: "11px" }} onClick={() => { state.follow.list = !state.follow.list; }} />
+              <MultiInput onClick={() => { state.follow.list = !state.follow.list; }} />
+            </div>
+            
             <Form.Item name="title">
               <Input
                 style={{

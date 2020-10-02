@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
@@ -8,10 +8,10 @@ import { OuterWrapper } from '../../styles/styles';
 import AuthAPI from '../../api/auth';
 import { AppContext } from '../../components/App/context';
 import { inputRules } from '../../components/accounts/validator';
-import { toJS } from 'mobx';
 import FindPassModal from '../../components/accounts/FindPassModal';
 
-import SocialMeiaLoginCard from '../../components/accounts/SociaLoginCard';
+import GoogleBtn from '../../components/accounts/social/google';
+// import SocialMeiaLoginCard from '../../components/accounts/SociaLoginCard';
 
 const SignIn = (props) => {
   const global = React.useContext(AppContext);
@@ -30,15 +30,15 @@ const SignIn = (props) => {
 
     const [visible, setVisible] = React.useState(false);
 
-    const [_, setCookie] = useCookies(['token']);
-
-    // 사인 버튼 누르고 skeleton 추가
-    // 1.5 초 안에 반응 없을 때 잘 못 된 방식이라는 메시지 추가
+    const [cookies, setCookie] = useCookies(['access_token', 'refresh_token']);
 
     const onLogin = async () => {
       try {
         const resAuth = await AuthAPI.login(state);
         if (resAuth.data.code == 200) {
+          const { access_token, refresh_token } = resAuth.data.body;
+          setCookie('access_token', access_token);
+          setCookie('refresh_token', refresh_token);
           global.action.login(resAuth.data.body);
         }
       } catch (e) {
@@ -47,12 +47,17 @@ const SignIn = (props) => {
       }
     };
 
-    useEffect(() => {
-      if (global.state.user?.token) {
-        Router.push('/');
-        setCookie('token', global.state.user?.token);
+    const onKeyDown = (e) => {
+      if (e.keyCode === 13) {
+        onLogin();
       }
-    }, [global.state.user?.token]);
+    };
+
+    useEffect(() => {
+      if (cookies.access_token) {
+        Router.push('/');
+      }
+    }, [cookies.access_token]);
 
     const formItemMaker = (name) => (
       <Form.Item
@@ -78,46 +83,54 @@ const SignIn = (props) => {
               : (state.value.userId = e.target.value);
           }}
           autoComplete='off'
+          onKeyDown={onKeyDown}
         />
       </Form.Item>
     );
 
     return (
-      <OuterWrapper className={props.className}>
-        <Form
-          name='basic'
-          onFinish={() => {
-            onLogin();
-          }}
-        >
-          <div className='wrapper'>
-            {formItemMaker('userId')}
-            {formItemMaker('password')}
-            <Form.Item>
-              <Button className='button' type='primary' onClick={onLogin}>
-                로그인
-              </Button>
-            </Form.Item>
-            <Form.Item>
-              <Button
-                className='button'
-                onClick={() => router.push('/accounts/signup')}
-              >
-                회원가입
-              </Button>
-            </Form.Item>
-          </div>
-          <Row className='right lost_info_wrapper'>
-            <Col>
-              <p className='find_pass' onClick={() => setVisible(true)}>
-                비밀번호 찾기
-              </p>
-              <FindPassModal visible={visible} setVisible={setVisible} />
-            </Col>
-          </Row>
-        </Form>
-        <SocialMeiaLoginCard />
-      </OuterWrapper>
+      <>
+        {!cookies.access_token ? (
+          <OuterWrapper className={props.className}>
+            <Form
+              name='basic'
+              onFinish={() => {
+                onLogin();
+              }}
+            >
+              <div className='wrapper'>
+                {formItemMaker('userId')}
+                {formItemMaker('password')}
+                <Form.Item className='form-item'>
+                  <Button className='button' type='primary' onClick={onLogin}>
+                    로그인
+                  </Button>
+                </Form.Item>
+                <Form.Item className='form-item'>
+                  <GoogleBtn />
+                </Form.Item>
+                <Form.Item className='form-item'>
+                  <Button
+                    className='button'
+                    onClick={() => router.push('/accounts/signup')}
+                  >
+                    회원가입
+                  </Button>
+                </Form.Item>
+              </div>
+              <Row className='right lost_info_wrapper'>
+                <Col>
+                  <p className='find_pass' onClick={() => setVisible(true)}>
+                    비밀번호 찾기
+                  </p>
+                  <FindPassModal visible={visible} setVisible={setVisible} />
+                </Col>
+              </Row>
+            </Form>
+            {/* <SocialMeiaLoginCard /> */}
+          </OuterWrapper>
+        ) : null}
+      </>
     );
   });
 };

@@ -1,9 +1,10 @@
 import { EditOutlined } from '@ant-design/icons';
-import { Button, Row, Table, Modal, Tabs, Tooltip } from "antd";
+import { Button, Row, Table, Tabs } from "antd";
 import { useLocalStore, useObserver } from "mobx-react";
 import { toJS } from 'mobx';
 import { useRouter } from "next/router";
-import { useCookies } from 'react-cookie';
+import cookie from 'cookie';
+import jwt from "jsonwebtoken";
 
 import React, { useEffect } from "react";
 import styled from "styled-components";
@@ -13,43 +14,23 @@ import Modal_login from '../../../components/Board/Modals/Modal_login';
 import { sortLists } from '../../../components/Board/SortLists';
 import { boardColumns } from '../../../components/Board/BoardColumns';
 import { AppContext } from '../../../components/App/context';
+import { BOARD } from '../../../utils/enum';
+
 
 const { TabPane } = Tabs;
 
 const BoardPage = (props) => {
-    const global = React.useContext(AppContext);
-    const userToken = global.state.user.token;
-    const boardListProps = props.props;
-    const boardCate = props.props.cate;
-    let board_title;
-
-  switch(boardCate) {
-    case "free":
-      board_title = "자유게시판"
-      break;
-    case "noti":
-      board_title = "공지사항"
-      break;
-    case "qna":
-      board_title = "Q&A"
-      break;
-    case "recruit":
-      board_title = "구인게시판"
-    break;
-    case "resumes":
-      board_title = "구직게시판"
-    break;
-    case "secret":
-      board_title = "비밀게시판"
-      break;
-    default:
-  }
-
+    
   return useObserver(() => {
     const router = useRouter();
+    const global = React.useContext(AppContext);
+
+    const boardListProps = props.props;
+    const boardCate = props.props.cate;
+
     const state = useLocalStore(() => {
       return {
-        dataSource: boardListProps.listByDate.content,
+        dataSource: boardListProps?.listByDate?.content,
         page: {
           currentPage: 1,
           gb: 'title',
@@ -57,35 +38,40 @@ const BoardPage = (props) => {
           size: 20,
           sort: "date",
           tablePage: 1,
-          total: boardListProps.listByDate.totalElements
+          total: boardListProps?.listByDate?.totalElements
         },
         modal: {
           login: false
         },
-        boardTitle: board_title,
-        auth: {
-          member: false,
-          admin: false
-        }
       };
     });
 
     useEffect(() => {
-      const updateList = async () => await BoardAPI.list({
-        currentPage: 1,
-        gb: "title",
-        keyword: '',
-        size: 20,
-        sort: "date"
-      });
+      const updateList = async () => {
+        try {
+          const newList = await BoardAPI.list({
+          boardType: BOARD[router.query.cate].board_type,
+          currentPage: 1,
+          gb: "title",
+          keyword: '',
+          size: 20,
+          sort: "date"
+          });
+        state.dataSource = newList?.body.content;
+        state.page.sort = "date";
+        } catch(err) {
+          console.error(err);
+        }
+      };
       updateList();
 
-    }, []);
+    }, [router.query.cate]);
 
 
     const fetchListData = async () => {
       const { currentPage, keyword, gb, size, sort } = state.page;
       const nextData = await BoardAPI.list({
+        boardType: BOARD[router.query.cate].board_type,
         currentPage,
         keyword,
         gb,
@@ -104,7 +90,6 @@ const BoardPage = (props) => {
 
     const onChangeSort = (selectedFilter) => {
       // if (selectedFilter !== "newest" || selectedFilter !== "like" || selectedFilter !== "commentCnt" || selectedFilter !== "viewCount") return;
-
       // 정미경의 코멘트 : sortLists id를 서버에 주는 값과 똑같이 쓰면 코드가 간단해집니다.
       state.page.sort = selectedFilter;
       moveToFirstPage();
@@ -119,7 +104,11 @@ const BoardPage = (props) => {
           if(target === 'title') {
             moveToBoardPost(record.id);
           } else if (target === 'writer') {
-            moveToWriterProfile();
+          if(!global.state.user.token) {
+            state.modal.login = true;
+          } else {
+            moveToWriterProfile(e);
+          }
           } else {
             return;
           }
@@ -127,13 +116,15 @@ const BoardPage = (props) => {
       }
     }
 
+    // 각가 포스트로 이동
     const moveToBoardPost = (boardId) => {
-      router.push(`/board/${boardCate}/[id]`, `/board/${boardCate}/${boardId}`);
+      router.push(`/board/[cate]/[id]`, `/board/${boardCate}/${boardId}`);
     }
 
-    const moveToWriterProfile = () => {
-      // 작성자 아이디로 변수처리 필요!!
-      router.push(`/profile/20`);
+    // 작성자 프로필로 이동
+    const moveToWriterProfile = (e) => {
+      const writer = e.target.dataset.name;
+      router.push("/profile/[userId]", `/profile/${writer}`); 
     }
 
     // 페이지 변경
@@ -158,13 +149,11 @@ const BoardPage = (props) => {
     }
 
     // 유저 확인 & 새글쓰기로 이동
-    // const [cookies, _, removeCookie] = useCookies(['token', 'id']);
-    
     const onClickNewPostBtn = () => {
-      if(!userToken) {
+      if(!global.state.user.token) {
         state.modal.login = true;
       } else {
-        router.push(`/board/${boardCate}/articles/create`);
+        router.push("/board/[cate]/articles/create", `/board/${boardCate}/articles/create`);
       }
     };
 
@@ -177,17 +166,31 @@ const BoardPage = (props) => {
       router.push('/accounts/signin');
     }
 
+    const checkAdmin = () => {
+      const btn = <Button className="new_post_btn" type="primary" onClick={onClickNewPostBtn}>
+                      <EditOutlined />
+                      새글쓰기
+                  </Button>;
+
+      if(boardCate === 'recruit' || boardCate === 'noti') {
+        if(global.state.user.role === 'A') {
+          return btn;
+        } else {
+          return <div className="blank_post_btn"></div>;
+        }
+      } else {
+        return btn;
+      }
+    }
+
     return (
       <div className={props.className}>
 
         <Row justify="space-between">
-          <h1>{state.boardTitle}</h1>
+          <h1>{BOARD[router.query.cate].board_title}</h1>
 
           {/* "새글쓰기" 버튼 */}
-          <Button className="new_post_btn" type="primary" onClick={onClickNewPostBtn}>
-            <EditOutlined />
-            새글쓰기
-          </Button>
+          {checkAdmin()}
         </Row>
 
         {/* 로그인 메세지 */}
@@ -199,7 +202,7 @@ const BoardPage = (props) => {
 
         <Row align="top" justify="space-between" className="filter_container">
           {/* 최신순 | 좋아요순 | 댓글순 | 조회수순 */}
-          <Tabs onChange={onChangeSort}>
+          <Tabs defaultActiveKey="date" activeKey={state.page.sort} onChange={onChangeSort}>
             {sortLists && sortLists.map(list => (
               <TabPane tab={list.name} key={list.id} />
             ))}
@@ -232,16 +235,54 @@ const BoardPage = (props) => {
 // ++++++++++++++++++++++++++++++++++++++++++++
 
 BoardPage.getInitialProps = async(ctx) => {
+
+  const ck = cookie.parse(
+    (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
+  );
+  const token = ck.token ?? "";
+  const decodedToken = jwt.decode(token.replace("Bearer ", ""));
+  const user = decodedToken?.userId ?? "";
+  
+  if (user === "" && ctx.res && ctx.query.cate !== "free") {
+    ctx.res.writeHead(302, { Location: "/accounts/signin" });
+    ctx.res.end();
+    return;
+  }
+
+  const cate = ctx.query.cate;
+  let board_type;
+
+  switch(cate) {
+    case "free":
+      board_type = "FREE"
+      break;
+    case "noti":
+      board_type = "NOTICE"
+      break;
+    case "qna":
+      board_type = "QNA"
+      break;
+    case "recruit":
+      board_type = "JOB_OFFER"
+    break;
+    case "resumes":
+      board_type = "JOB_SEARCH"
+    break;
+    case "secret":
+      board_type = "SECRET"
+      break;
+  }
   
   // 최신순
   const boardListByDate = await BoardAPI.list({
+    boardType: board_type,
     currentPage: 1,
     gb: "title",
     keyword: '',
     size: 20,
     sort: "date"
   });
-  
+
   return {
     props: {
       listByDate: boardListByDate.body,
@@ -251,30 +292,13 @@ BoardPage.getInitialProps = async(ctx) => {
 
 }
 
-// export const getStaticProps = async (ctx) => {
-
-//     console.log("board test-ctx:", ctx);
-
-//   // 최신순
-//   const boardListByDate = await BoardAPI.list({
-//     currentPage: 1,
-//     gb: "title",
-//     keyword: '',
-//     size: 20,
-//     sort: "date"
-//   });
-
-//   return {
-//     props: {
-//       listByDate: boardListByDate.body,
-//     },
-//   };
-// };
-
 export default styled(BoardPage)`
   & {
     .new_post_btn {
       margin-bottom: 40px;
+    }
+    .blank_post_btn {
+      margin-bottom: 60px;
     }
     .filter_container {
       margin-bottom: 20px;
@@ -284,6 +308,12 @@ export default styled(BoardPage)`
         cursor: pointer;
         color: #1890ff;
       }
+    }
+    .list_title {
+      /* border: 1px solid red; */
+      max-width: 300px;
+      max-height: 20px;
+      overflow: hidden;
     }
   }
 `;

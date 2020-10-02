@@ -2,30 +2,44 @@ const routes = [
   {
     name: "Home",
     url: "/",
+    as: "/",
+    role: ''
   },
   {
     name: "자유게시판",
-    url: "/board/free",
+    url: "/board/[cate]",
+    as: "/board/free",
+    role: ''
   },
   {
     name: "공지사항",
-    url: "/board/noti",
+    url: "/board/[cate]",
+    as: "/board/noti",
+    role: 'Y'
   },
   {
     name: "Q&A",
-    url: "/board/qna",
+    url: "/board/[cate]",
+    as: "/board/qna",
+    role: 'Y'
   },
   {
     name: "구인",
-    url: "/board/recruit",
+    url: "/board/[cate]",
+    as: "/board/recruit",
+    role: 'Y'
   },
   {
     name: "구직",
-    url: "/board/resumes",
+    url: "/board/[cate]",
+    as: "/board/resumes",
+    role: 'Y'
   },
   {
     name: "비밀게시판",
-    url: "/board/secret",
+    url: "/board/[cate]",
+    as: "/board/secret",
+    role: 'A'
   },
   // {
   //   name: "로그인",
@@ -34,3 +48,4 @@ const routes = [
 ];
 
 export default routes;
+

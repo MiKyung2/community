@@ -10,21 +10,21 @@ import ReactHtmlParser from 'react-html-parser';
 import styled from 'styled-components';
 
 import BoardAPI from "../../../../api/board";
-// import BoardAPI from "../../../../api/board";
 import UserAPI from "../../../../api/user";
 import CommentAPI from "../../../../api/comment";
 import Comments from "../../../../components/Board/Comment/Comments";
 import { formatDate } from '../../../../utils/dateFormatter';
 import { numFormatter } from '../../../../utils/numFormatter';
-import Modal_cancel from '../../../../components/Board/Modals/Modal_cancel';
+// import { checkAdmin_writer } from '../../../../components/Board/checkAdmin_writer';
+import Modal_delete from '../../../../components/Board/Modals/Modal_delete';
 
 const Board = (props) => {
   
   return useObserver(() => {
     const router = useRouter();
-
     const global = React.useContext(AppContext);
-    const userToken = global.state.user.token;
+
+    console.log("게시글 global-al:", toJS(global.state))
 
     const boardData = props.board.body;
     const boardCate = props.boardCate
@@ -51,14 +51,12 @@ const Board = (props) => {
     });
 
 
-    // 유저 정보
-    // const [cookies, _, removeCookie] = useCookies(['token', 'id']);
-
     useEffect(() => {
+      // 유저 정보
       const getUserInfo = async() => {
-        if(!userToken) return;
-          const userInfo = await UserAPI.get({userId: global.state.user.userId}); 
-          state.user = userInfo?.body.nickname ? userInfo.body.nickname : '';
+        if(!global.state.user.token) return;
+          const userInfo = await UserAPI.get({ userId: encodeURI(global.state.user.userId) }); 
+          state.user = userInfo?.body.userId ? userInfo.body.userId : '';
           state.login = true;
       };
       getUserInfo();
@@ -76,7 +74,7 @@ const Board = (props) => {
     setIsWriter();
 
     const onClickBackToList = () => {
-      router.push(`/board/${boardCate}`);
+      router.push("/board/[cate]", `/board/${boardCate}`);
     }
 
     const onClickLike = async () => {
@@ -100,7 +98,7 @@ const Board = (props) => {
     };
 
     const onClickEdit = () => {
-      router.push(`/board/${boardCate}/${boardId}/modify`);
+      router.push("/board/[cate]/[id]/modify", `/board/${boardCate}/${boardId}/modify`);
     }
 
     const onClickDelete = () => {
@@ -113,22 +111,50 @@ const Board = (props) => {
 
     const handleOk_DeleteModal = () => {
       const boardDeleteRes = async () => await BoardAPI.delete({
-        id: queryId
+        id: boardId
       });
       boardDeleteRes();
-      router.push(`/board/${boardCate}`);
+      router.push("/board/[cate]", `/board/${boardCate}`);
       state.modal.delete = false;
     }
 
+    // 작성자 프로필로 이동
     const moveToWriterProfile = () => {
-      // 작성자 아이디로 변수처리 필요!!
-      router.push(`/profile/20`);
+      if (global.state.user.role === 'A' || state.login) {
+        router.push("/profile/[userId]", `/profile/${state.data.writer}`);
+      } else {
+        return;
+      }
+    }
+
+    // 어드민 확인
+    const checkAdmin_btn = () => {
+      const btn = <Row>
+      <Button type="text" onClick={onClickEdit}>수정</Button>
+      <Button type="text" onClick={onClickDelete}>삭제</Button>
+      </Row>;
+
+      if (global.state.user.role === 'A' || state.isWriter) {
+        return btn;
+      } else {
+        return null;
+      }
+    } 
+
+    const checkAdmin_writer = () => {
+      let title;
+      if(global.state.user.role === 'A' || state.login) {
+        title = "프로필 이동"
+      } else {
+        title = "로그인 해 주세요";
+      }
+      return title;
     }
     
     return (
       <div className={props.className}>
         <Row justify="space-between" className="header_top">
-          <h2>test-{state.data.title}</h2>
+          <h2>{state.data.title}</h2>
           <Button type="default" onClick={onClickBackToList}>글 목록</Button>
         </Row>
 
@@ -136,7 +162,7 @@ const Board = (props) => {
           <span><strong>작성일:</strong> {formatDate(state.data.createdDate)}</span>
             <p>
               <strong>작성자: </strong> 
-              <Tooltip title="프로필 이동">
+              <Tooltip title={checkAdmin_writer()}>
                 <span className="hover" onClick={moveToWriterProfile}>{state.data.writer}</span>
               </Tooltip>
             </p>
@@ -159,12 +185,7 @@ const Board = (props) => {
             </Row>
 
             {/* 수정 & 삭제 */}
-            {state.isWriter && 
-              <Row>
-                <Button type="text" onClick={onClickEdit}>수정</Button>
-                <Button type="text" onClick={onClickDelete}>삭제</Button>
-              </Row>
-            }
+            {checkAdmin_btn()}
           </Row>
 
           {/* 게시글 내용 */}
@@ -175,14 +196,15 @@ const Board = (props) => {
         {/* 댓글 */}
         <div className="comment-section">
           <h3>댓글</h3>
-          <Comments queryId={boardId} data={props.comments.body} />
+          {/* <Comments queryId={boardId} data={props.comments.body} isAdmin={test_level} /> */}
+          <Comments queryId={boardId} data={props.comments.body} isAdmin={global.state.user.role} />
         </div>
 
         {/* 삭제 확인 메세지 */}
-        <Modal_cancel
-          isCancel={state.modal.delete}
-          handleOk={handleOk_DeleteModal}
-          handleCancel={handleCancel_DeleteModal}
+        <Modal_delete 
+          isDelete={state.modal.delete} 
+          handleOk={handleOk_DeleteModal} 
+          handleCancel={handleCancel_DeleteModal} 
         />
       </div>
     );
@@ -216,7 +238,8 @@ export default styled(Board)`
     .header_top {
       margin-bottom: 60px;
       > h2 {
-        margin-bottom: 40px;
+        /* border: 1px solid red; */
+        max-width: 700px;
       }
     }
     .header_bottom {

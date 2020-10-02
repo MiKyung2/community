@@ -1,7 +1,7 @@
 
 export const sortLists = [
     {
-      id: 'newest',
+      id: 'date',
       name: '최신순',
     },
     {

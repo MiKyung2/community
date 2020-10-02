@@ -1,5 +1,5 @@
 import axios from 'axios';
-import CONFIG from '../utils/config';
+import CONFIG from '../utils/CONFIG';
 import { message } from "antd";
 
 const instance = axios.create({
@@ -7,8 +7,8 @@ const instance = axios.create({
 });
 
 export const handleSuccess = (response) => {
-  CONFIG.INFO(`${response.data.code}: ${response.data.msg}`)
-  CONFIG.INFO(response.data.body);
+  // CONFIG.INFO(`${response.data.code}: ${response.data.msg}`)
+  // CONFIG.INFO(response.data.body);
   return response;
 };
 
