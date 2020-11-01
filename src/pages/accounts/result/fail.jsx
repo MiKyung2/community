@@ -1,6 +1,8 @@
+import * as React from "react";
 import styled from 'styled-components';
 import {useRouter} from 'next/router';
 import { Result, Button } from 'antd';
+import { PropTypes } from "mobx-react";
 
 
 const SignUpFail = (props) => {
@@ -38,6 +40,10 @@ const SignUpFail = (props) => {
     </div>
   )
 }
+
+SignUpFail.propTypes = {
+    className: PropTypes.string
+  };
 
 export default styled(SignUpFail)`
     &{

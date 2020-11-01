@@ -1,3 +1,4 @@
+import * as React from "react";
 import 'antd/dist/antd.css';
 import 'react-virtualized/styles.css';
 import Head from 'next/head';
@@ -8,11 +9,10 @@ import GlobalStyle from '../styles/global';
 import { AppContext } from '../components/App/context';
 import useApp from '../hooks/app';
 import { observerBatching } from 'mobx-react-lite';
-import { CookiesProvider, Cookies } from 'react-cookie';
-import NextApp, { AppContext as NextAppContext } from 'next/app';
+import { CookiesProvider } from 'react-cookie';
+import NextApp from 'next/app';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
-import CONFIG from '../utils/CONFIG';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import { useRouter } from 'next/router';
@@ -34,21 +34,21 @@ function App(props) {
         stompClient.connect({}, () => {
           stompClient.subscribe(
             '/socket/sub/note/' + global.state.user.userId,
-            (data) => {
+            () => {
               global.state.alarm.note = true;
             },
           );
 
           stompClient.subscribe(
             '/socket/sub/board/' + global.state.user.userId,
-            (event) => {
+            () => {
               global.state.alarm.board = true;
             },
           );
 
           stompClient.subscribe(
             '/socket/sub/profile/' + global.state.user.userId,
-            (event) => {
+            () => {
               global.state.alarm.profile = true;
             },
           );
@@ -91,7 +91,7 @@ function App(props) {
           {/* <script
             type='text/javascript'
             src='https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js'
-            charset='utf-8'
+            charSet='utf-8'
           ></script> */}
           <script src="https://cdn.ckeditor.com/4.15.0/standard-all/ckeditor.js"></script>
         </Head>

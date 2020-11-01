@@ -8,7 +8,7 @@ const WithDraw = () => {
   const router = useRouter();
   // id to userId
   const { id } = router.query;
-  const [_, __, removeCookie] = useCookies(['token', 'id']);
+  const [ removeCookie] = useCookies(['token', 'id']);
 
   const withdraw = async () => {
     try {
@@ -36,7 +36,7 @@ const WithDraw = () => {
         <>
           <h3>탈퇴시 회원정보는 사라집니다.</h3>
           <h3>
-            '정말 <span style={{ color: 'crimson' }}>탈퇴</span>하시겠습니까?'
+            &apos;정말 <span style={{ color: 'crimson' }}>탈퇴</span>하시겠습니까?&apos;
           </h3>
         </>
       ),
@@ -55,7 +55,7 @@ const WithDraw = () => {
       <nav style={{ marginBottom: 20 }}>
         <li>
           회원 탈퇴 일로부터 계정과 닉네임을 포함한 계정
-          정보(아이디/이메일/닉네임)는 '개인 정보 보호 정책'에 따라 60일간
+          정보(아이디/이메일/닉네임)는 &apos;개인 정보 보호 정책&apos;에 따라 60일간
           보관(잠김) 되며, 60일이 경과된 후에는 모든 개인 정보는 완전히 삭제되며
           더 이상 복구할 수 없게 됩니다.
         </li>

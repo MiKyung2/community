@@ -2,17 +2,12 @@ import instance from './axiosWrapper';
 
 const AuthAPI = {
   signup: async (payload) => {
-    try {
-      const res = await instance.post('user', {
-        nickname: '',
-        userId: payload.value.userId,
-        email: payload.value.email,
-        password: payload.value.password1,
-      });
-      return res;
-    } catch (error) {
-      throw error;
-    }
+    return await instance.post('user', {
+      nickname: '',
+      userId: payload.value.userId,
+      email: payload.value.email,
+      password: payload.value.password1,
+    });
   },
 
   login: async (payload) => {
@@ -30,12 +25,7 @@ const AuthAPI = {
     );
   },
   logout: async (userId) => {
-    try {
-      const res = await instance.post(`user/logout?userId=${userId}`);
-      return res;
-    } catch (error) {
-      throw error;
-    }
+    return await instance.post(`user/logout?userId=${userId}`);
   },
   check_userId: async (userId) => {
     try {
@@ -116,12 +106,7 @@ const AuthAPI = {
     }
   },
   withdraw: async (userId) => {
-    try {
-      const res = await instance.delete(`user/${userId}`);
-      return res;
-    } catch (error) {
-      throw error;
-    }
+    return await instance.delete(`user/${userId}`);
   },
 };
 

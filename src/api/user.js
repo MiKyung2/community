@@ -10,7 +10,7 @@ const UserAPI = {
       CONFIG.ERROR(error);
     }
   },
-  put: async (payload) => {
+  put: async () => {
     try {
       const res = await instance.put('user');
       return res;

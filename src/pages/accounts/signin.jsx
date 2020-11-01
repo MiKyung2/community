@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useCookies } from 'react-cookie';
-import { Form, Input, Button, Checkbox, Row, Col, message, Card } from 'antd';
+import { Form, Input, Button, Row, Col, message } from 'antd';
 import { OuterWrapper } from '../../styles/styles';
 import AuthAPI from '../../api/auth';
 import { AppContext } from '../../components/App/context';
@@ -11,7 +10,6 @@ import { inputRules } from '../../components/accounts/validator';
 import FindPassModal from '../../components/accounts/FindPassModal';
 
 import GoogleBtn from '../../components/accounts/social/google';
-// import SocialMeiaLoginCard from '../../components/accounts/SociaLoginCard';
 
 const SignIn = (props) => {
   const global = React.useContext(AppContext);

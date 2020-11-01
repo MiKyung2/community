@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
 import styled from 'styled-components';
-import { Form, Input, Button, Checkbox, Row, Col, message } from 'antd';
+import { Form, Input, Button, Checkbox, message } from 'antd';
 import AuthAPI from '../../api/auth';
 import { inputRules, regExp } from '../../components/accounts/validator';
 import PolicyModal from '../../components/accounts/PolicyModal';

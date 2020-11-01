@@ -1,16 +1,14 @@
 import React, { useEffect } from 'react';
-import Link from 'next/link';
-import Router, { useRouter } from 'next/router';
+import Router from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useCookies } from 'react-cookie';
-import { Form, Input, Button, Checkbox, Row, Col, message } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import styled from 'styled-components';
 import AuthAPI from '../../api/auth';
 import { AppContext } from '../../components/App/context';
 
 const FindId = (props) => {
   const global = React.useContext(AppContext);
-  const router = useRouter();
   return useObserver(() => {
     const state = useLocalStore(() => {
       return {
@@ -22,7 +20,7 @@ const FindId = (props) => {
         },
       };
     });
-    const [_, setCookie] = useCookies(['token', 'id']);
+    const [setCookie] = useCookies(['token', 'id']);
 
     const onLogin = async () => {
       const resAuth = await AuthAPI.login(state);

@@ -1,5 +1,7 @@
+import * as React from "react";
 import styled from 'styled-components';
 import { Result } from 'antd';
+import { PropTypes } from "mobx-react";
 
 const SignUpComplete = (props) => {
   const title = '회원가입이 완료되었습니다.';
@@ -18,6 +20,10 @@ const SignUpComplete = (props) => {
       <Result title={title} subTitle={subTitle} />
     </div>
   );
+};
+
+SignUpComplete.propTypes = {
+  className: PropTypes.string
 };
 
 export default styled(SignUpComplete)`

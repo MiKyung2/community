@@ -1,5 +1,6 @@
+import * as React from "react";
 import styled from 'styled-components';
-import { Row, Col, Card } from 'antd';
+import { Row, Col } from 'antd';
 import { useObserver } from 'mobx-react';
 import { useRouter } from 'next/router';
 import { AppContext } from '../components/App/context';

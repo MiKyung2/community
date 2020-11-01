@@ -1,9 +1,7 @@
-import { DislikeFilled, DislikeOutlined, EyeOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons';
-import { Button, Modal, Row, Tooltip } from 'antd';
+import { DislikeOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
+import { Button, Row, Tooltip } from 'antd';
 import { useLocalStore, useObserver } from 'mobx-react';
-import {toJS} from 'mobx';
 import { useRouter } from 'next/router';
-import { useCookies } from 'react-cookie';
 import { AppContext } from '../../../../components/App/context';
 import React, {useEffect} from 'react';
 import ReactHtmlParser from 'react-html-parser';

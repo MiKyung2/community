@@ -1,6 +1,9 @@
+import * as React from "react";
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { Result, Button } from 'antd';
+import { PropTypes } from "mobx-react";
+
 const SignUpSuccess = (props) => {
   const router = useRouter();
 
@@ -40,6 +43,10 @@ const SignUpSuccess = (props) => {
     </div>
   );
 };
+
+SignUpSuccess.propTypes = {
+  className: PropTypes.string
+}
 
 export default styled(SignUpSuccess)`
   & {
