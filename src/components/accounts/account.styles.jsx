@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Card } from 'antd';
 
-export const StyledSocialCard = styled(Card)`
+const StyledSocialCard = styled(Card)`
   & {
     margin: auto auto;
     width: 300px;
@@ -42,3 +42,5 @@ export const StyledSocialCard = styled(Card)`
     }
   }
 `;
+
+export { StyledSocialCard as default };

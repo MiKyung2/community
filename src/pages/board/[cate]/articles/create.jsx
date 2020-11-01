@@ -1,12 +1,9 @@
 import React, {useEffect} from 'react';
-import Axios from 'axios';
 import { useObserver, useLocalStore } from 'mobx-react';
-import {toJS} from 'mobx';
 import {useRouter} from 'next/router';
 import BoardAPI from "../../../../api/board";
 import UserAPI from "../../../../api/user";
 import { Modal } from 'antd';
-import { useCookies } from 'react-cookie';
 import cookie from 'cookie';
 import jwt from "jsonwebtoken";
 
@@ -15,7 +12,7 @@ import WriteBoardForm from '../../../../components/Board/WriteBoardForm';
 import { AppContext } from '../../../../components/App/context';
 import Modal_cancel from '../../../../components/Board/Modals/Modal_cancel';
 
-const CreateBoard = (props) => {
+const CreateBoard = () => {
     return useObserver(() => {
 
         const router = useRouter();
@@ -107,7 +104,7 @@ const CreateBoard = (props) => {
             })
         }
 
-        const onCancel = (e) => {
+        const onCancel = () => {
             state.modal.cancel = true;
         }	
 
@@ -131,9 +128,7 @@ const CreateBoard = (props) => {
         const onChangeEditor = (e) => {
             const dataFromEditor =  e.editor.getData();
             state.contents = dataFromEditor;
-        }
-    
-       			      
+        }	      
     
     
       return (

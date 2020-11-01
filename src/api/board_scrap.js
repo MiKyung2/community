@@ -1,4 +1,4 @@
-import instance from "./axiosWrapper";
+import instance from './axiosWrapper';
 
 const BoardScrapAPI = {
   get: async (payload) => {
@@ -8,24 +8,13 @@ const BoardScrapAPI = {
     } catch (error) {
       console.error(error);
     }
+    return false;
   },
   post: async (payload) => {
-    try {
-      const res = await instance.post(`board/scrap`, payload.data);
-      return res;
-    } catch (error) {
-      // throw error;
-      console.error(error);
-    }
+    return instance.post('board/scrap', payload.data);
   },
   delete: async (payload) => {
-    try {
-      const res = await instance.post('board/scrap/delete', payload.data);
-      return res;
-    } catch (error) {
-      // throw error;
-      console.error(error);
-    }
+    return instance.post('board/scrap/delete', payload.data);
   },
 };
 

@@ -1,19 +1,21 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { useCookies } from 'react-cookie';
-import { Card, Button, Modal, message } from 'antd';
+import {
+  Card, Button, Modal, message,
+} from 'antd';
 import AuthAPI from '../../api/auth';
 
 const WithDraw = () => {
   const router = useRouter();
   // id to userId
   const { id } = router.query;
-  const [ removeCookie] = useCookies(['token', 'id']);
+  const [removeCookie] = useCookies(['token', 'id']);
 
   const withdraw = async () => {
     try {
       const resAuth = await AuthAPI.withdraw(id);
-      if (resAuth.data.code == '200') {
+      if (resAuth.data.code === '200') {
         message.info('회원 탈퇴 처리되었습니다.');
         setTimeout(() => {
           removeCookie('token');
@@ -22,21 +24,25 @@ const WithDraw = () => {
         setTimeout(() => {
           router.reload();
         }, 100);
-        router.push('/');
+        return router.push('/');
       }
     } catch (e) {
       return message.error(e.response.data.msg);
     }
+
+    return true;
   };
 
-  const showWithdrawModal = (e) => {
+  const showWithdrawModal = () => {
     return Modal.confirm({
       title: '회원탈퇴',
       content: (
         <>
           <h3>탈퇴시 회원정보는 사라집니다.</h3>
           <h3>
-            &apos;정말 <span style={{ color: 'crimson' }}>탈퇴</span>하시겠습니까?&apos;
+            &apos;정말
+            <span style={{ color: 'crimson' }}>탈퇴</span>
+            하시겠습니까?&apos;
           </h3>
         </>
       ),
@@ -69,8 +75,8 @@ const WithDraw = () => {
         </li>
       </nav>
       <div>
-        <Button onClick={() => router.push('/profile/edit')}>아니오</Button>
-        <Button type='danger' onClick={showWithdrawModal}>
+        <Button onClick={() => { router.push('/profile/edit'); }}>아니오</Button>
+        <Button type="danger" onClick={showWithdrawModal}>
           예, 탈퇴하겠습니다
         </Button>
       </div>

@@ -1,16 +1,15 @@
-import instance from "./axiosWrapper";
+import instance from './axiosWrapper';
 
 const CommentAPI = {
   get: async (payload) => {
     try {
-      const {id} = payload;
-      const res = await instance.get(
-        `comment/page/${id}`
-        );
+      const { id } = payload;
+      const res = await instance.get(`comment/page/${id}`);
       return res.data;
     } catch (error) {
       console.error(error);
     }
+    return false;
   },
   post: async (payload) => {
     try {
@@ -19,6 +18,7 @@ const CommentAPI = {
     } catch (error) {
       console.error(error);
     }
+    return false;
   },
   event: async (payload) => {
     try {
@@ -27,6 +27,7 @@ const CommentAPI = {
     } catch (error) {
       console.error(error);
     }
+    return false;
   },
   delete: async (payload) => {
     try {
@@ -35,6 +36,7 @@ const CommentAPI = {
     } catch (error) {
       console.error(error);
     }
+    return false;
   },
 };
 

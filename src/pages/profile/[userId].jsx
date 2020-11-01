@@ -8,12 +8,12 @@ import { AppContext } from '../../components/App/context';
 import SendNote from '../../components/note/SendNote';
 import ProfileCard from '../../components/profile/ProfileCard';
 import ProfileTabList from '../../components/profile/ProfileList';
-const { TabPane } = Tabs;
-import { toJS } from 'mobx';
 import FollowTab from '../../components/profile/FollowTab';
 import BoardRecentAPI from '../../api/board_recent';
-import MyBoardAPI from "../../api/board_my";
-import BoardScrapAPI from "../../api/board_scrap";
+import MyBoardAPI from '../../api/board_my';
+import BoardScrapAPI from '../../api/board_scrap';
+
+const { TabPane } = Tabs;
 
 const ProfilePage = (props) => {
   return useObserver(() => {
@@ -63,8 +63,7 @@ const ProfilePage = (props) => {
     const getProfile = async () => {
       try {
         const profileRes = await UserAPI.get({ userId: encodeURI(router.query.userId) });
-        if (profileRes.code != 200) return;
-        
+        if (profileRes.code !== 200) return;
         state.profile = profileRes.body;
       } catch (error) {
         console.error(error);
@@ -98,26 +97,22 @@ const ProfilePage = (props) => {
         state.follow.loading = false;
       }
     };
-  
+
     const getBoardRecent = async () => {
       state.tab.recent.loading = true;
       try {
         const boardRecentRes = await BoardRecentAPI.get({ userId: router.query.userId });
         state.tab.recent.list = boardRecentRes.body;
-      } catch (e) {
-
       } finally {
         state.tab.recent.loading = false;
       }
     };
-  
+
     const getMyBoard = async () => {
       state.tab.board.loading = true;
       try {
         const boardMyBoardRes = await MyBoardAPI.get({ userId: router.query.userId });
         state.tab.board.list = boardMyBoardRes.body;
-      } catch (e) {
-
       } finally {
         state.tab.board.loading = false;
       }
@@ -126,12 +121,12 @@ const ProfilePage = (props) => {
     const getScrap = async () => {
       state.tab.scrap.loading = true;
       try {
-        const boardScrapBoardRes = await BoardScrapAPI.get({ userId: router.query.userId, data: { currentPage: state.tab.scrap.page, size: 10} });
+        const boardScrapBoardRes = await BoardScrapAPI.get({
+          userId: router.query.userId, data: { currentPage: state.tab.scrap.page, size: 10 },
+        });
         state.tab.scrap.list = boardScrapBoardRes.body.content;
-        state.tab.scrap.page = boardScrapBoardRes.body.totalElements 
-        state.tab.scrap.max_page = boardScrapBoardRes.body.totalPages 
-      } catch (e) {
-
+        state.tab.scrap.page = boardScrapBoardRes.body.totalElements;
+        state.tab.scrap.max_page = boardScrapBoardRes.body.totalPages;
       } finally {
         state.tab.scrap.loading = false;
       }
@@ -149,17 +144,17 @@ const ProfilePage = (props) => {
 
     React.useEffect(() => {
       switch (state.tab.active) {
-        case "recent":
-          getBoardRecent();
-          return;
-
-        case "board":
+        case 'board':
           getMyBoard();
           return;
 
-        case "scrap":
+        case 'scrap':
           getScrap();
           return;
+
+        case 'recent':
+        default:
+          getBoardRecent();
       }
     }, [state.tab.active]);
 
@@ -206,21 +201,21 @@ const ProfilePage = (props) => {
 
         {/* 게시물 탭 */}
         <Tabs
-          large='true'
-          type='card'
+          large="true"
+          type="card"
           defaultActiveKey={state.tab.active}
           activeKey={state.tab.active}
           onChange={(active) => {
             state.tab.active = active;
           }}
         >
-          <TabPane tab='최근 활동' key='recent'>
+          <TabPane tab="최근 활동" key="recent">
             <ProfileTabList loading={state.tab.recent.loading} dataSource={state.tab.recent.list} />
           </TabPane>
-          <TabPane tab='내가 쓴 게시물' key='board'>
+          <TabPane tab="내가 쓴 게시물" key="board">
             <ProfileTabList loading={state.tab.board.loading} dataSource={state.tab.board.list} />
           </TabPane>
-          <TabPane tab='스크랩' key='scrap'>
+          <TabPane tab="스크랩" key="scrap">
             <ProfileTabList loading={state.tab.scrap.loading} dataSource={state.tab.scrap.list} />
           </TabPane>
         </Tabs>

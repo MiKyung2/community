@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
 import styled from 'styled-components';
-import { Form, Input, Button, Checkbox, message } from 'antd';
+import {
+  Form, Input, Button, Checkbox, message,
+} from 'antd';
 import AuthAPI from '../../api/auth';
 import { inputRules, regExp } from '../../components/accounts/validator';
 import PolicyModal from '../../components/accounts/PolicyModal';
@@ -68,11 +70,7 @@ const Signup = (props) => {
       if (confirm && isUserIdUnique && isEmailUnique) {
         state.loading = true;
         if (
-          state.value.userId &&
-          // state.value.id &&
-          state.value.email &&
-          state.value.password1 &&
-          state.value.password2
+          state.value.userId && state.value.email && state.value.password1 && state.value.password2
         ) {
           const resAuth = await AuthAPI.signup(state);
           if (resAuth.data.code === '200') {
@@ -100,71 +98,71 @@ const Signup = (props) => {
     if (state.loading) {
       return (
         <div className={props.className}>
-          <h1 className='title'>Loading...</h1>
-          <h3 className='title'>3~4초의 시간이 소요됩니다.</h3>
+          <h1 className="title">Loading...</h1>
+          <h3 className="title">3~4초의 시간이 소요됩니다.</h3>
         </div>
       );
     }
 
     return (
       <div className={props.className}>
-        <h1 className='title'>LOGO</h1>
+        <h1 className="title">LOGO</h1>
         <Form
           form={form}
-          onFinish={() => onSignup()}
+          onFinish={() => { onSignup(); }}
           onFinishFailed={() => {
           }}
         >
-          <div className='wrapper'>
+          <div className="wrapper">
             <Form.Item
-              className='center form-item'
+              className="center form-item"
               name={['user', 'userId']}
               rules={inputRules.userId}
             >
               <div style={{ display: 'flex' }}>
                 <Input
-                  className='input'
-                  type='text'
-                  name='email'
-                  placeholder='유저 이이디를 입력해주세요'
+                  className="input"
+                  type="text"
+                  name="email"
+                  placeholder="유저 이이디를 입력해주세요"
                   style={{ width: 200 }}
                   value={state.value.userId}
                   onChange={(e) => {
                     state.value.userId = e.target.value;
                   }}
-                  autoComplete='off'
+                  autoComplete="off"
                 />
                 <Button
-                  className='button-id'
-                  type='primary'
-                  onClick={() => checkUserIdDuplication()}
+                  className="button-id"
+                  type="primary"
+                  onClick={() => { checkUserIdDuplication(); }}
                 >
                   중복 확인
                 </Button>
               </div>
             </Form.Item>
             <Form.Item
-              className='center form-item'
+              className="center form-item"
               name={['user', 'email']}
               rules={inputRules.email}
             >
               <div style={{ display: 'flex' }}>
                 <Input
-                  className='input'
-                  type='text'
-                  name='email'
-                  placeholder='이메일을 입력해주세요'
+                  className="input"
+                  type="text"
+                  name="email"
+                  placeholder="이메일을 입력해주세요"
                   style={{ width: 200 }}
                   value={state.value.email}
                   onChange={(e) => {
                     state.value.email = e.target.value;
                   }}
-                  autoComplete='off'
+                  autoComplete="off"
                 />
                 <Button
-                  className='button-id'
-                  type='primary'
-                  onClick={() => checkEmailDuplication()}
+                  className="button-id"
+                  type="primary"
+                  onClick={() => { checkEmailDuplication(); }}
                 >
                   중복 확인
                 </Button>
@@ -172,39 +170,39 @@ const Signup = (props) => {
             </Form.Item>
 
             <Form.Item
-              className='center form-item'
+              className="center form-item"
               name={['password']}
               rules={inputRules.password}
               hasFeedback
-              autoComplete='off'
+              autoComplete="off"
             >
               <Input
-                className='input'
-                type='password'
-                placeholder='영문, 숫자, 특수문자 포함 8자리 이상'
+                className="input"
+                type="password"
+                placeholder="영문, 숫자, 특수문자 포함 8자리 이상"
                 value={state.value.password1}
                 onChange={(e) => {
                   state.value.password1 = e.target.value;
                 }}
-                autoComplete='off'
+                autoComplete="off"
               />
             </Form.Item>
             <Form.Item
-              className='center form-item'
-              name='confirm'
+              className="center form-item"
+              name="confirm"
               dependencies={['password']}
               hasFeedback
               rules={inputRules.passwordCheck}
             >
               <Input
-                className='input'
-                type='password'
-                placeholder='비밀번호를 확인'
+                className="input"
+                type="password"
+                placeholder="비밀번호를 확인"
                 value={state.value.password2}
                 onChange={(e) => {
                   state.value.password2 = e.target.value;
                 }}
-                autoComplete='off'
+                autoComplete="off"
               />
             </Form.Item>
             <Form.Item>
@@ -216,13 +214,13 @@ const Signup = (props) => {
               >
                 개인 정보 취급 방침 동의
               </Checkbox>
-              <p className='privacy' onClick={() => setVisible(true)}>
+              <p className="privacy" onClick={() => setVisible(true)}>
                 보기
               </p>
               <PolicyModal visible={visible} setVisible={setVisible} />
             </Form.Item>
             <Form.Item>
-              <Button className='button' type='primary' htmlType='submit'>
+              <Button className="button" type="primary" htmlType="submit">
                 회원 가입
               </Button>
             </Form.Item>
@@ -232,7 +230,6 @@ const Signup = (props) => {
     );
   });
 };
-``;
 
 export default styled(Signup)`
   & {

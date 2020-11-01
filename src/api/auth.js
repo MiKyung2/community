@@ -2,7 +2,7 @@ import instance from './axiosWrapper';
 
 const AuthAPI = {
   signup: async (payload) => {
-    return await instance.post('user', {
+    return instance.post('user', {
       nickname: '',
       userId: payload.value.userId,
       email: payload.value.email,
@@ -11,7 +11,7 @@ const AuthAPI = {
   },
 
   login: async (payload) => {
-    return await instance.post(
+    return instance.post(
       'user/login',
       {
         userId: payload.value.userId,
@@ -25,7 +25,7 @@ const AuthAPI = {
     );
   },
   logout: async (userId) => {
-    return await instance.post(`user/logout?userId=${userId}`);
+    return instance.post(`user/logout?userId=${userId}`);
   },
   check_userId: async (userId) => {
     try {
@@ -63,7 +63,7 @@ const AuthAPI = {
         userId,
         newPassword,
       };
-      const res = await instance.put(`user/password`, data, config);
+      const res = await instance.put('user/password', data, config);
       return res;
     } catch (error) {
       return '500';
@@ -81,7 +81,7 @@ const AuthAPI = {
       formdata.append('userId', data.userId);
       formdata.append('nickname', data.nickname);
       formdata.append('gitAddr', data.gitAddr);
-      const res = await instance.put(`user`, formdata, config);
+      const res = await instance.put('user', formdata, config);
 
       return res;
     } catch (error) {
@@ -99,14 +99,14 @@ const AuthAPI = {
       const formdata = new FormData();
       formdata.append('file', image[0].originFileObj);
       formdata.append('userId', userId);
-      const res = await instance.put(`profile`, formdata, config);
+      const res = await instance.put('profile', formdata, config);
       return res;
     } catch (error) {
       return '500';
     }
   },
   withdraw: async (userId) => {
-    return await instance.delete(`user/${userId}`);
+    return instance.delete(`user/${userId}`);
   },
 };
 

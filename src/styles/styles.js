@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+export const test = '';
 export const OuterWrapper = styled.div`
   & {
     height: 75vh;

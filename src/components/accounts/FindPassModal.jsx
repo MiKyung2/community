@@ -1,9 +1,11 @@
 import React from 'react';
-import { Modal, Form, Input, message, Button } from 'antd';
+import {
+  Modal, Form, Input, message, Button,
+} from 'antd';
 
 import AuthAPI from '../../api/auth';
 
-import { regExp, inputRules } from './validator';
+import { regExp } from './validator';
 
 const FindPassModal = ({ visible, setVisible }) => {
   const [userId, setUserId] = React.useState('');
@@ -21,14 +23,13 @@ const FindPassModal = ({ visible, setVisible }) => {
     const resAuth = await AuthAPI.find_pass(userId);
     if (resAuth.status === 200) {
       setLoading(false);
-      message.success(`등록하신 이메일로 새 비밀번호를 발송했습니다.`);
+      message.success('등록하신 이메일로 새 비밀번호를 발송했습니다.');
       setVisible(false);
     }
     if (resAuth === '500') {
       setTimeout(() => {
         setLoading(false);
         message.error('회원정보를 다시 한 번 확인해 주세요');
-        return;
       }, 1500);
     }
   };
@@ -54,24 +55,24 @@ const FindPassModal = ({ visible, setVisible }) => {
 
   return (
     <Modal
-      title='새 비밀번호 생성'
+      title="새 비밀번호 생성"
       visible={visible}
       style={{ top: '100px' }}
       onOk={handleOk}
       onCancel={handleCancel}
       footer={[
         <Button
-          key='back'
+          key="back"
           onClick={handleCancel}
-          disabled={loading ? true : false}
+          disabled={loading || false}
         >
           취소
         </Button>,
         <Button
-          key='submit'
-          type='primary'
+          key="submit"
+          type="primary"
           onClick={showConfirmModal}
-          disabled={loading ? true : false}
+          disabled={loading || false}
         >
           새 비밀번호 생성
         </Button>,
@@ -83,19 +84,19 @@ const FindPassModal = ({ visible, setVisible }) => {
             margin: 0,
             textAlign: 'center',
           }}
-          name='userId'
+          name="userId"
           initialValues={userId}
           // rules={inputRules.userId}
         >
           <Input
             style={{ width: '280px' }}
-            name='userId'
-            placeholder='유저 아이디를 입력해주세요'
-            size='large'
-            disabled={loading ? true : false}
-            autoComplete='off'
+            name="userId"
+            placeholder="유저 아이디를 입력해주세요"
+            size="large"
+            disabled={loading || false}
+            autoComplete="off"
             value={userId}
-            onChange={(e) => setUserId(e.target.value)}
+            onChange={(e) => { setUserId(e.target.value); }}
           />
         </Form.Item>
       </Form>

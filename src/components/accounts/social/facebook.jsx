@@ -1,19 +1,17 @@
-import { Button } from 'antd';
+import * as React from 'react';
 import FacebookLogin from 'react-facebook-login';
-import { FACEBOOK_ID } from './keys';
 
 const Facebook = () => {
-  const responseFacebook = (response) => {
-    // console.log(response);
-  };
-
+  const FACEBOOK_ID = '';
+  const responseFacebook = () => { };
+  const autLoad = true;
   return (
     <FacebookLogin
       appId={FACEBOOK_ID}
-      autoLoad={true}
-      fields='name,email,picture'
+      autoLoad={autLoad}
+      fields="name,email,picture"
       callback={responseFacebook}
-      size='small'
+      size="small"
     />
   );
 };

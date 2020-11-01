@@ -7,7 +7,6 @@ import {
 } from '@ant-design/icons';
 import { StyledSocialCard } from './account.styles';
 
-import Google from './social/google';
 // import Facebook from './social/facebook';
 
 const SocialLogin = () => {
@@ -18,34 +17,33 @@ const SocialLogin = () => {
       },
     };
     try {
-      const response = await axios.get(
+      axios.get(
         `https://toyproject.okky.kro.kr:8443/oauth2/authorization/${type}`,
         null,
         config,
       );
-    } catch (err) {}
-    // window.location.href = `https://toyproject.okky.kro.kr:8443/oauth2/authorization/${type}`;
+    } catch (err) { }
   };
 
   return (
     <>
       <StyledSocialCard>
-        <div className='social-wrapper'>
+        <div className="social-wrapper">
           <FacebookOutlined
-            className='btn_social facebook'
-            onClick={() => socialLogin('facebook')}
+            className="btn_social facebook"
+            onClick={() => { socialLogin('facebook'); }}
           />
           <GoogleOutlined
-            className='btn_social google'
-            onClick={() => socialLogin('google')}
+            className="btn_social google"
+            onClick={() => { socialLogin('google'); }}
           />
           <GithubOutlined
-            className='btn_social github'
-            onClick={() => socialLogin('github')}
+            className="btn_social github"
+            onClick={() => { socialLogin('github'); }}
           />
           <div
-            className='btn_social naver'
-            onClick={() => socialLogin('naver')}
+            className="btn_social naver"
+            onClick={() => { socialLogin('naver');}}
           >
             N
           </div>

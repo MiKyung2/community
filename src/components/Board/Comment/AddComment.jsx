@@ -4,41 +4,37 @@ import { Modal, Button } from 'antd';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import CommentAPI from '../../../api/comment';
-import UserAPI from "../../../api/user";
+import UserAPI from '../../../api/user';
 import { AppContext } from '../../App/context';
-import Modal_login from '../Modals/Modal_login';
-
+import ModalLogin from '../Modals/Modal_login';
 
 const AddComment = (props) => {
-
   return useObserver(() => {
     const global = React.useContext(AppContext);
     const globalUserInfo = global.state.user;
-    const { isAdmin } = props;
 
     const { queryId, comments } = props;
     const router = useRouter();
 
     const state = useLocalStore(() => {
       return {
-          content: '',
-          user: [],
-          modal: {
-            login: false,
-          }
-      }
-  });
+        content: '',
+        user: [],
+        modal: {
+          login: false,
+        },
+      };
+    });
 
-  // 유저 정보
-
-  useEffect(() => {
-    const getUserInfo = async() => {
-      if(!globalUserInfo.userId) return;
-      const userInfo = await UserAPI.get({userId: encodeURI(global.state.user.userId)});  
-      state.user = userInfo.body; 
-    };
-    getUserInfo();
-  }, []);
+    // 유저 정보
+    useEffect(() => {
+      const getUserInfo = async () => {
+        if (!globalUserInfo.userId) return;
+        const userInfo = await UserAPI.get({ userId: encodeURI(global.state.user.userId) });
+        state.user = userInfo.body;
+      };
+      getUserInfo();
+    }, []);
 
     const registerComment = async () => {
       const payload = {
@@ -47,70 +43,63 @@ const AddComment = (props) => {
         content: state.content,
         writer: state.user.userId,
         id: 0,
-        itemGb: "string",
+        itemGb: 'string',
         rowDisLike: 0,
         rowLike: 0,
-        viewCount: 0
-      }
+        viewCount: 0,
+      };
       const resp = await CommentAPI.post(payload);
       comments.push(resp.body);
-    }
+    };
 
     const onChangeTextArea = (e) => {
       state.content = e.target.value;
-    }
+    };
 
     const warning = () => {
       Modal.warning({
-        content: '댓글 내용을 입력해 주세요.'
-      })
-    }
+        content: '댓글 내용을 입력해 주세요.',
+      });
+    };
 
     const onSubmitComment = (e) => {
       e.preventDefault();
-      
+
       if (!globalUserInfo.userId) {
         state.modal.login = true;
       } else {
-        if (state.content.trim() == '') {
-          warning();
-          state.content = '';
-        } else {
-          registerComment();
-          state.content = '';
-        }
+        if (state.content.trim() === '') warning(); else registerComment();
+        state.content = '';
       }
-    }
+    };
 
-    const handleCancel_LoginModal = (e) => {
+    const handleCancelLoginModal = () => {
       state.modal.login = false;
-    }
+    };
 
-    const handleOk_LoginModal = () => {
+    const handleOkLoginModal = () => {
       router.push('/accounts/signin');
-    }
+    };
 
     return (
       <>
-      <div className={props.className}>
-        <form>
-          <textarea className="text-area" value={state.content} onChange={onChangeTextArea} />
-          <Button type="primary" onClick={onSubmitComment}>등록</Button>
-        </form>
-      </div>
+        <div className={props.className}>
+          <form>
+            <textarea className="text-area" value={state.content} onChange={onChangeTextArea} />
+            <Button type="primary" onClick={onSubmitComment}>등록</Button>
+          </form>
+        </div>
 
-      {/* 로그인 메세지 */}
-      <Modal_login 
-        isLogin={state.modal.login} 
-        handleOk={handleOk_LoginModal} 
-        handleCancel={handleCancel_LoginModal} 
-      />
-     </>
-    )
-
+        {/* 로그인 메세지 */}
+        <ModalLogin
+          isLogin={state.modal.login}
+          handleOk={handleOkLoginModal}
+          handleCancel={handleCancelLoginModal}
+        />
+      </>
+    );
   });
-
-}
+};
 
 export default styled(AddComment)`
   margin-bottom: 50px;

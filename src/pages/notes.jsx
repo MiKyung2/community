@@ -1,29 +1,27 @@
-import { useLocalStore, useObserver } from "mobx-react-lite";
-import { Input, Menu, Select, Table, Button, Tabs, Popconfirm, message, Pagination } from "antd";
-import NoteAPI from "../api/note";
-import SendNote from "../components/note/SendNote";
-import { SearchOutlined } from '@ant-design/icons';
+import * as React from 'react';
+import { useLocalStore, useObserver } from 'mobx-react-lite';
+import {
+  Table, Button, Tabs, Popconfirm, message,
+} from 'antd';
+import NoteAPI from '../api/note';
+import SendNote from '../components/note/SendNote';
 import cookie from 'cookie';
-import jwt from "jsonwebtoken";
-import { toJS } from "mobx";
-import { AppContext } from "../components/App/context";
+import jwt from 'jsonwebtoken';
+import { AppContext } from '../components/App/context';
 import CONFIG from '../utils/CONFIG';
-
-const { Option } = Select;
-const { Search } = Input;
 
 const { TabPane } = Tabs;
 
 const sendColumns = [
-  { title: "제목", dataIndex: "title" },
-  { title: "받는 사람", dataIndex: "revId" },
-  { title: "보낸 시간", dataIndex: "strCreateDate" },
+  { title: '제목', dataIndex: 'title' },
+  { title: '받는 사람', dataIndex: 'revId' },
+  { title: '보낸 시간', dataIndex: 'strCreateDate' },
 ];
 
 const receiveColumns = [
-  { title: "제목", dataIndex: "title" },
-  { title: "보낸 사람", dataIndex: "sendId" },
-  { title: "받은 시간", dataIndex: "strCreateDate" },
+  { title: '제목', dataIndex: 'title' },
+  { title: '보낸 사람', dataIndex: 'sendId' },
+  { title: '받은 시간', dataIndex: 'strCreateDate' },
 ];
 
 const Notes = (props) => {
@@ -33,7 +31,7 @@ const Notes = (props) => {
       return {
         loading: false,
         error: false,
-        tabActive: "R",
+        tabActive: 'R',
         pageSize: 10,
         receive: {
           page: 1,
@@ -56,16 +54,62 @@ const Notes = (props) => {
       };
     });
 
+    const getSendList = async () => {
+      state.sendnote.list = [];
+
+      try {
+        const res = await NoteAPI.sendList({
+          pageSize: state.pageSize,
+          userId: global.state.user.userId,
+          page: state.sendnote.page,
+        });
+        state.sendnote.list = res.content;
+        state.sendnote.totalPages = res.totalElements;
+      } catch (error) {
+        state.error = true;
+      }
+    };
+
+    const getReceiveList = () => {
+      state.receive.list = [];
+      (async () => {
+        try {
+          const res = await NoteAPI.receiveList({
+            pageSize: state.pageSize,
+            userId: global.state.user.userId,
+            page: state.receive.page,
+          });
+
+          state.receive.list = res.content;
+          state.receive.totalPages = res.totalElements;
+        } catch (error) {
+          state.error = true;
+        }
+      })();
+    };
+
+    const getCurrentList = () => {
+      switch (state.tabActive) {
+        case 'S':
+          getSendList();
+          break;
+        case 'R':
+        default:
+          getReceiveList();
+          break;
+      }
+    };
+
     const onDelete = () => {
       state.delete.loading = true;
 
       (async () => {
         try {
-          const res = await NoteAPI.remove({
+          await NoteAPI.remove({
             data: {
               gb: state.tabActive,
               id: state.delete.selectedRowKeys,
-            }
+            },
           });
 
           state.delete.selectedRowKeys = [];
@@ -89,58 +133,26 @@ const Notes = (props) => {
 
     const hasSelected = state.delete.selectedRowKeys.length > 0;
 
-    const getSendList = async () => {
-      state.sendnote.list = [];
-  
-      try {
-        const res = await NoteAPI.sendList({ pageSize: state.pageSize, userId: global.state.user.userId, page: state.sendnote.page });
-        state.sendnote.list = res.content;
-        state.sendnote.totalPages = res.totalElements;
-      } catch (error) {
-        state.error = true;
-      }
-    };
-
-    const getReceiveList = () => {
-      state.receive.list = [];
-      (async () => {
-        try {
-          const res = await NoteAPI.receiveList({ pageSize: state.pageSize, userId: global.state.user.userId, page: state.receive.page });
-          state.receive.list = res.content;
-          state.receive.totalPages = res.totalElements;
-        } catch (error) {
-          state.error = true;
-        }
-      })();
-    };
-
-    const getCurrentList = () => {
-      switch (state.tabActive) {
-        case "R":
-          getReceiveList();
-          break;
-        case "S":
-          getSendList();
-          break;
-      }
-    };
-
     React.useEffect(() => {
       state.delete.selectedRowKeys = [];
       getCurrentList();
     }, [state.tabActive]);
 
     React.useEffect(() => {
-      if (global.state.alarm.note) global.state.alarm.note = false
+      if (global.state.alarm.note) global.state.alarm.note = false;
     }, [global.state.alarm.note]);
 
-    const onChangePage = (page, pageSize) => {
-      if (state.tabActive === "S") {
+    const onChangePage = (page) => {
+      if (state.tabActive === 'S') {
         state.sendnote.list = [];
-  
+
         (async () => {
           try {
-            const res = await NoteAPI.sendList({ pageSize: state.pageSize, userId: global.state.user.userId, page: page });
+            const res = await NoteAPI.sendList({
+              pageSize: state.pageSize,
+              userId: global.state.user.userId,
+              page,
+            });
             state.sendnote.list = res.content;
             state.sendnote.page = page;
             state.sendnote.totalPages = res.totalElements;
@@ -148,24 +160,33 @@ const Notes = (props) => {
             state.error = true;
           }
         })();
-      } else if (state.tabActive === "R") {
-      (async () => {
-        try {
-          const res = await NoteAPI.receiveList({ pageSize: state.pageSize, userId: global.state.user.userId, page: page });
-          state.receive.list = res.content;
-          state.receive.page = page;
-          state.receive.totalPages = res.totalElements;
-        } catch (error) {
-          state.error = true;
-        }
-      })();
+      } else if (state.tabActive === 'R') {
+        (async () => {
+          try {
+            const res = await NoteAPI.receiveList({
+              pageSize: state.pageSize,
+              userId: global.state.user.userId,
+              page,
+            });
+            state.receive.list = res.content;
+            state.receive.page = page;
+            state.receive.totalPages = res.totalElements;
+          } catch (error) {
+            state.error = true;
+          }
+        })();
       }
-      
-    }
+    };
 
     return (
       <div>
-        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginBottom: 16,
+          }}
+        >
           <div>
             <Button
               style={{ marginRight: 8 }}
@@ -182,7 +203,7 @@ const Notes = (props) => {
               title="정말로 선택한 쪽지를 삭제하시겠습니까?"
               disabled={!hasSelected}
               onConfirm={() => {
-                message.info("선택하신 쪽지가 삭제되었습니다.");
+                message.info('선택하신 쪽지가 삭제되었습니다.');
                 onDelete();
               }}
               okText="확인"
@@ -202,11 +223,11 @@ const Notes = (props) => {
               <Option value="title">제목</Option>
               <Option value="writer">{state.tabActive === "R" ? "보낸 사람" : "받는 사람"}</Option>
             </Select>
-            <Search 
-              style={{ width: "65%"}} 
-              placeholder="input search text" 
-              onSearch={value => console.log(value)} 
-              enterButton 
+            <Search
+              style={{ width: "65%"}}
+              placeholder="input search text"
+              onSearch={value => console.log(value)}
+              enterButton
             />
           </Input.Group> */}
         </div>
@@ -223,15 +244,17 @@ const Notes = (props) => {
               columns={receiveColumns}
               dataSource={state.receive.list}
               expandable={{
-                expandedRowRender: record => <p style={{ whiteSpace: "pre-line", marginLeft: "110px" }}>{record.contents}</p>,
+                expandedRowRender: (record) => {
+                  return  <p style={{ whiteSpace: "pre-line", marginLeft: "110px" }}>{record.contents}</p>
+                },
                 expandRowByClick: true,
               }}
               onRow={(record, rowIndex) => {
                 return {
-                  onClick: event => { 
+                  onClick: () => {
                     CONFIG.LOG(`${rowIndex} : ${record.id}`);
                   },
-                }
+                };
               }}
               pagination={{
                 pageSize: state.pageSize,
@@ -253,10 +276,10 @@ const Notes = (props) => {
               }}
               onRow={(record, rowIndex) => {
                 return {
-                  onClick: event => { 
-                    CONFIG.LOG(`${rowIndex} : ${record.id}`)
+                  onClick: () => {
+                    CONFIG.LOG(`${rowIndex} : ${record.id}`);
                   },
-                }
+                };
               }}
               pagination={{
                 pageSize: state.pageSize,
@@ -267,14 +290,14 @@ const Notes = (props) => {
             />
           </TabPane>
         </Tabs>
-          
+
         <SendNote
           visible={state.send.open}
           onCancel={() => {
             state.send.open = false;
           }}
-          onFinish={() => { 
-            if (state.tabActive === "S") getSendList();
+          onFinish={() => {
+            if (state.tabActive === 'S') getSendList();
           }}
         />
       </div>
@@ -286,24 +309,24 @@ Notes.getInitialProps = async (ctx) => {
   const ck = cookie.parse(
     (ctx.req ? ctx.req.headers.cookie : document.cookie) ?? '',
   );
-  const token = ck.token ?? "";
-  const decodedToken = jwt.decode(token.replace("Bearer ", ""));
-  const user = decodedToken?.userId ?? "";
-  
-  if (user === "") {
-    ctx.res.writeHead(302, { Location: "/accounts/signin" });
+  const token = ck.token ?? '';
+  const decodedToken = jwt.decode(token.replace('Bearer ', ''));
+  const user = decodedToken?.userId ?? '';
+
+  if (user === '') {
+    ctx.res.writeHead(302, { Location: '/accounts/signin' });
     ctx.res.end();
     return;
   }
 
   try {
-    const receive = await NoteAPI.receiveList({ userId: user, page: 1, pageSize: 5});
-    return {
-      receive,
-    };
+    const receive = await NoteAPI.receiveList({ userId: user, page: 1, pageSize: 5 });
+    return { receive };
   } catch (error) {
     return { error: true };
   }
+
+  return { error: true };
 };
 
 export default Notes;

@@ -3,7 +3,7 @@ import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
 
 const CONFIG = (() => {
-  let API_BASE_URL = ""
+  let API_BASE_URL = '';
   const URL = 'https://toyproject.okky.kro.kr:8443';
   const API_VERSION = 'v1';
   const IMAGE_BASE_URL = '';
@@ -32,14 +32,14 @@ const CONFIG = (() => {
 
     case 'production':
     default:
-      LOG = (value) => {};
-      INFO = (value) => {};
-      WARN = (value) => {};
-      ERROR = (value) => {};
+      LOG = () => {};
+      INFO = () => {};
+      WARN = () => {};
+      ERROR = () => {};
       NODE_ENV = 'production';
   }
 
-  API_BASE_URL = URL + '/' + API_VERSION + '/api';
+  API_BASE_URL = `${URL}/${API_VERSION}/api`;
 
   return {
     URL,

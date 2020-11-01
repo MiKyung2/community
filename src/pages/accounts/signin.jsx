@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import Router, { useRouter } from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useCookies } from 'react-cookie';
-import { Form, Input, Button, Row, Col, message } from 'antd';
+import {
+  Form, Input, Button, Row, Col, message,
+} from 'antd';
 import { OuterWrapper } from '../../styles/styles';
 import AuthAPI from '../../api/auth';
 import { AppContext } from '../../components/App/context';
@@ -33,15 +35,14 @@ const SignIn = (props) => {
     const onLogin = async () => {
       try {
         const resAuth = await AuthAPI.login(state);
-        if (resAuth.data.code == 200) {
+        if (resAuth.data.code === 200) {
           const { access_token, refresh_token } = resAuth.data.body;
           setCookie('access_token', access_token);
           setCookie('refresh_token', refresh_token);
           global.action.login(resAuth.data.body);
         }
       } catch (e) {
-        message.error('아이디 혹은 비밀번호를 확인해주세요.');
-        return;
+        return message.error('아이디 혹은 비밀번호를 확인해주세요.');
       }
     };
 
@@ -59,12 +60,12 @@ const SignIn = (props) => {
 
     const formItemMaker = (name) => (
       <Form.Item
-        className='center'
+        className="center"
         name={name}
         rules={name === 'userId' ? inputRules.userId : null}
       >
         <Input
-          className='input'
+          className="input"
           type={name.includes('userId') ? 'text' : 'password'}
           value={
             name.includes('userId') ? state.value.userId : state.value.password
@@ -76,11 +77,11 @@ const SignIn = (props) => {
           }
           onChange={(e) => {
             e.preventDefault();
-            name === 'password'
+            name === "password"
               ? (state.value.password = e.target.value)
               : (state.value.userId = e.target.value);
           }}
-          autoComplete='off'
+          autoComplete="off"
           onKeyDown={onKeyDown}
         />
       </Form.Item>
@@ -91,34 +92,34 @@ const SignIn = (props) => {
         {!cookies.access_token ? (
           <OuterWrapper className={props.className}>
             <Form
-              name='basic'
+              name="basic"
               onFinish={() => {
                 onLogin();
               }}
             >
-              <div className='wrapper'>
+              <div className="wrapper">
                 {formItemMaker('userId')}
                 {formItemMaker('password')}
-                <Form.Item className='form-item'>
-                  <Button className='button' type='primary' onClick={onLogin}>
+                <Form.Item className="form-item">
+                  <Button className="button" type="primary" onClick={onLogin}>
                     로그인
                   </Button>
                 </Form.Item>
-                <Form.Item className='form-item'>
+                <Form.Item className="form-item">
                   <GoogleBtn />
                 </Form.Item>
-                <Form.Item className='form-item'>
+                <Form.Item className="form-item">
                   <Button
-                    className='button'
+                    className="button"
                     onClick={() => router.push('/accounts/signup')}
                   >
                     회원가입
                   </Button>
                 </Form.Item>
               </div>
-              <Row className='right lost_info_wrapper'>
+              <Row className="right lost_info_wrapper">
                 <Col>
-                  <p className='find_pass' onClick={() => setVisible(true)}>
+                  <p className="find_pass" onClick={() => setVisible(true)}>
                     비밀번호 찾기
                   </p>
                   <FindPassModal visible={visible} setVisible={setVisible} />

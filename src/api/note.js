@@ -1,4 +1,4 @@
-import instance from "./axiosWrapper";
+import instance from './axiosWrapper';
 
 const NoteAPI = {
   sendList: async (payload) => {
@@ -9,6 +9,7 @@ const NoteAPI = {
     } catch (error) {
       console.error(error);
     }
+    return false;
   },
   receiveList: async (payload) => {
     try {
@@ -20,6 +21,7 @@ const NoteAPI = {
     } catch (error) {
       console.error(error);
     }
+    return false;
   },
   get: async (payload) => {
     try {
@@ -28,22 +30,25 @@ const NoteAPI = {
     } catch (error) {
       console.error(error);
     }
+    return false;
   },
   post: async (payload) => {
     try {
-      const res = await instance.post("note/write", payload.data);
+      const res = await instance.post('note/write', payload.data);
       return res;
     } catch (error) {
       console.error(error);
     }
+    return false;
   },
   remove: async (payload) => {
     try {
-      const res = await instance.post("note/remove/bulk", payload.data);
+      const res = await instance.post('note/remove/bulk', payload.data);
       return res;
     } catch (error) {
       console.error(error);
     }
+    return false;
   },
 };
 

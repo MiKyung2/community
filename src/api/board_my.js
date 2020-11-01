@@ -1,4 +1,4 @@
-import instance from "./axiosWrapper";
+import instance from './axiosWrapper';
 
 const MyBoardAPI = {
   get: async (payload) => {
@@ -8,7 +8,8 @@ const MyBoardAPI = {
     } catch (error) {
       console.error(error);
     }
-  }
+    return false;
+  },
 };
 
 export default MyBoardAPI;

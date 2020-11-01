@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Card, Input, message, Button } from 'antd';
+import { Modal, Card, Button } from 'antd';
 import ReactMarkdown from 'react-markdown';
 import { policy } from './policy';
 
@@ -28,17 +28,19 @@ const PolicyModal = ({ visible, setVisible }) => {
   return (
     <Modal
       visible={visible}
-      style={{ top: 80, width: 700, height: 'auto', overflow: 'scroll' }}
+      style={{
+        top: 80, width: 700, height: 'auto', overflow: 'scroll',
+      }}
       onOk={handleOk}
       closable={false}
       footer={[
-        <Button key='submit' type='primary' onClick={handleOk}>
+        <Button key="submit" type="primary" onClick={handleOk}>
           확인
         </Button>,
       ]}
     >
       <Card
-        title='개인정보취급방침'
+        title="개인정보취급방침"
         style={{ height: 550, overflow: 'scroll' }}
       >
         <ReactMarkdown

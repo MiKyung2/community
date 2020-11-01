@@ -9,22 +9,13 @@ const UserAPI = {
     } catch (error) {
       CONFIG.ERROR(error);
     }
+    return false;
   },
   put: async () => {
-    try {
-      const res = await instance.put('user');
-      return res;
-    } catch (error) {
-      CONFIG.ERROR(error);
-    }
+    return instance.put('user');
   },
   putPassword: async (data) => {
-    try {
-      const res = await instance.put('user/password', data);
-      return res;
-    } catch (error) {
-      CONFIG.ERROR(error);
-    }
+    return instance.put('user/password', data);
   },
   followingList: async (payload) => {
     try {
@@ -35,6 +26,7 @@ const UserAPI = {
     } catch (error) {
       CONFIG.ERROR(error);
     }
+    return false;
   },
   followerList: async (payload) => {
     try {
@@ -45,22 +37,13 @@ const UserAPI = {
     } catch (error) {
       CONFIG.ERROR(error);
     }
+    return false;
   },
   follow: async (data) => {
-    try {
-      const res = await instance.post('user/follow', data);
-      return res;
-    } catch (error) {
-      CONFIG.ERROR(error);
-    }
+    return instance.post('user/follow', data);
   },
   unfollow: async (data) => {
-    try {
-      const res = await instance.put('user/unfollow', data);
-      return res;
-    } catch (error) {
-      CONFIG.ERROR(error);
-    }
+    return instance.put('user/unfollow', data);
   },
 };
 

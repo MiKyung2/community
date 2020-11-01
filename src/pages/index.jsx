@@ -1,10 +1,7 @@
-import * as React from "react";
+import * as React from 'react';
 import styled from 'styled-components';
 import { Row, Col } from 'antd';
 import { useObserver } from 'mobx-react';
-import { useRouter } from 'next/router';
-import { AppContext } from '../components/App/context';
-
 import Freeboard from '../components/home/Freeboard';
 import NoticeBoard from '../components/home/NoticeBoard';
 import JobBoard from '../components/home/JobBoard';
@@ -12,28 +9,29 @@ import QABoard from '../components/home/QABoard';
 
 const Home = (props) => {
   return useObserver(() => {
-    const global = React.useContext(AppContext);
-    const router = useRouter();
-
     return (
       <div className={props.className}>
         <div>
           <Row
-            className='home-card row'
-            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+            className="home-card row"
+            gutter={{
+              xs: 8, sm: 16, md: 24, lg: 32,
+            }}
           >
-            <Col flex='1 1 400px'>
+            <Col flex="1 1 400px">
               <Freeboard />
             </Col>
-            <Col flex='1 1 400px'>
+            <Col flex="1 1 400px">
               <NoticeBoard />
             </Col>
           </Row>
           <Row
-            className='home-card row'
-            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+            className="home-card row"
+            gutter={{
+              xs: 8, sm: 16, md: 24, lg: 32,
+            }}
           >
-            <Col flex='0 1 600px'>
+            <Col flex="0 1 600px">
               <QABoard />
             </Col>
             {/* <Col flex='1 1 400px'>
@@ -41,10 +39,12 @@ const Home = (props) => {
             </Col> */}
           </Row>
           <Row
-            className='home-card row'
-            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+            className="home-card row"
+            gutter={{
+              xs: 8, sm: 16, md: 24, lg: 32,
+            }}
           >
-            <Col flex='0 1 600px'>
+            <Col flex="0 1 600px">
               <JobBoard />
             </Col>
             {/* <Col flex='1 1 400px'>

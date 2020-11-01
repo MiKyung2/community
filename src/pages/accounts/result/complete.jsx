@@ -1,12 +1,13 @@
-import * as React from "react";
+import * as React from 'react';
 import styled from 'styled-components';
 import { Result } from 'antd';
-import { PropTypes } from "mobx-react";
+import { PropTypes } from 'mobx-react';
 
 const SignUpComplete = (props) => {
   const title = '회원가입이 완료되었습니다.';
+
   const subTitle = (
-    <p className='sub-title'>
+    <p className="sub-title">
       회원님이 등록하신 메일로 인증메일이 발송되었습니다.
       <br />
       <br />
@@ -23,7 +24,11 @@ const SignUpComplete = (props) => {
 };
 
 SignUpComplete.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+};
+
+SignUpComplete.defaultProps = {
+  className: '',
 };
 
 export default styled(SignUpComplete)`

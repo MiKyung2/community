@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import Router from 'next/router';
 import { useObserver, useLocalStore } from 'mobx-react';
 import { useCookies } from 'react-cookie';
-import { Form, Input, Button, message } from 'antd';
+import {
+  Form, Input, Button, message,
+} from 'antd';
 import styled from 'styled-components';
 import AuthAPI from '../../api/auth';
 import { AppContext } from '../../components/App/context';
@@ -20,6 +22,7 @@ const FindId = (props) => {
         },
       };
     });
+
     const [setCookie] = useCookies(['token', 'id']);
 
     const onLogin = async () => {
@@ -41,19 +44,19 @@ const FindId = (props) => {
 
     return (
       <div className={props.className}>
-        <h1 className='center'>아이디 찾기에 관해서는 논의가 필요하다</h1>
+        <h1 className="center">아이디 찾기에 관해서는 논의가 필요하다</h1>
         <Form
-          name='basic'
+          name="basic"
           initialValues={{
             remember: true,
           }}
           // onFinish={() => onLogin()}
           onFinishFailed={() => { }}
         >
-          <div className='wrapper'>
+          <div className="wrapper">
             <Form.Item
-              className='center'
-              name='email'
+              className="center"
+              name="email"
               rules={[
                 {
                   required: true,
@@ -62,10 +65,10 @@ const FindId = (props) => {
               ]}
             >
               <Input
-                className='input'
-                id='email'
+                className="input"
+                id="email"
                 value={state.value.email}
-                placeholder='이메일을 입력해주세요'
+                placeholder="이메일을 입력해주세요"
                 onChange={(e) => {
                   state.value.email = e.target.value;
                 }}
@@ -73,10 +76,10 @@ const FindId = (props) => {
             </Form.Item>
             <Form.Item>
               <Button
-                className='button'
-                type='primary'
-                htmlType='submit'
-                onClick={() => onLogin()}
+                className="button"
+                type="primary"
+                htmlType="submit"
+                onClick={() => { onLogin(); }}
                 disabled
               >
                 아이디 찾기

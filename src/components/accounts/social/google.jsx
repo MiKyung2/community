@@ -1,7 +1,7 @@
+import * as React from 'react';
 import { Button } from 'antd';
 import GoogleLogin from 'react-google-login';
 import { GoogleOutlined } from '@ant-design/icons';
-import styled from 'styled-components';
 import { GOOGLE_CLIENT_ID } from './keys-sample';
 // import { GOOGLE_CLIENT_ID } from './keys';
 
@@ -13,24 +13,24 @@ const Google = () => {
     console.log(response);
   };
   return (
-    <>
-      <GoogleLogin
-        clientId={GOOGLE_CLIENT_ID}
-        render={(renderProps) => (
+    <GoogleLogin
+      clientId={GOOGLE_CLIENT_ID}
+      render={(renderProps) => {
+        return (
           <Button
             style={{ width: 300 }}
-            size='large'
+            size="large"
             onClick={renderProps.onClick}
           >
             <GoogleOutlined />
             Login with Google
           </Button>
-        )}
-        buttonText='Login with Google'
-        onSuccess={sucessResponse}
-        onFailure={failureResponse}
-      ></GoogleLogin>
-    </>
+        );
+      }}
+      buttonText="Login with Google"
+      onSuccess={sucessResponse}
+      onFailure={failureResponse}
+    />
   );
 };
 

@@ -1,28 +1,30 @@
-import * as React from "react";
 import 'antd/dist/antd.css';
 import 'react-virtualized/styles.css';
+
+import * as React from 'react';
 import Head from 'next/head';
-import Layout from '../components/common/Layout';
 import styled from 'styled-components';
-import { useObserver } from 'mobx-react';
-import GlobalStyle from '../styles/global';
-import { AppContext } from '../components/App/context';
-import useApp from '../hooks/app';
-import { observerBatching } from 'mobx-react-lite';
-import { CookiesProvider } from 'react-cookie';
+import { useRouter } from 'next/router';
 import NextApp from 'next/app';
+import { useObserver } from 'mobx-react';
+import { observerBatching } from 'mobx-react-lite';
+
+import { CookiesProvider } from 'react-cookie';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
-import { useRouter } from 'next/router';
 
+import { AppContext } from '../components/App/context';
+import useApp from '../hooks/app';
 
+import Layout from '../components/common/Layout';
+import GlobalStyle from '../styles/global';
 
 observerBatching();
 
-let sockJS = new SockJS(`https://toyproject.okky.kro.kr:8443/ws-stomp`);
-let stompClient = Stomp.over(sockJS);
+const sockJS = new SockJS('https://toyproject.okky.kro.kr:8443/ws-stomp');
+const stompClient = Stomp.over(sockJS);
 
 function App(props) {
   return useObserver(() => {
@@ -33,59 +35,59 @@ function App(props) {
       if (global.state.user.userId) {
         stompClient.connect({}, () => {
           stompClient.subscribe(
-            '/socket/sub/note/' + global.state.user.userId,
+            `/socket/sub/note/${global.state.user.userId}`,
             () => {
               global.state.alarm.note = true;
             },
           );
 
           stompClient.subscribe(
-            '/socket/sub/board/' + global.state.user.userId,
+            `/socket/sub/board/${global.state.user.userId}`,
             () => {
               global.state.alarm.board = true;
             },
           );
 
           stompClient.subscribe(
-            '/socket/sub/profile/' + global.state.user.userId,
+            `/socket/sub/profile/${global.state.user.userId}`,
             () => {
               global.state.alarm.profile = true;
             },
           );
         });
       }
-      
-      if (!(global.state.user.userId) && router.pathname === "/notes") {
-        router.replace("/accounts/signin");
+
+      if (!(global.state.user.userId) && router.pathname === '/notes') {
+        router.replace('/accounts/signin');
       }
     }, [global.state.user.userId]);
 
     return (
       <>
-        {router.route !== "/board/[cate]/[id]" && <GlobalStyle /> }
+        {router.route !== '/board/[cate]/[id]' && <GlobalStyle /> }
         <Head>
           <title>개발자들의 커뮤니티</title>
           <meta
-            name='description'
-            content='나의 관심 콘텐츠를 가장 즐겁게 볼 수 있는 Daum'
+            name="description"
+            content="나의 관심 콘텐츠를 가장 즐겁게 볼 수 있는 Daum"
           />
           {/* 카톡, 페이스북 */}
-          <meta property='og:url' content='' />
-          <meta property='og:type' content='website' />
-          <meta property='og:title' content='site' />
-          <meta property='og:description' content='정보 공유 사이트입니다.' />
+          <meta property="og:url" content="" />
+          <meta property="og:type" content="website" />
+          <meta property="og:title" content="site" />
+          <meta property="og:description" content="정보 공유 사이트입니다." />
           <meta
-            property='og:image'
-            content='https://www.daum.net///i1.daumcdn.net/svc/image/U03/common_icon/5587C4E4012FCD0001'
+            property="og:image"
+            content="https://www.daum.net///i1.daumcdn.net/svc/image/U03/common_icon/5587C4E4012FCD0001"
           />
 
           {/* 트위터 */}
-          <meta name='twitter:card' content='summary_large_image' />
-          <meta name='twitter:title' content='site' />
-          <meta name='twitter:description' content='정보 공유 사이트입니다.' />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content="site" />
+          <meta name="twitter:description" content="정보 공유 사이트입니다." />
           <meta
-            name='twitter:image'
-            content='https://www.daum.net///i1.daumcdn.net/svc/image/U03/common_icon/5587C4E4012FCD0001'
+            name="twitter:image"
+            content="https://www.daum.net///i1.daumcdn.net/svc/image/U03/common_icon/5587C4E4012FCD0001"
           />
           {/* 네이버 */}
           {/* <script
@@ -109,7 +111,7 @@ function App(props) {
 
 App.getInitialProps = async (appContext) => {
   const nextAppProps = await NextApp.getInitialProps(appContext);
-  const ctx = appContext.ctx;
+  const { ctx } = appContext;
 
   const ssr = !!appContext.ctx.req;
   const ck = cookie.parse(
@@ -119,7 +121,7 @@ App.getInitialProps = async (appContext) => {
   const token = ck.token ?? '';
   const decodedToken = jwt.decode(token.replace('Bearer ', ''));
   const userId = decodedToken?.userId ?? '';
-  const role = decodedToken?.Role ?? "";
+  const role = decodedToken?.Role ?? '';
 
   return {
     ...nextAppProps,
