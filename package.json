@@ -15,7 +15,7 @@
     "jsonwebtoken": "^8.5.1",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
-    "next": "^9.4.4",
+    "next": "^13.0.3",
     "postcss-loader": "^3.0.0",
     "react": "^16.13.1",
     "react-cookie": "^4.0.3",
